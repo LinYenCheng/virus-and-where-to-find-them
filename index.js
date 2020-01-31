@@ -1,4 +1,5 @@
 import axios from "axios";
+import srcVirus from "./virus.png";
 
 const map = L.map("map").setView([23.5, 120.644], 5);
 
@@ -6,6 +7,13 @@ const tiles = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
   attribution:
     '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 }).addTo(map);
+
+const virusIcon = L.icon({
+  iconUrl: srcVirus,
+  iconSize: [25, 25], // size of the icon
+  iconAnchor: [22, 22], // point of the icon which will correspond to marker's location
+  popupAnchor: [-10, -25] // point from which the popup should open relative to the iconAnchor
+});
 
 let addressPoints = [];
 
@@ -27,6 +35,9 @@ axios
         )
         .concat(resChina.data.data[0])
         .forEach(elm => {
+          L.marker(elm[3].split(" "), { icon: virusIcon })
+            .addTo(map)
+            .bindPopup(elm[4] + "確診: " + elm[1]);
           let nowCount = parseInt(elm[1]);
           while (nowCount--) {
             addressPoints.push(elm[3].split(" "));
