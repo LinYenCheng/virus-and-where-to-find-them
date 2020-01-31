@@ -34,7 +34,7 @@ axios
       resWorld.data.data[0]
         .filter(elm => elm[2] !== "無")
         .filter(
-          elm => elm[3] !== "中國" && elm[3] !== "香港" && elm[3] !== "澳門"
+          elm => elm[4] !== "中國" && elm[4] !== "香港" && elm[4] !== "澳門"
         )
         .concat(resChina.data.data[0])
         .forEach(elm => {
