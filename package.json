@@ -1,0 +1,13 @@
+{
+  "name": "heatmap-earthquakes",
+  "dependencies": {
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "parcel": "^1.12.4"
+  },
+  "scripts": {
+    "start": "parcel --out-dir dev index.html ",
+    "build": "parcel build  index.html --no-content-hash --out-dir docs --public-url ./"
+  }
+}
