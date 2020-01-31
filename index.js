@@ -19,6 +19,7 @@ const virusIcon = L.icon({
 });
 
 let addressPoints = [];
+let cityMarkers = [];
 
 axios
   .all([
@@ -38,19 +39,36 @@ axios
         )
         .concat(resChina.data.data[0])
         .forEach(elm => {
-          L.marker(elm[3].split(" "), { icon: virusIcon })
-            .addTo(map)
-            .bindPopup(elm[4] + "確診: " + elm[1]);
           let nowCount = parseInt(elm[1]);
+          const tempMarker = L.marker(elm[3].split(" "), {
+            icon: virusIcon
+          }).bindPopup(elm[4] + "確診: " + elm[1]);
+          cityMarkers.push(tempMarker);
           while (nowCount--) {
             addressPoints.push(elm[3].split(" "));
           }
         });
+
+      const cities = L.layerGroup(cityMarkers).addTo(map);
 
       const heat = L.heatLayer(addressPoints, {
         radius: 25,
         blur: 15,
         minOpacity: 0.5
       }).addTo(map);
+
+      map.on("zoomend", function() {
+        const zoomlevel = map.getZoom();
+        if (zoomlevel < 5) {
+          map.removeLayer(cities);
+        }
+        if (zoomlevel >= 5) {
+          if (map.hasLayer(cities)) {
+            console.log("layer already added");
+          } else {
+            map.addLayer(cities);
+          }
+        }
+      });
     })
   );
