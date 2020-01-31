@@ -3,10 +3,13 @@ import srcVirus from "./virus.png";
 
 const map = L.map("map").setView([23.5, 120.644], 5);
 
-const tiles = L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png", {
-  attribution:
-    '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-}).addTo(map);
+const tiles = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  }
+).addTo(map);
 
 const virusIcon = L.icon({
   iconUrl: srcVirus,
