@@ -1,56 +1,62 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>病毒與牠們的產地</title>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <meta property="og:site_name" content="前端三分鐘" />
+    <meta property="og:title" content="病毒與牠們的產地" />
+    <meta property="og:image" content="/meta-heat.jpg" />
+    <meta property="og:description" content="使用熱區圖顯示病毒與牠們的產地" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <style>
+      body {
+        margin: 0;
+      }
 
-<head>
-  <title>病毒與牠們的產地</title>
-  <meta charset="utf-8" />
-  <link rel="shortcut icon" href="/favicon.ico" />
-  <meta property="og:site_name" content="前端三分鐘" />
-  <meta property="og:title" content="病毒與牠們的產地" />
-  <meta property="og:image" content="/meta-heat.jpg" />
-  <meta property="og:description" content="使用熱區圖顯示病毒與牠們的產地" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
-  <style>
-    body {
-      margin: 0;
-    }
+      #map {
+        width: 100vw;
+        height: 100vh;
+      }
 
-    #map {
-      width: 100vw;
-      height: 100vh;
-    }
+      #chart--line {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        background: none;
+        width: 50vw;
+        max-width: 100vw;
+        min-width: 300px;
+        min-height: 180px;
+      }
 
-    #chart--line {
-      position: fixed !important;
-      bottom: 0;
-      left: 0;
-      background: none;
-      width: 50vw;
-      min-height: 180px;
-    }
+      #chart--bar {
+        position: fixed !important;
+        bottom: 0;
+        right: 0;
+        background: none;
+        max-width: 50vw;
+        min-height: 180px;
+      }
+    </style>
+  </head>
 
-    #chart--bar {
-      position: fixed !important;
-      bottom: 0;
-      right: 0;
-      background: none;
-      max-width: 50vw;
-      min-height: 180px;
-    }
-  </style>
-</head>
-
-<body>
-  <!-- 台灣對抗病毒加油!!!! 也希望高雄人做出聰明的決定!!!! -->
-  <div id="map"></div>
-  <div id="chart--line"></div>
-  <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script>
-  <script src="./index.js"></script>
-</body>
-
+  <body>
+    <!-- 台灣對抗病毒加油!!!! 也希望高雄人做出聰明的決定!!!! -->
+    <div id="map"></div>
+    <div id="chart--line"></div>
+    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script>
+    <script src="./index.js"></script>
+  </body>
 </html>

@@ -2,8 +2,8 @@
 
 用了裡面兩個 API 去把資料放進熱區圖中顯示。
 
-1. https://e.infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/d88a8a03-ca6a-45a3-b286-3f818a507004
-2. https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/fa0a13f4-b153-48db-9e94-7cb6e1d85fab
+1. https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/d8693373-6503-4be8-b2dd-1089639b9dbf
+2. https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/9cb631ea-857c-49ac-a797-470cf6119f5e
 
 資料統計圖表
 

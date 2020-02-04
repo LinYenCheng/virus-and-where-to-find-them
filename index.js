@@ -4,8 +4,10 @@ import srcVirus from "./virus.png";
 const map = L.map("map").setView([23.5, 120.644], 5);
 
 const tiles = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    attribution:
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }
 ).addTo(map);
 
@@ -22,30 +24,27 @@ let cityMarkers = [];
 axios
   .all([
     axios.get(
-      "https://cors-anywhere.herokuapp.com/https://e.infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/d88a8a03-ca6a-45a3-b286-3f818a507004"
+      "https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/f76517e1-8c4b-42dc-b97b-8abab37a7de0"
     ),
     axios.get(
-      "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/fa0a13f4-b153-48db-9e94-7cb6e1d85fab"
+      "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/9cb631ea-857c-49ac-a797-470cf6119f5e"
     )
   ])
   .then(
-    axios.spread((resWorld, resChina) => {
-      resWorld.data.data[0]
-        .filter(elm => elm[2] !== "無")
-        .filter(
-          elm => elm[4] !== "中國" && elm[4] !== "香港" && elm[4] !== "澳門"
-        )
-        .concat(resChina.data.data[0])
-        .forEach(elm => {
-          let nowCount = parseInt(elm[1]);
-          const tempMarker = L.marker(elm[3].split(" "), {
-            icon: virusIcon
-          }).bindPopup(elm[4] + "確診: " + elm[1]);
-          cityMarkers.push(tempMarker);
-          while (nowCount--) {
-            addressPoints.push(elm[3].split(" "));
-          }
-        });
+    axios.spread((resTaiwan, resChina) => {
+      [
+        ...resChina.data.data[0],
+        ["Taiwan", resTaiwan.data.data[0][0][0], "確診", "24 121", "台灣"]
+      ].forEach(elm => {
+        let nowCount = parseInt(elm[1]);
+        const tempMarker = L.marker(elm[3].split(" "), {
+          icon: virusIcon
+        }).bindPopup(elm[4] + "確診: " + elm[1]);
+        cityMarkers.push(tempMarker);
+        while (nowCount--) {
+          addressPoints.push(elm[3].split(" "));
+        }
+      });
 
       const cities = L.layerGroup(cityMarkers).addTo(map);
 
@@ -55,7 +54,7 @@ axios
         minOpacity: 0.5
       }).addTo(map);
 
-      map.on("zoomend", function () {
+      map.on("zoomend", function() {
         const zoomLevel = map.getZoom();
         if (zoomLevel < 5) {
           map.removeLayer(cities);
@@ -71,36 +70,39 @@ axios
     })
   );
 
-
-axios.get('https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/831f2b9f-88fd-4cf1-a323-17756db0c7a1').then(
-  (resChart) => {
+axios
+  .get(
+    "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/831f2b9f-88fd-4cf1-a323-17756db0c7a1"
+  )
+  .then(resChart => {
     const dates = [];
     const chinaPatientCounts = [];
     const otherPatientCounts = [];
-    resChart.data.data[0].filter(elm => elm[0] !== '日期').forEach(elm => {
-      dates.push(elm[0]);
-      chinaPatientCounts.push(elm[1]);
-      otherPatientCounts.push(elm[2]);
-    });
+    resChart.data.data[0]
+      .filter(elm => elm[0] !== "日期")
+      .forEach(elm => {
+        dates.push(elm[0]);
+        chinaPatientCounts.push(elm[1]);
+        otherPatientCounts.push(elm[2]);
+      });
     const chart = c3.generate({
-      bindto: '#chart--line',
+      bindto: "#chart--line",
       data: {
-        x: 'date',
-        xFormat: '%m/%d',
+        x: "date",
+        xFormat: "%m/%d",
         columns: [
-          ['date', ...dates],
-          ['中國病例', ...chinaPatientCounts],
-          ['其他病例', ...otherPatientCounts]
+          ["date", ...dates],
+          ["中國病例", ...chinaPatientCounts],
+          ["其他病例", ...otherPatientCounts]
         ]
       },
       axis: {
         x: {
-          type: 'timeseries',
+          type: "timeseries",
           tick: {
-            format: '%m/%d'
+            format: "%m/%d"
           }
         }
       }
     });
-  }
-)
+  });
