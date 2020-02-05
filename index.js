@@ -4,10 +4,8 @@ import srcVirus from "./virus.png";
 const map = L.map("map").setView([23.5, 120.644], 5);
 
 const tiles = L.tileLayer(
-  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-  {
-    attribution:
-      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }
 ).addTo(map);
 
@@ -35,14 +33,22 @@ axios
       [
         ...resChina.data.data[0],
         ["Taiwan", resTaiwan.data.data[0][0][0], "確診", "24 121", "台灣"]
-      ].forEach(elm => {
+      ].forEach((elm) => {
         let nowCount = parseInt(elm[1]);
         const tempMarker = L.marker(elm[3].split(" "), {
           icon: virusIcon
         }).bindPopup(elm[4] + "確診: " + elm[1]);
         cityMarkers.push(tempMarker);
         while (nowCount--) {
-          addressPoints.push(elm[3].split(" "));
+          addressPoints.push(elm[3].split(" ").map(tempValue => {
+            const nowValue = parseFloat(tempValue);
+            const shiftValue = nowCount % 1000 * 0.001;
+            if (Math.random() % 2 === 0) {
+              return nowValue + shiftValue;
+            } else {
+              return nowValue - shiftValue;
+            }
+          }));
         }
       });
 
@@ -54,7 +60,7 @@ axios
         minOpacity: 0.5
       }).addTo(map);
 
-      map.on("zoomend", function() {
+      map.on("zoomend", function () {
         const zoomLevel = map.getZoom();
         if (zoomLevel < 5) {
           map.removeLayer(cities);
