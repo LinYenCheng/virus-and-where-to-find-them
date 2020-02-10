@@ -1,7 +1,7 @@
 import axios from "axios";
 import srcVirus from "./virus.png";
 
-const map = L.map("map").setView([24.5, 110.644], 4);
+const map = L.map("map").setView([23.5, 120.644], 5);
 
 const tiles = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -24,39 +24,46 @@ let cityMarkers = [];
 axios
   .all([
     axios.get(
-      "https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/f76517e1-8c4b-42dc-b97b-8abab37a7de0"
+      "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/analytics/country"
     ),
     axios.get(
       "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/9cb631ea-857c-49ac-a797-470cf6119f5e"
     )
   ])
   .then(
-    axios.spread((resTaiwan, resChina) => {
-      [
-        ...resChina.data.data[0],
-        ["Taiwan", resTaiwan.data.data[0][0][0], "確診", "24 121", "台灣"]
-      ].forEach(elm => {
-        let nowCount = parseInt(elm[1]);
-        const tempMarker = L.marker(elm[3].split(" "), {
-          icon: virusIcon
-        }).bindPopup(elm[4] + "確診: " + elm[1]);
-        cityMarkers.push(tempMarker);
-        while (nowCount--) {
-          addressPoints.push(
-            elm[3].split(" ").map(tempValue => {
-              const nowValue = parseFloat(tempValue);
-              const shiftValue = (nowCount % 1000) / 1000;
-              if (Math.random() % 2 === 0) {
-                return nowValue + shiftValue;
-              } else {
-                return nowValue - shiftValue;
-              }
-            })
-          );
-        }
-      });
+    axios.spread((resCountry, resChina) => {
+      resCountry.data
+        .filter(elm => elm.country !== "Mainland China")
+        .map(elm => [
+          elm.country,
+          elm.total_confirmed,
+          "確診",
+          `${elm.lat} ${elm.lng}`,
+          elm.country
+        ])
+        .concat(resChina.data.data[0])
+        .forEach(elm => {
+          let nowCount = parseInt(elm[1]);
+          const tempMarker = L.marker(elm[3].split(" "), {
+            icon: virusIcon
+          }).bindPopup(elm[4] + "確診: " + elm[1]);
+          cityMarkers.push(tempMarker);
+          while (nowCount--) {
+            addressPoints.push(
+              elm[3].split(" ").map(tempValue => {
+                const nowValue = parseFloat(tempValue);
+                const shiftValue = (nowCount % 1000) * 0.001;
+                if (Math.random() % 2 === 0) {
+                  return nowValue + shiftValue;
+                } else {
+                  return nowValue - shiftValue;
+                }
+              })
+            );
+          }
+        });
 
-      const cities = L.layerGroup(cityMarkers);
+      const cities = L.layerGroup(cityMarkers).addTo(map);
 
       const heat = L.heatLayer(addressPoints, {
         radius: 25,
@@ -104,7 +111,11 @@ axios
           ["date", ...dates],
           ["中國病例", ...chinaPatientCounts],
           ["其他病例", ...otherPatientCounts]
-        ]
+        ],
+        axes: {
+          中國病例: "y",
+          其他病例: "y2"
+        }
       },
       axis: {
         x: {
@@ -112,6 +123,9 @@ axios
           tick: {
             format: "%m/%d"
           }
+        },
+        y2: {
+          show: true
         }
       }
     });
