@@ -104,7 +104,11 @@ axios
           ["date", ...dates],
           ["中國病例", ...chinaPatientCounts],
           ["其他病例", ...otherPatientCounts]
-        ]
+        ],
+        axes: {
+          中國病例: "y",
+          其他病例: "y2"
+        }
       },
       axis: {
         x: {
@@ -112,6 +116,9 @@ axios
           tick: {
             format: "%m/%d"
           }
+        },
+        y2: {
+          show: true
         }
       }
     });
