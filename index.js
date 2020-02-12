@@ -21,6 +21,52 @@ const virusIcon = L.icon({
 let addressPoints = [];
 let cityMarkers = [];
 
+const getRandomAround = function(
+  [latitude, longitude],
+  radiusInMeters = 90 * 1000
+) {
+  var getRandomCoordinates = function(radius, uniform) {
+    // Generate two random numbers
+    var a = Math.random(),
+      b = Math.random();
+
+    // Flip for more uniformity.
+    if (uniform) {
+      if (b < a) {
+        var c = b;
+        b = a;
+        a = c;
+      }
+    }
+
+    // It's all triangles.
+    return [
+      b * radius * Math.cos((2 * Math.PI * a) / b),
+      b * radius * Math.sin((2 * Math.PI * a) / b)
+    ];
+  };
+
+  var randomCoordinates = getRandomCoordinates(radiusInMeters, true);
+
+  // Earths radius in meters via WGS 84 model.
+  var earth = 6378137;
+
+  // Offsets in meters.
+  var northOffset = randomCoordinates[0],
+    eastOffset = randomCoordinates[1];
+
+  // Offset coordinates in radians.
+  var offsetLatitude = northOffset / earth,
+    offsetLongitude =
+      eastOffset / (earth * Math.cos(Math.PI * (parseFloat(latitude) / 180)));
+
+  // Offset position in decimal degrees.
+  return [
+    parseFloat(latitude) + offsetLatitude * (180 / Math.PI).toFixed(5),
+    parseFloat(longitude) + offsetLongitude * (180 / Math.PI).toFixed(5)
+  ];
+};
+
 axios
   .all([
     axios.get(
@@ -49,17 +95,16 @@ axios
           }).bindPopup(elm[4] + "確診: " + elm[1]);
           cityMarkers.push(tempMarker);
           while (nowCount--) {
-            addressPoints.push(
-              elm[3].split(" ").map(tempValue => {
-                const nowValue = parseFloat(tempValue);
-                const shiftValue = (nowCount % 1000) * 0.001;
-                if (Math.random() % 2 === 0) {
-                  return nowValue + shiftValue;
-                } else {
-                  return nowValue - shiftValue;
-                }
-              })
-            );
+            const arrayLatLng = elm[3].split(" ");
+            if (nowCount > 2000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 6));
+            } else if (nowCount > 4000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 4));
+            } else if (nowCount > 6000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
+            } else {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+            }
           }
         });
 
