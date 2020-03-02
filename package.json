@@ -4,10 +4,28 @@
     "axios": "^0.19.2"
   },
   "devDependencies": {
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "standard-version": "^7.1.0"
   },
   "scripts": {
     "start": "parcel --out-dir dev index.html ",
-    "build": "parcel build  index.html --no-content-hash --out-dir docs --public-url ./"
-  }
+    "build": "parcel build  index.html --no-content-hash --out-dir docs --public-url ./",
+    "release": "standard-version"
+  },
+  "description": "看到了 [CNA][cna] 新聞網有做了即時資訊更新。",
+  "version": "1.1.0",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LinYenCheng/virus-and-where-to-find-them.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LinYenCheng/virus-and-where-to-find-them/issues"
+  },
+  "homepage": "https://github.com/LinYenCheng/virus-and-where-to-find-them#readme"
 }
