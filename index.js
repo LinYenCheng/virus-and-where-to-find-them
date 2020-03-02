@@ -21,6 +21,33 @@ const virusIcon = L.icon({
 let addressPoints = [];
 let cityMarkers = [];
 
+//var csv is the CSV file with headers
+function csvJSON(csv) {
+  var lines = csv.split("\n");
+
+  var result = [];
+
+  // NOTE: If your columns contain commas in their values, you'll need
+  // to deal with those before doing the next step
+  // (you might convert them to &&& or something, then covert them back later)
+  // jsfiddle showing the issue https://jsfiddle.net/
+  var headers = lines[0].split(",");
+
+  for (var i = 1; i < lines.length; i++) {
+    var obj = {};
+    var currentline = lines[i].split(",");
+
+    for (var j = 0; j < headers.length; j++) {
+      obj[headers[j]] = currentline[j];
+    }
+
+    result.push(obj);
+  }
+
+  //return result; //JavaScript object
+  return JSON.stringify(result); //JSON
+}
+
 const getRandomAround = function(
   [latitude, longitude],
   radiusInMeters = 90 * 1000
@@ -79,7 +106,12 @@ axios
   .then(
     axios.spread((resCountry, resChina) => {
       resCountry.data
-        .filter(elm => elm.country !== "Mainland China")
+        .filter(
+          elm =>
+            elm.country !== "Mainland China" &&
+            elm.country !== "Hong Kong" &&
+            elm.country !== "Macau"
+        )
         .map(elm => [
           elm.country,
           elm.total_confirmed,
@@ -92,7 +124,7 @@ axios
           let nowCount = parseInt(elm[1]);
           const tempMarker = L.marker(elm[3].split(" "), {
             icon: virusIcon
-          }).bindPopup(elm[4] + "確診: " + elm[1]);
+          }).bindPopup(`${elm[4]}確診：${elm[1]}`);
           cityMarkers.push(tempMarker);
           while (nowCount--) {
             const arrayLatLng = elm[3].split(" ");
@@ -143,7 +175,7 @@ axios
     resChart.data.data[0]
       .filter(elm => elm[0] !== "日期")
       .forEach(elm => {
-        dates.push(elm[0]);
+        dates.push(`2020/${elm[0]}`);
         chinaPatientCounts.push(elm[1]);
         otherPatientCounts.push(elm[2]);
       });
@@ -151,7 +183,7 @@ axios
       bindto: "#chart--line",
       data: {
         x: "date",
-        xFormat: "%m/%d",
+        xFormat: "%Y/%m/%d",
         columns: [
           ["date", ...dates],
           ["中國病例", ...chinaPatientCounts],
