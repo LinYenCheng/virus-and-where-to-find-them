@@ -128,14 +128,16 @@ axios
           cityMarkers.push(tempMarker);
           while (nowCount--) {
             const arrayLatLng = elm[3].split(" ");
-            if (nowCount > 2000) {
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 6));
+            if (nowCount > 1000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+            } else if (nowCount > 2000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.5));
+            } else if (nowCount > 3000) {
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.2));
             } else if (nowCount > 4000) {
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 4));
-            } else if (nowCount > 6000) {
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.1));
             } else {
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
             }
           }
         });
@@ -144,7 +146,7 @@ axios
 
       const heat = L.heatLayer(addressPoints, {
         radius: 25,
-        blur: 15,
+        blur: 20,
         minOpacity: 0.5
       }).addTo(map);
 
