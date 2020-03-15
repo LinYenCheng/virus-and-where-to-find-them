@@ -1,5 +1,5 @@
 {
-  "name": "heatmap-earthquakes",
+  "name": "virus-and-where-to-find-them",
   "dependencies": {
     "axios": "^0.19.2"
   },
