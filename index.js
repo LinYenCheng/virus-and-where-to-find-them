@@ -108,7 +108,7 @@ axios
       resCountry.data
         .filter(
           elm =>
-            elm.country !== "Mainland China" &&
+            elm.country !== "China" &&
             elm.country !== "Hong Kong" &&
             elm.country !== "Macau"
         )
