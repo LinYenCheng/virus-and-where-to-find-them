@@ -182,14 +182,13 @@ axios
   )
   .then(resChart => {
     const dates = [];
-    const otherPatientCounts = [];
-    resChart.data
-      // .filter(elm => elm[0] !== "日期")
-      .forEach(elm => {
-        dates.push(elm.ytd.toString().substring(0, 10));
-        // chinaPatientCounts.push(elm[1]);
-        otherPatientCounts.push(elm.ytdConfirmed);
-      });
+    const diffConfirmCounts = [];
+    const confirmPatientCounts = [];
+    resChart.data.forEach(elm => {
+      dates.push(elm.ytd.toString().substring(0, 10));
+      diffConfirmCounts.push(elm.diffConfirmed);
+      confirmPatientCounts.push(elm.todayConfirmed);
+    });
     const chart = c3.generate({
       bindto: "#chart--line",
       data: {
@@ -197,13 +196,13 @@ axios
         xFormat: "%Y-%m-%d",
         columns: [
           ["date", ...dates],
-          // ["中國病例", ...chinaPatientCounts],
-          ["全球確診病例", ...otherPatientCounts]
-        ]
-        // axes: {
-        // 中國病例: "y",
-        // 其他病例: "y2"
-        // }
+          ["增加數量", ...diffConfirmCounts],
+          ["全球確診病例", ...confirmPatientCounts]
+        ],
+        axes: {
+          全球確診病例: "y",
+          增加數量: "y2"
+        }
       },
       axis: {
         x: {
@@ -211,10 +210,10 @@ axios
           tick: {
             format: "%m-%d"
           }
+        },
+        y2: {
+          show: true
         }
-        // y2: {
-        //   show: true
-        // }
       }
     });
   });
