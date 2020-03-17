@@ -100,7 +100,7 @@ axios
       "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/analytics/country"
     ),
     axios.get(
-      "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/9cb631ea-857c-49ac-a797-470cf6119f5e"
+      "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/v2/analytics/area?limit=100"
     )
   ])
   .then(
@@ -110,7 +110,7 @@ axios
           elm =>
             elm.country !== "China" &&
             elm.country !== "Hong Kong" &&
-            elm.country !== "Macau"
+            elm.country !== "N/A"
         )
         .map(elm => [
           elm.country,
@@ -119,7 +119,15 @@ axios
           `${elm.lat} ${elm.lng}`,
           elm.country
         ])
-        .concat(resChina.data.data[0])
+        .concat(
+          resChina.data.map(elm => [
+            elm.state,
+            elm.total_confirmed,
+            "確診",
+            `${elm.lat} ${elm.lng}`,
+            elm.state
+          ])
+        )
         .forEach(elm => {
           let nowCount = parseInt(elm[1]);
           const tempMarker = L.marker(elm[3].split(" "), {
@@ -168,44 +176,43 @@ axios
 
 axios
   .get(
-    "https://cors-anywhere.herokuapp.com/https://infogram.com/api/live/flex/01a8508e-9cc9-4b64-994b-cb4fdc2ee6f4/831f2b9f-88fd-4cf1-a323-17756db0c7a1"
+    "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/v2/stats/diff/global"
   )
   .then(resChart => {
     const dates = [];
-    const chinaPatientCounts = [];
     const otherPatientCounts = [];
-    resChart.data.data[0]
-      .filter(elm => elm[0] !== "日期")
+    resChart.data
+      // .filter(elm => elm[0] !== "日期")
       .forEach(elm => {
-        dates.push(`2020/${elm[0]}`);
-        chinaPatientCounts.push(elm[1]);
-        otherPatientCounts.push(elm[2]);
+        dates.push(elm.ytd.toString().substring(0, 10));
+        // chinaPatientCounts.push(elm[1]);
+        otherPatientCounts.push(elm.ytdConfirmed);
       });
     const chart = c3.generate({
       bindto: "#chart--line",
       data: {
         x: "date",
-        xFormat: "%Y/%m/%d",
+        xFormat: "%Y-%m-%d",
         columns: [
           ["date", ...dates],
-          ["中國病例", ...chinaPatientCounts],
-          ["其他病例", ...otherPatientCounts]
-        ],
-        axes: {
-          中國病例: "y",
-          其他病例: "y2"
-        }
+          // ["中國病例", ...chinaPatientCounts],
+          ["全球確診病例", ...otherPatientCounts]
+        ]
+        // axes: {
+        // 中國病例: "y",
+        // 其他病例: "y2"
+        // }
       },
       axis: {
         x: {
           type: "timeseries",
           tick: {
-            format: "%m/%d"
+            format: "%m-%d"
           }
-        },
-        y2: {
-          show: true
         }
+        // y2: {
+        //   show: true
+        // }
       }
     });
   });
