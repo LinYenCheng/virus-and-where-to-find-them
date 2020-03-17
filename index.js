@@ -120,13 +120,15 @@ axios
           elm.country
         ])
         .concat(
-          resChina.data.map(elm => [
-            elm.state,
-            elm.total_confirmed,
-            "確診",
-            `${elm.lat} ${elm.lng}`,
-            elm.state
-          ])
+          resChina.data
+            .filter(elm => elm.state !== "N/A")
+            .map(elm => [
+              elm.state,
+              elm.total_confirmed,
+              "確診",
+              `${elm.lat} ${elm.lng}`,
+              elm.state
+            ])
         )
         .forEach(elm => {
           let nowCount = parseInt(elm[1]);
