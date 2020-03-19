@@ -184,10 +184,15 @@ axios
     const dates = [];
     const diffConfirmCounts = [];
     const confirmPatientCounts = [];
+    const deathCounts = [];
+    const recoverCounts = [];
+
     resChart.data.forEach(elm => {
       dates.push(elm.ytd.toString().substring(0, 10));
       diffConfirmCounts.push(elm.diffConfirmed);
       confirmPatientCounts.push(elm.todayConfirmed);
+      deathCounts.push(elm.todayDeath);
+      recoverCounts.push(elm.todayRecover);
     });
     const chart = c3.generate({
       bindto: "#chart--line",
@@ -216,4 +221,64 @@ axios
         }
       }
     });
+
+    const chartBar = c3.generate({
+      bindto: "#chart--bar",
+      data: {
+        x: "date",
+        xFormat: "%Y-%m-%d",
+        columns: [
+          ["date", ...dates],
+          ["死亡數量", ...deathCounts],
+          ["恢復數量", ...recoverCounts]
+        ],
+        axes: {
+          死亡數量: "y",
+          恢復數量: "y2"
+        }
+      },
+      axis: {
+        x: {
+          type: "timeseries",
+          tick: {
+            format: "%m-%d"
+          }
+        },
+        y2: {
+          show: true
+        }
+      }
+    });
+    const { todayConfirmed, todayDeath, todayRecover } = resChart.data[0];
+    var chartDounut = c3.generate({
+      bindto: "#chart--dounut",
+      data: {
+        columns: [
+          ["治療中", todayConfirmed - todayDeath - todayRecover],
+          ["恢復", todayRecover],
+          ["死亡", todayDeath]
+        ],
+        type: "donut"
+      },
+      donut: {
+        title: "武漢肺炎",
+        label: {
+          format: function(value, ratio, id) {
+            return value;
+          }
+        }
+      }
+    });
   });
+
+$("#btn-open").click(function() {
+  $("#modal").css("opacity", 1);
+  $("#modal").css("zIndex", 1000);
+  $("#btn-open").css("zIndex", -1);
+});
+
+$("#btn-close").click(function() {
+  $("#modal").css("opacity", 0);
+  $("#modal").css("zIndex", -1);
+  $("#btn-open").css("zIndex", 2);
+});
