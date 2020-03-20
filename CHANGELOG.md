@@ -2,23 +2,7 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.4.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.4.0) (2020-03-20)
-
-
-### Features
-
-* 加入增加數量 ([ba67c8a](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/ba67c8a20dc91d5389aee11d8e98af9ba67bb8f6))
-* 增加圖表 ([2dfb2f7](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/2dfb2f77f295ff95617e4aff7f2f8ef0a5022eda))
-
-
-### Bug Fixes
-
-* data ([920ba96](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/920ba9656900f559940e5063a24dd46c05b23c9a))
-* data ([7ddf449](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/7ddf44998cc3a1b35253061a100c77445bb9d0b2))
-* dounut chart rwd ([6ff0c67](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/6ff0c678c99dace05480e2d7d77e67a56c53366f))
-* filter N/A ([5127c54](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/5127c5484a1712bf5f9bad3fabb3a3a9fa3f4654))
-
-## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.3.0) (2020-03-20)
+## [1.2.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.2.0) (2020-03-20)
 
 
 ### Features
