@@ -1,18 +1,18 @@
 const locations = [
   {
     location: "新北市",
-    lng: 121.6739,
-    lat: 24.91571
+    lng: 121.465452,
+    lat: 25.012458
   },
   {
     location: "高雄市",
-    lng: 120.666,
-    lat: 23.01087
+    lng: 120.312019,
+    lat: 22.623045
   },
   {
     location: "台中市",
-    lng: 120.9417,
-    lat: 24.23321
+    lng: 120.645756,
+    lat: 24.176912
   },
   {
     location: "台北市",
@@ -21,13 +21,13 @@ const locations = [
   },
   {
     location: "桃園市",
-    lng: 121.2168,
-    lat: 24.93759
+    lng: 121.300974,
+    lat: 24.993312
   },
   {
     location: "台南市",
-    lng: 120.2513,
-    lat: 23.1417
+    lng: 120.1851,
+    lat: 23.005181
   },
   {
     location: "彰化縣",
@@ -46,8 +46,8 @@ const locations = [
   },
   {
     location: "苗栗縣",
-    lng: 120.9417,
-    lat: 24.48927
+    lng: 120.820793,
+    lat: 24.565031
   },
   {
     location: "嘉義縣",
@@ -56,8 +56,8 @@ const locations = [
   },
   {
     location: "新竹縣",
-    lng: 121.1252,
-    lat: 24.70328
+    lng: 121.012893,
+    lat: 24.827162
   },
   {
     location: "南投縣",
