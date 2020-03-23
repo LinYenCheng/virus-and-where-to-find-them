@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.3.0) (2020-03-20)
+## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.2.0...v1.3.0) (2020-03-23)
+
+
+### Features
+
+* 增加台灣資料 ([cfa9f73](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/cfa9f73cb0de95ceadca6dda3386672109305b7c))
+
+## [1.2.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.2.0) (2020-03-20)
 
 
 ### Features
