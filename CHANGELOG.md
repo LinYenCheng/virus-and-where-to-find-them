@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.3.0...v1.3.1) (2020-03-23)
+
+
+### Bug Fixes
+
+* gis ([3bed678](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/3bed678b5dbc1d0463552d0d91857742a18c7923))
+
+### [1.3.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.3.0...v1.3.1) (2020-03-23)
+
 ## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.2.0...v1.3.0) (2020-03-23)
 
 
