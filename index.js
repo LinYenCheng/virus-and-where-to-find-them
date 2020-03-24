@@ -1,5 +1,4 @@
 import axios from "axios";
-import axiosRetry from "axios-retry";
 import { setupCache } from "axios-cache-adapter";
 import { locations, csvJSON, getRandomAround } from "./util.js";
 import srcVirus from "./virus.png";
@@ -125,11 +124,9 @@ const api = axios.create({
   adapter: cache.adapter
 });
 
-axiosRetry(api, { retries: 3 });
-
 axios
   .all([
-    api.get(
+    axios.get(
       "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.csv"
     ),
     api.get("https://api.coronatracker.com/analytics/country"),
