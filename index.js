@@ -1,6 +1,6 @@
 import axios from "axios";
 import { setupCache } from "axios-cache-adapter";
-import { locations, csvJSON, getRandomAround } from "./util.js";
+import { locations, getRandomAround } from "./util.js";
 import srcVirus from "./virus.png";
 
 const map = L.map("map").setView([23.5, 120.644], 5);
@@ -29,6 +29,7 @@ function generateChart(resChart) {
   const confirmPatientCounts = [];
   const deathCounts = [];
   const recoverCounts = [];
+  const { todayConfirmed, todayDeath, todayRecover } = resChart.data[0];
 
   resChart.data.forEach(elm => {
     dates.push(elm.ytd.toString().substring(0, 10));
@@ -44,12 +45,12 @@ function generateChart(resChart) {
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
-        ["增加數量", ...diffConfirmCounts],
+        ["單日增加", ...diffConfirmCounts],
         ["全球確診病例", ...confirmPatientCounts]
       ],
       axes: {
         全球確診病例: "y",
-        增加數量: "y2"
+        單日增加: "y2"
       }
     },
     axis: {
@@ -67,17 +68,21 @@ function generateChart(resChart) {
 
   const chartBar = c3.generate({
     bindto: "#chart--bar",
+    title: {
+      text: `死亡率: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
+      恢復率: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`
+    },
     data: {
       x: "date",
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
-        ["死亡數量", ...deathCounts],
-        ["恢復數量", ...recoverCounts]
+        ["全球死亡", ...deathCounts],
+        ["全球恢復", ...recoverCounts]
       ],
       axes: {
-        死亡數量: "y",
-        恢復數量: "y2"
+        全球死亡: "y",
+        全球恢復: "y2"
       }
     },
     axis: {
@@ -89,26 +94,6 @@ function generateChart(resChart) {
       },
       y2: {
         show: true
-      }
-    }
-  });
-  const { todayConfirmed, todayDeath, todayRecover } = resChart.data[0];
-  var chartDounut = c3.generate({
-    bindto: "#chart--dounut",
-    data: {
-      columns: [
-        ["治療中", todayConfirmed - todayDeath - todayRecover],
-        ["恢復", todayRecover],
-        ["死亡", todayDeath]
-      ],
-      type: "donut"
-    },
-    donut: {
-      title: "武漢肺炎",
-      label: {
-        format: function(value, ratio, id) {
-          return value;
-        }
       }
     }
   });
@@ -124,10 +109,13 @@ const api = axios.create({
   adapter: cache.adapter
 });
 
+let otherCounts = 0;
+let taiwanCounts = 0;
+
 axios
   .all([
-    axios.get(
-      "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.csv"
+    api.get(
+      "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json"
     ),
     api.get("https://api.coronatracker.com/analytics/country"),
     api.get("https://api.coronatracker.com/v2/analytics/area?limit=100"),
@@ -137,14 +125,36 @@ axios
     axios.spread((resTaiwan, resCountry, resChina, resChart) => {
       $(".loading__overlay").css("zIndex", -1);
       $(".loading__content").css("zIndex", -1);
-      var data = JSON.parse(csvJSON(resTaiwan.data));
-      $(data).each(function(k, v) {
+      $(resTaiwan.data).each(function(k, v) {
         const nowIndex = locations.findIndex(elm => elm.location === v["縣市"]);
+        if (v["是否為境外移入"] === "是") {
+          otherCounts += 1;
+        } else {
+          taiwanCounts += 1;
+        }
         if (locations[nowIndex]) {
           if (locations[nowIndex].count) {
             locations[nowIndex].count += 1;
           } else {
             locations[nowIndex].count = 1;
+          }
+        }
+      });
+      var chartDounut = c3.generate({
+        bindto: "#chart--dounut",
+        data: {
+          columns: [
+            ["境外移入", otherCounts],
+            ["本土", taiwanCounts]
+          ],
+          type: "donut"
+        },
+        donut: {
+          title: "台灣疫情",
+          label: {
+            format: function(value, ratio, id) {
+              return value;
+            }
           }
         }
       });
