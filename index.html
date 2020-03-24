@@ -9,6 +9,7 @@
     <meta property="og:image" content="/meta-heat.jpg" />
     <meta property="og:description" content="使用熱區圖顯示病毒與牠們的產地" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/app.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
@@ -17,154 +18,8 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"
     />
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
-    <style>
-      * {
-        margin: 0;
-        font-family: Roboto, Helvetica Neue, Helvetica, Arial, PingFang TC,
-          黑體-繁, Heiti TC, 蘋果儷中黑, Apple LiGothic Medium, 微軟正黑體,
-          Microsoft JhengHei, sans-serif;
-      }
-
-      #map {
-        width: 100vw;
-        height: 100vh;
-      }
-
-      #chart--line {
-        position: fixed !important;
-        bottom: 30px;
-        left: 20px;
-        background: none;
-        width: 50vw;
-        max-width: 100vw;
-        min-width: 90vw;
-        max-height: 40vh;
-        min-height: 40vh;
-      }
-
-      #chart--bar {
-        position: fixed !important;
-        top: 50px;
-        left: 20px;
-        background: none;
-        max-width: 50vw;
-        min-width: 90vw;
-        max-height: 40vh;
-        min-height: 40vh;
-      }
-
-      #chart--dounut {
-        position: fixed !important;
-        bottom: 30px;
-        right: 20px;
-        background: none;
-        max-width: 30vw;
-        min-width: 30vw;
-        max-height: 40vh;
-        min-height: 40vh;
-      }
-
-      @media (max-width: 480px) {
-        #chart--dounut {
-          bottom: 10px;
-          right: 10px;
-          max-width: 55vw;
-          min-width: 55vw;
-          max-height: 35vh;
-          min-height: 35vh;
-        }
-      }
-
-      #modal {
-        background: #fff;
-        width: 100vw;
-        height: 100vh;
-        position: fixed;
-        top: 0;
-        transition: opacity 0.6s ease, width 0.6s ease;
-        opacity: 0;
-        z-index: -1;
-      }
-
-      #btn-open {
-        position: fixed;
-        font-size: 20px;
-        top: 10px;
-        right: 10px;
-      }
-
-      #btn-close {
-        position: fixed;
-        font-size: 20px;
-        top: 10px;
-        right: 10px;
-      }
-
-      .loading__overlay {
-        position: fixed;
-        z-index: 1000;
-        top: 0px;
-        background: rgba(0, 0, 0, 0.6);
-        width: 100vw;
-        height: 100vh;
-      }
-
-      .loading__content {
-        z-index: 3;
-        position: fixed;
-        top: 30%;
-        left: calc(50% - 60px);
-        opacity: 1;
-      }
-
-      .loader,
-      .loader:after {
-        border-radius: 50%;
-        width: 10em;
-        height: 10em;
-      }
-
-      .loader {
-        margin: 60px auto;
-        font-size: 10px;
-        position: relative;
-        text-indent: -9999em;
-        border-top: 1.1em solid rgba(255, 255, 255, 0.2);
-        border-right: 1.1em solid rgba(255, 255, 255, 0.2);
-        border-bottom: 1.1em solid rgba(255, 255, 255, 0.2);
-        border-left: 1.1em solid #ffffff;
-        -webkit-transform: translateZ(0);
-        -ms-transform: translateZ(0);
-        transform: translateZ(0);
-        -webkit-animation: load8 1.1s infinite linear;
-        animation: load8 1.1s infinite linear;
-      }
-
-      @-webkit-keyframes load8 {
-        0% {
-          -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
-        }
-
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-
-      @keyframes load8 {
-        0% {
-          -webkit-transform: rotate(0deg);
-          transform: rotate(0deg);
-        }
-
-        100% {
-          -webkit-transform: rotate(360deg);
-          transform: rotate(360deg);
-        }
-      }
-    </style>
   </head>
 
   <body>
