@@ -1,4 +1,6 @@
 import axios from "axios";
+import axiosRetry from "axios-retry";
+import { setupCache } from "axios-cache-adapter";
 import { locations, csvJSON, getRandomAround } from "./util.js";
 import srcVirus from "./virus.png";
 
@@ -113,20 +115,26 @@ function generateChart(resChart) {
   });
 }
 
+// Create `axios-cache-adapter` instance
+const cache = setupCache({
+  maxAge: 15 * 60 * 1000
+});
+
+// Create `axios` instance passing the newly created `cache.adapter`
+const api = axios.create({
+  adapter: cache.adapter
+});
+
+axiosRetry(api, { retries: 3 });
+
 axios
   .all([
-    axios.get(
+    api.get(
       "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.csv"
     ),
-    axios.get(
-      "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/analytics/country"
-    ),
-    axios.get(
-      "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/v2/analytics/area?limit=100"
-    ),
-    axios.get(
-      "https://cors-anywhere.herokuapp.com/https://api.coronatracker.com/v2/stats/diff/global"
-    )
+    api.get("https://api.coronatracker.com/analytics/country"),
+    api.get("https://api.coronatracker.com/v2/analytics/area?limit=100"),
+    api.get("https://api.coronatracker.com/v2/stats/diff/global")
   ])
   .then(
     axios.spread((resTaiwan, resCountry, resChina, resChart) => {
