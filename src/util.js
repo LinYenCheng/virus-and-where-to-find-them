@@ -177,4 +177,57 @@ function getRandomAround([latitude, longitude], radiusInMeters = 90 * 1000) {
   ];
 }
 
-export { locations, csvJSON, getRandomAround };
+function modifyCountryName(name) {
+  let finalName = name;
+  switch (name) {
+    case "Taiwan*":
+      finalName = "Taiwan";
+      break;
+    case "Korea, South":
+      finalName = "Korea";
+      break;
+    case "USA":
+      finalName = "US";
+      break;
+    case "United Kingdom":
+      finalName = "UK";
+      break;
+
+    default:
+      break;
+  }
+  return finalName;
+}
+
+function modifyCountryParam(name) {
+  let finalName = name;
+  switch (name) {
+    case "taiwan":
+      finalName = "taiwan*";
+      break;
+    case "United Arab Emirates":
+      finalName = "UAE";
+      break;
+    case "Korea":
+      finalName = "S. Korea";
+      break;
+    case "United Kingdom":
+      finalName = "UK";
+      break;
+    case "Bosnia and Herzegovina":
+      finalName = "Bosnia";
+      break;
+
+    default:
+      break;
+  }
+  return finalName;
+}
+
+export {
+  locations,
+  csvJSON,
+  getRandomAround,
+  modifyCountryName,
+  modifyCountryParam
+};

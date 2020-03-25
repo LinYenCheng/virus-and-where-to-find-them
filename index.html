@@ -9,7 +9,6 @@
     <meta property="og:image" content="/meta-heat.jpg" />
     <meta property="og:description" content="使用熱區圖顯示病毒與牠們的產地" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="/app.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
@@ -18,13 +17,19 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"
     />
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/app.css" />
   </head>
 
   <body>
     <!-- 台灣對抗病毒加油!!!! 也希望高雄人做出聰明的決定!!!! -->
     <div id="map"></div>
+    <select id="select-country" name="country">
+      <option></option>
+    </select>
     <button id="btn-open">開啟圖表</button>
     <div id="modal">
       <button id="btn-close">關閉圖表</button>
@@ -37,7 +42,10 @@
         <div class="loader">Loading...</div>
       </div>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
     <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script>

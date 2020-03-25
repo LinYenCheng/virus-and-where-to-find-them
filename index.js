@@ -1,10 +1,23 @@
 import axios from "axios";
 import { setupCache } from "axios-cache-adapter";
-import { locations, getRandomAround } from "./util.js";
+import router from "./src/router.js";
+import {
+  generateChart,
+  generateDounutChartTaiwan,
+  generateChartCountry
+} from "./src/charts.js";
+import {
+  locations,
+  getRandomAround,
+  modifyCountryName,
+  modifyCountryParam
+} from "./src/util.js";
 import srcVirus from "./virus.png";
 
-const map = L.map("map").setView([23.5, 120.644], 5);
+let addressPoints = [];
+let cityMarkers = [];
 
+const map = L.map("map").setView([23.5, 120.644], 5);
 const tiles = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
@@ -12,7 +25,6 @@ const tiles = L.tileLayer(
       '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
   }
 ).addTo(map);
-
 const virusIcon = L.icon({
   iconUrl: srcVirus,
   iconSize: [25, 25], // size of the icon
@@ -20,87 +32,9 @@ const virusIcon = L.icon({
   popupAnchor: [-10, -25] // point from which the popup should open relative to the iconAnchor
 });
 
-let addressPoints = [];
-let cityMarkers = [];
-
-function generateChart(resChart) {
-  const dates = [];
-  const diffConfirmCounts = [];
-  const confirmPatientCounts = [];
-  const deathCounts = [];
-  const recoverCounts = [];
-  const { todayConfirmed, todayDeath, todayRecover } = resChart.data[0];
-
-  resChart.data.forEach(elm => {
-    dates.push(elm.ytd.toString().substring(0, 10));
-    diffConfirmCounts.push(elm.diffConfirmed);
-    confirmPatientCounts.push(elm.todayConfirmed);
-    deathCounts.push(elm.todayDeath);
-    recoverCounts.push(elm.todayRecover);
-  });
-  const chart = c3.generate({
-    bindto: "#chart--line",
-    data: {
-      x: "date",
-      xFormat: "%Y-%m-%d",
-      columns: [
-        ["date", ...dates],
-        ["單日增加", ...diffConfirmCounts],
-        ["全球確診病例", ...confirmPatientCounts]
-      ],
-      axes: {
-        全球確診病例: "y",
-        單日增加: "y2"
-      }
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%m-%d"
-        }
-      },
-      y2: {
-        show: true
-      }
-    }
-  });
-
-  const chartBar = c3.generate({
-    bindto: "#chart--bar",
-    title: {
-      text: `死亡率: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
-      恢復率: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`
-    },
-    data: {
-      x: "date",
-      xFormat: "%Y-%m-%d",
-      columns: [
-        ["date", ...dates],
-        ["全球死亡", ...deathCounts],
-        ["全球恢復", ...recoverCounts]
-      ],
-      axes: {
-        全球死亡: "y",
-        全球恢復: "y2"
-      }
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%m-%d"
-        }
-      },
-      y2: {
-        show: true
-      }
-    }
-  });
-}
-
 // Create `axios-cache-adapter` instance
 const cache = setupCache({
+  readHeaders: true,
   maxAge: 15 * 60 * 1000
 });
 
@@ -108,9 +42,6 @@ const cache = setupCache({
 const api = axios.create({
   adapter: cache.adapter
 });
-
-let otherCounts = 0;
-let taiwanCounts = 0;
 
 axios
   .all([
@@ -123,6 +54,11 @@ axios
   ])
   .then(
     axios.spread((resTaiwan, resCountry, resChina, resChart) => {
+      let otherCounts = 0;
+      let taiwanCounts = 0;
+      const selectOptions = [];
+      const countries = resCountry.data;
+
       $(".loading__overlay").css("zIndex", -1);
       $(".loading__content").css("zIndex", -1);
       $(resTaiwan.data).each(function(k, v) {
@@ -140,39 +76,34 @@ axios
           }
         }
       });
-      var chartDounut = c3.generate({
-        bindto: "#chart--dounut",
-        data: {
-          columns: [
-            ["境外移入", otherCounts],
-            ["本土", taiwanCounts]
-          ],
-          type: "donut"
-        },
-        donut: {
-          title: "台灣疫情",
-          label: {
-            format: function(value, ratio, id) {
-              return value;
-            }
-          }
-        }
+
+      countries.sort(function(a, b) {
+        return parseInt(b.total_confirmed) - parseInt(a.total_confirmed);
       });
-      resCountry.data
+      countries
+        .map(elm => {
+          selectOptions.push({
+            id: modifyCountryName(elm.country).toLowerCase(),
+            text: `${modifyCountryName(elm.country)} (${elm.total_confirmed})`,
+            // selected: modifyCountryName(elm.country) === "Taiwan",
+            paramCountry: modifyCountryParam(elm.country),
+            lng: elm.lng,
+            lat: elm.lat
+          });
+          return [
+            elm.country,
+            elm.total_confirmed,
+            "確診",
+            `${elm.lat} ${elm.lng}`
+          ];
+        })
         .filter(
           elm =>
-            elm.country !== "China" &&
-            elm.country !== "Hong Kong" &&
-            elm.country !== "Taiwan*" &&
-            elm.country !== "N/A"
+            elm[0] !== "China" &&
+            elm[0] !== "Hong Kong" &&
+            elm[0] !== "Taiwan*" &&
+            elm[0] !== "N/A"
         )
-        .map(elm => [
-          elm.country,
-          elm.total_confirmed,
-          "確診",
-          `${elm.lat} ${elm.lng}`,
-          elm.country
-        ])
         .concat(
           resChina.data
             .filter(elm => elm.state !== "N/A")
@@ -180,8 +111,7 @@ axios
               elm.state,
               elm.total_confirmed,
               "確診",
-              `${elm.lat} ${elm.lng}`,
-              elm.state
+              `${elm.lat} ${elm.lng}`
             ])
         )
         .concat(
@@ -191,15 +121,14 @@ axios
               elm.location,
               elm.count,
               "確診",
-              `${elm.lat} ${elm.lng}`,
-              elm.location
+              `${elm.lat} ${elm.lng}`
             ])
         )
         .forEach(elm => {
           let nowCount = parseInt(elm[1]);
           const tempMarker = L.marker(elm[3].split(" "), {
             icon: virusIcon
-          }).bindPopup(`${elm[4]}確診：${elm[1]}`);
+          }).bindPopup(`${elm[0]}確診：${elm[1]}`);
           cityMarkers.push(tempMarker);
           while (nowCount--) {
             const arrayLatLng = elm[3].split(" ");
@@ -217,7 +146,70 @@ axios
           }
         });
 
+      $("#select-country")
+        .select2({
+          data: selectOptions,
+          placeholder: "國家 (確診數)",
+          allowClear: true
+        })
+        .on("select2:select", function(e) {
+          var data = e.params.data;
+          map.panTo([data.lat, data.lng], { animate: true });
+          generateChartCountry({
+            api,
+            title: data.paramCountry,
+            paramCountry: modifyCountryParam(data.paramCountry)
+          });
+          if (
+            data.paramCountry === "Taiwan*" ||
+            data.paramCountry === "Taiwan"
+          ) {
+            $("#chart--dounut").css("zIndex", 1);
+          } else {
+            $("#chart--dounut").css("zIndex", -1);
+          }
+          router.navigateTo(
+            `country/${data.id
+              .toString()
+              .toLowerCase()
+              .replace(/ /g, "-")}`
+          );
+        });
+
       generateChart(resChart);
+      generateChartCountry({ api, title: "Taiwan", paramCountry: "taiwan*" });
+      generateDounutChartTaiwan({
+        otherCounts,
+        taiwanCounts
+      });
+
+      router
+        .add("", function() {
+          generateChartCountry({
+            api,
+            title: "Taiwan",
+            paramCountry: "taiwan*"
+          });
+        })
+        .add("country/(:any)", function(country) {
+          const nowCountry = country.replace(/-/g, " ").toLocaleLowerCase();
+
+          $("#select-country")
+            .val(nowCountry)
+            .trigger("change")
+            .trigger({
+              type: "select2:select",
+              params: {
+                data:
+                  selectOptions[
+                    selectOptions.findIndex(elm => {
+                      return elm.id.toLowerCase() === nowCountry;
+                    })
+                  ]
+              }
+            });
+        })
+        .check();
 
       const cities = L.layerGroup(cityMarkers).addTo(map);
       const heat = L.heatLayer(addressPoints, {

@@ -66,18 +66,33 @@
   z-index: -1;
 }
 
-#btn-open {
-  position: fixed;
-  font-size: 20px;
-  top: 10px;
-  right: 10px;
-}
-
+#btn-open,
 #btn-close {
   position: fixed;
-  font-size: 20px;
+  font-size: 16px;
   top: 10px;
   right: 10px;
+  border-radius: 5px;
+  padding: 2px 15px;
+}
+
+#select-country,
+.select2-container {
+  width: 180px !important;
+  position: fixed;
+
+  top: 10px;
+  right: 120px;
+}
+
+select {
+  height: 30px;
+  line-height: 30px;
+  background: #f4f4f4;
+}
+
+.select2-container {
+  z-index: 1001;
 }
 
 .loading__overlay {
