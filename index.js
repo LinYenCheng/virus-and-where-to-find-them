@@ -1,5 +1,6 @@
 import axios from "axios";
 import { setupCache } from "axios-cache-adapter";
+import router from "./router.js";
 import { locations, getRandomAround } from "./util.js";
 import srcVirus from "./virus.png";
 
@@ -23,6 +24,63 @@ const virusIcon = L.icon({
 let addressPoints = [];
 let cityMarkers = [];
 
+// Create `axios-cache-adapter` instance
+const cache = setupCache({
+  maxAge: 15 * 60 * 1000
+});
+
+// Create `axios` instance passing the newly created `cache.adapter`
+const api = axios.create({
+  adapter: cache.adapter
+});
+
+function modifyCountryName(name) {
+  let finalName = name;
+  switch (name) {
+    case "Taiwan*":
+      finalName = "Taiwan";
+      break;
+    case "S. Korea":
+      finalName = "Korea, South";
+      break;
+    case "USA":
+      finalName = "US";
+      break;
+    case "UK":
+      finalName = "United Kingdom";
+      break;
+
+    default:
+      break;
+  }
+  return finalName;
+}
+
+function modifyCountryParam(name) {
+  let finalName = name;
+  switch (name) {
+    case "taiwan":
+      finalName = "taiwan*";
+      break;
+    case "United Arab Emirates":
+      finalName = "uae";
+      break;
+    case "Korea, South":
+      finalName = "s. korea";
+      break;
+    case "United Kingdom":
+      finalName = "uk";
+      break;
+    case "Bosnia and Herzegovina":
+      finalName = "bosnia";
+      break;
+
+    default:
+      break;
+  }
+  return finalName;
+}
+
 function generateChart(resChart) {
   const dates = [];
   const diffConfirmCounts = [];
@@ -39,14 +97,20 @@ function generateChart(resChart) {
     recoverCounts.push(elm.todayRecover);
   });
   const chart = c3.generate({
-    bindto: "#chart--line",
+    bindto: "#chart--bar",
+    title: {
+      text: `累積死亡: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
+      累積恢復: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`
+    },
     data: {
       x: "date",
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
         ["單日增加", ...diffConfirmCounts],
-        ["全球確診病例", ...confirmPatientCounts]
+        ["全球確診", ...confirmPatientCounts],
+        ["全球死亡", ...deathCounts],
+        ["全球恢復", ...recoverCounts]
       ],
       axes: {
         全球確診病例: "y",
@@ -65,49 +129,58 @@ function generateChart(resChart) {
       }
     }
   });
-
-  const chartBar = c3.generate({
-    bindto: "#chart--bar",
-    title: {
-      text: `死亡率: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
-      恢復率: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`
-    },
-    data: {
-      x: "date",
-      xFormat: "%Y-%m-%d",
-      columns: [
-        ["date", ...dates],
-        ["全球死亡", ...deathCounts],
-        ["全球恢復", ...recoverCounts]
-      ],
-      axes: {
-        全球死亡: "y",
-        全球恢復: "y2"
-      }
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%m-%d"
-        }
-      },
-      y2: {
-        show: true
-      }
-    }
-  });
 }
 
-// Create `axios-cache-adapter` instance
-const cache = setupCache({
-  maxAge: 15 * 60 * 1000
-});
+function generateChartCountry(title, country) {
+  api
+    .get(`https://corona.lmao.ninja/v2/historical/${country}`)
+    .then(resChart => {
+      const dates = [];
+      const totalCounts = [];
+      const deathCounts = [];
 
-// Create `axios` instance passing the newly created `cache.adapter`
-const api = axios.create({
-  adapter: cache.adapter
-});
+      const {
+        data: {
+          timeline: { cases, deaths }
+        }
+      } = resChart;
+      for (let [key, value] of Object.entries(cases)) {
+        dates.push(key);
+        totalCounts.push(value);
+      }
+
+      for (let [key, value] of Object.entries(deaths)) {
+        deathCounts.push(value);
+      }
+      const chartBar = c3.generate({
+        bindto: "#chart--line",
+        title: {
+          text: title
+        },
+        data: {
+          x: "date",
+          xFormat: "%m/%d/%Y",
+          columns: [
+            ["date", ...dates],
+            ["確診數", ...totalCounts],
+            ["死亡", ...deathCounts]
+          ],
+          axes: {
+            確診數: "y"
+          }
+        },
+        axis: {
+          x: {
+            type: "timeseries",
+            tick: {
+              format: "%m-%d"
+            }
+          }
+        }
+      });
+    });
+  $("#btn-open").click();
+}
 
 let otherCounts = 0;
 let taiwanCounts = 0;
@@ -158,21 +231,34 @@ axios
           }
         }
       });
+
+      const selectOptions = [];
+
       resCountry.data
+
+        .map(elm => {
+          selectOptions.push({
+            id: modifyCountryName(elm.country).toLowerCase(),
+            text: modifyCountryName(elm.country),
+            // selected: modifyCountryName(elm.country) === "Taiwan",
+            value: modifyCountryParam(elm.country),
+            lng: elm.lng,
+            lat: elm.lat
+          });
+          return [
+            elm.country,
+            elm.total_confirmed,
+            "確診",
+            `${elm.lat} ${elm.lng}`
+          ];
+        })
         .filter(
           elm =>
-            elm.country !== "China" &&
-            elm.country !== "Hong Kong" &&
-            elm.country !== "Taiwan*" &&
-            elm.country !== "N/A"
+            elm[0] !== "China" &&
+            elm[0] !== "Hong Kong" &&
+            elm[0] !== "Taiwan*" &&
+            elm[0] !== "N/A"
         )
-        .map(elm => [
-          elm.country,
-          elm.total_confirmed,
-          "確診",
-          `${elm.lat} ${elm.lng}`,
-          elm.country
-        ])
         .concat(
           resChina.data
             .filter(elm => elm.state !== "N/A")
@@ -180,8 +266,7 @@ axios
               elm.state,
               elm.total_confirmed,
               "確診",
-              `${elm.lat} ${elm.lng}`,
-              elm.state
+              `${elm.lat} ${elm.lng}`
             ])
         )
         .concat(
@@ -191,15 +276,14 @@ axios
               elm.location,
               elm.count,
               "確診",
-              `${elm.lat} ${elm.lng}`,
-              elm.location
+              `${elm.lat} ${elm.lng}`
             ])
         )
         .forEach(elm => {
           let nowCount = parseInt(elm[1]);
           const tempMarker = L.marker(elm[3].split(" "), {
             icon: virusIcon
-          }).bindPopup(`${elm[4]}確診：${elm[1]}`);
+          }).bindPopup(`${elm[0]}確診：${elm[1]}`);
           cityMarkers.push(tempMarker);
           while (nowCount--) {
             const arrayLatLng = elm[3].split(" ");
@@ -217,7 +301,40 @@ axios
           }
         });
 
+      $("#select-country")
+        .select2({
+          data: selectOptions,
+          placeholder: "選擇國家",
+          allowClear: true
+        })
+        .on("select2:select", function(e) {
+          var data = e.params.data;
+          map.panTo([data.lat, data.lng], { animate: true });
+          generateChartCountry(data.text, data.value);
+          router.navigateTo(
+            `country/${data.value
+              .toString()
+              .toLowerCase()
+              .replace(" ", "-")}`
+          );
+        });
+
       generateChart(resChart);
+      // generateChartCountry("Taiwan", "taiwan*");
+      router
+        .add("", function() {
+          generateChartCountry("Taiwan", "taiwan*");
+        })
+        .add("country/(:any)", function(country) {
+          const nowCountry = country.replace("-", " ");
+          $("#select-country").val(nowCountry);
+
+          // TODO: panto
+          // const { lat, lng } = $("#select-country option:selected");
+          // map.panTo([lat, lng], { animate: true });
+          generateChartCountry(nowCountry, modifyCountryParam(nowCountry));
+        })
+        .check();
 
       const cities = L.layerGroup(cityMarkers).addTo(map);
       const heat = L.heatLayer(addressPoints, {

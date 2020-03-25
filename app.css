@@ -73,6 +73,15 @@
   right: 10px;
 }
 
+#select-country,
+.select2-container {
+  z-index: 1;
+  width: 180px !important;
+  position: fixed;
+  top: 10px;
+  right: 120px;
+}
+
 #btn-close {
   position: fixed;
   font-size: 20px;

@@ -2,7 +2,8 @@
   "name": "virus-and-where-to-find-them",
   "dependencies": {
     "axios": "^0.19.2",
-    "axios-cache-adapter": "^2.5.0"
+    "axios-cache-adapter": "^2.5.0",
+    "vanilla-router": "^1.2.8"
   },
   "devDependencies": {
     "parcel": "^1.12.4",
