@@ -124,7 +124,11 @@ function generateChart(resChart) {
           format: "%m-%d"
         }
       },
+      y: {
+        min: 0
+      },
       y2: {
+        min: 0,
         show: true
       }
     }
@@ -164,10 +168,7 @@ function generateChartCountry(title, country) {
             ["date", ...dates],
             ["確診數", ...totalCounts],
             ["死亡", ...deathCounts]
-          ],
-          axes: {
-            確診數: "y"
-          }
+          ]
         },
         axis: {
           x: {
@@ -175,6 +176,9 @@ function generateChartCountry(title, country) {
             tick: {
               format: "%m-%d"
             }
+          },
+          y: {
+            min: 0
           }
         }
       });
@@ -311,12 +315,17 @@ axios
           var data = e.params.data;
           map.panTo([data.lat, data.lng], { animate: true });
           generateChartCountry(data.text, data.value);
-          router.navigateTo(
-            `country/${data.value
-              .toString()
-              .toLowerCase()
-              .replace(" ", "-")}`
-          );
+          if (data.text === "Taiwan") {
+            $("#chart--dounut").css("zIndex", 1);
+          } else {
+            $("#chart--dounut").css("zIndex", -1);
+          }
+          // router.navigateTo(
+          //   `country/${data.value
+          //     .toString()
+          //     .toLowerCase()
+          //     .replace(" ", "-")}`
+          // );
         });
 
       generateChart(resChart);
@@ -327,7 +336,9 @@ axios
         })
         .add("country/(:any)", function(country) {
           const nowCountry = country.replace("-", " ");
-          $("#select-country").val(nowCountry);
+          $("#select-country")
+            .val(nowCountry)
+            .trigger("change");
 
           // TODO: panto
           // const { lat, lng } = $("#select-country option:selected");
