@@ -152,6 +152,12 @@ axios
           placeholder: "國家 (確診數)",
           allowClear: true
         })
+        .on("select2:open", function() {
+          $("#chart--bar").css("display", "none");
+        })
+        .on("select2:close", function() {
+          $("#chart--bar").css("display", "initial");
+        })
         .on("select2:select", function(e) {
           var data = e.params.data;
           map.panTo([data.lat, data.lng]);

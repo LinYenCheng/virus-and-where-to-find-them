@@ -73,7 +73,7 @@
   top: 10px;
   right: 10px;
   border-radius: 5px;
-  padding: 2px 15px;
+  padding: 5px 5px;
 }
 
 #select-country,
@@ -82,17 +82,22 @@
   position: fixed;
 
   top: 10px;
-  right: 120px;
+  right: 100px;
 }
 
 select {
-  height: 30px;
-  line-height: 30px;
+  height: 35px;
+  line-height: 35px;
   background: #f4f4f4;
 }
 
 .select2-container {
   z-index: 1001;
+}
+
+.select2-results__option {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 .loading__overlay {
