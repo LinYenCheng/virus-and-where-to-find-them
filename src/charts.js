@@ -80,14 +80,18 @@ function generateChartCountry({ api, title, paramCountry }) {
       const dates = [];
       const totalCounts = [];
       const deathCounts = [];
+      const diffConfirmCounts = [];
+      let prevValue = 0;
       const {
         data: {
           timeline: { cases, deaths }
         }
       } = resChart;
       for (let [key, value] of Object.entries(cases)) {
-        dates.push(key);
+        dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
         totalCounts.push(value);
+        diffConfirmCounts.push(value - prevValue);
+        prevValue = value;
       }
 
       for (let [key, value] of Object.entries(deaths)) {
@@ -96,16 +100,25 @@ function generateChartCountry({ api, title, paramCountry }) {
       const chartBar = c3.generate({
         bindto: "#chart--line",
         title: {
-          text: title
+          text: `${title}  
+          死亡:${(
+            (deathCounts[deathCounts.length - 1] * 100) /
+            totalCounts[totalCounts.length - 1]
+          ).toFixed(2)}%`
         },
         data: {
           x: "date",
-          xFormat: "%m/%d/%Y",
+          xFormat: "%Y-%m-%d",
           columns: [
             ["date", ...dates],
             ["確診數", ...totalCounts],
-            ["死亡", ...deathCounts]
-          ]
+            ["死亡", ...deathCounts],
+            ["單日增加", ...diffConfirmCounts]
+          ],
+          axes: {
+            確診數: "y",
+            單日增加: "y2"
+          }
         },
         axis: {
           x: {
@@ -116,6 +129,10 @@ function generateChartCountry({ api, title, paramCountry }) {
           },
           y: {
             min: 0
+          },
+          y2: {
+            min: 0,
+            show: true
           }
         }
       });
