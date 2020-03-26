@@ -2,12 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-## [1.2.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.2.0) (2020-03-20)
+## [1.2.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.2.0) (2020-03-26)
 
 
 ### Features
 
+* add cache ([0a42bbd](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/0a42bbd167dc928d18bc66f47221ea15e798ba15))
+* add loading spinner and refactor ([0142660](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/0142660320f02c25cd0577f52adb8302c234299f))
+* use cdc's json ([6551924](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/655192499988c884a86744efd59a19439a23e97b))
+* 加入各國資料 ([27d5df2](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/27d5df22c80a3cc93b6808f30be9542bf3959abb))
 * 加入增加數量 ([ba67c8a](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/ba67c8a20dc91d5389aee11d8e98af9ba67bb8f6))
+* 增加台灣資料 ([320a064](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/320a064208d05df5cb556dcc8def2fa9cc489cd8))
 * 增加圖表 ([2dfb2f7](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/2dfb2f77f295ff95617e4aff7f2f8ef0a5022eda))
 
 
@@ -17,6 +22,9 @@ All notable changes to this project will be documented in this file. See [standa
 * data ([7ddf449](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/7ddf44998cc3a1b35253061a100c77445bb9d0b2))
 * dounut chart rwd ([6ff0c67](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/6ff0c678c99dace05480e2d7d77e67a56c53366f))
 * filter N/A ([5127c54](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/5127c5484a1712bf5f9bad3fabb3a3a9fa3f4654))
+* gis ([aaf8379](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/aaf8379fa1f8e40a52f14ee88e2168ebe904c313))
+* remove retry ([84b9c6c](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/84b9c6c1927d8540ea928ab1d9371b78db59178c))
+* update meta ([729b426](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/729b42610541533dd14219b9c4d792bf251890de))
 
 ### [1.1.2](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.1...v1.1.2) (2020-03-04)
 
