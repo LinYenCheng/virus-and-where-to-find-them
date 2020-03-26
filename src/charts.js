@@ -50,6 +50,9 @@ function generateChart(resChart) {
       }
     }
   });
+  window.addEventListener("resize", () => {
+    chart.resize();
+  });
 }
 
 function generateDounutChartTaiwan({ otherCounts, taiwanCounts }) {
@@ -136,7 +139,11 @@ function generateChartCountry({ api, title, paramCountry }) {
           }
         }
       });
+      window.addEventListener("resize", () => {
+        chartBar.resize();
+      });
     });
+
   $("#btn-open").click();
 }
 
