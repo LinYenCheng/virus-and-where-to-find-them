@@ -154,7 +154,7 @@ axios
         })
         .on("select2:select", function(e) {
           var data = e.params.data;
-          map.panTo([data.lat, data.lng], { animate: true });
+          map.panTo([data.lat, data.lng]);
           generateChartCountry({
             api,
             title: data.paramCountry,
