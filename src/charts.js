@@ -114,9 +114,9 @@ function generateChartCountry({ api, title, paramCountry }) {
           xFormat: "%Y-%m-%d",
           columns: [
             ["date", ...dates],
+            ["單日增加", ...diffConfirmCounts],
             ["確診數", ...totalCounts],
-            ["死亡", ...deathCounts],
-            ["單日增加", ...diffConfirmCounts]
+            ["死亡", ...deathCounts]
           ],
           axes: {
             確診數: "y",
