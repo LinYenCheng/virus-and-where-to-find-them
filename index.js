@@ -40,7 +40,8 @@ const cache = setupCache({
 
 // Create `axios` instance passing the newly created `cache.adapter`
 const api = axios.create({
-  adapter: cache.adapter
+  adapter: cache.adapter,
+  timeout: 9000
 });
 
 axios
@@ -48,7 +49,11 @@ axios
     api.get(
       "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json"
     ),
-    api.get("https://api.coronatracker.com/analytics/country"),
+    api.get("https://api.coronatracker.com/analytics/country").catch(error => {
+      alert("資料錯誤");
+      $(".loading__overlay").css("zIndex", -1);
+      $(".loading__content").css("zIndex", -1);
+    }),
     api.get("https://api.coronatracker.com/v2/analytics/area?limit=100"),
     api.get("https://api.coronatracker.com/v2/stats/diff/global")
   ])
