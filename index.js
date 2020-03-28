@@ -1,5 +1,3 @@
-import axios from "axios";
-import { setupCache } from "axios-cache-adapter";
 import router from "./src/router.js";
 import {
   generateChart,
@@ -13,6 +11,11 @@ import {
   modifyCountryParam
 } from "./src/util.js";
 import srcVirus from "./virus.png";
+
+import jsonChina from "./data/china.json";
+import jsonCountry from "./data/country.json";
+import jsonChart from "./data/global.json";
+import jsonTaiwan from "./data/taiwan.json";
 
 let addressPoints = [];
 let cityMarkers = [];
@@ -32,32 +35,15 @@ const virusIcon = L.icon({
   popupAnchor: [-10, -25] // point from which the popup should open relative to the iconAnchor
 });
 
-// Create `axios-cache-adapter` instance
-const cache = setupCache({
-  readHeaders: true,
-  maxAge: 15 * 60 * 1000
-});
-
-// Create `axios` instance passing the newly created `cache.adapter`
-const api = axios.create({
-  adapter: cache.adapter,
-  timeout: 9000
-});
-
-function generateInformation(
-  resTaiwan,
-  resCountry = { data: [] },
-  resChina = { data: [] },
-  resChart = { data: [] }
-) {
+function generateInformation() {
   let otherCounts = 0;
   let taiwanCounts = 0;
   const selectOptions = [];
-  const countries = resCountry.data;
+  const countries = jsonCountry;
 
   $(".loading__overlay").css("zIndex", -1);
   $(".loading__content").css("zIndex", -1);
-  $(resTaiwan.data).each(function(k, v) {
+  $(jsonTaiwan).each(function(k, v) {
     const nowIndex = locations.findIndex(elm => elm.location === v["縣市"]);
     if (v["是否為境外移入"] === "是") {
       otherCounts += 1;
@@ -101,7 +87,7 @@ function generateInformation(
         elm[0] !== "N/A"
     )
     .concat(
-      resChina.data
+      jsonChina
         .filter(elm => elm.state !== "N/A")
         .map(elm => [
           elm.state,
@@ -153,7 +139,6 @@ function generateInformation(
       var data = e.params.data;
       map.panTo([data.lat, data.lng]);
       generateChartCountry({
-        api,
         title: data.paramCountry,
         paramCountry: modifyCountryParam(data.paramCountry)
       });
@@ -170,8 +155,8 @@ function generateInformation(
       );
     });
 
-  generateChart(resChart);
-  generateChartCountry({ api, title: "Taiwan", paramCountry: "taiwan*" });
+  generateChart({ data: jsonChart });
+  generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
   generateDounutChartTaiwan({
     otherCounts,
     taiwanCounts
@@ -180,7 +165,6 @@ function generateInformation(
   router
     .add("", function() {
       generateChartCountry({
-        api,
         title: "Taiwan",
         paramCountry: "taiwan*"
       });
@@ -225,29 +209,11 @@ function generateInformation(
       }
     }
   });
+  $(".loading__overlay").css("zIndex", -1);
+  $(".loading__content").css("zIndex", -1);
 }
 
-axios
-  .all([
-    api.get(
-      "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json"
-    ),
-    api.get("https://api.coronatracker.com/analytics/country").catch(error => {
-      alert("資料錯誤");
-      api
-        .get(
-          "https://cors-anywhere.herokuapp.com/https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json"
-        )
-        .then(resTaiwan => {
-          generateInformation(resTaiwan);
-          $(".loading__overlay").css("zIndex", -1);
-          $(".loading__content").css("zIndex", -1);
-        });
-    }),
-    api.get("https://api.coronatracker.com/v2/analytics/area?limit=100"),
-    api.get("https://api.coronatracker.com/v2/stats/diff/global")
-  ])
-  .then(axios.spread(generateInformation));
+generateInformation();
 
 $("#btn-open").click(function() {
   $("#modal").css("opacity", 1);

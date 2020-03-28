@@ -1,3 +1,17 @@
+import axios from "axios";
+import { setupCache } from "axios-cache-adapter";
+// Create `axios-cache-adapter` instance
+const cache = setupCache({
+  readHeaders: true,
+  maxAge: 15 * 60 * 1000
+});
+
+// Create `axios` instance passing the newly created `cache.adapter`
+const api = axios.create({
+  adapter: cache.adapter,
+  timeout: 9000
+});
+
 function generateChart(resChart) {
   const dates = [];
   const diffConfirmCounts = [];
@@ -79,7 +93,7 @@ function generateDounutChartTaiwan({ otherCounts, taiwanCounts }) {
   });
 }
 
-function generateChartCountry({ api, title, paramCountry }) {
+function generateChartCountry({ title, paramCountry }) {
   api
     .get(`https://corona.lmao.ninja/v2/historical/${paramCountry}`)
     .then(resChart => {

@@ -1,0 +1,38 @@
+name: Node CI
+
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: "* */8 * * *"
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 12.x
+    steps:
+      - uses: actions/checkout@v1
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: generate new build
+        run: |
+          npm install
+          npm run generate
+          npm run build
+      - name: push
+        uses: github-actions-x/commit@v2.5
+        with:
+          github-token: ${{ secrets.TOKEN }}
+          push-branch: "master"
+          commit-message: "publish with new data"
+          force-add: "true"
+          files: docs/
+          name: Lin Yen Cheng
+          email: linyencheng.tw@gmail.com
