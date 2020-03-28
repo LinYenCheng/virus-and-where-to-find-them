@@ -1,13 +1,24 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>病毒與牠們的產地</title>
+    <title>前端三分鐘-武漢肺炎疫情地圖 (病毒與牠們的產地)</title>
+    <meta
+      name="description"
+      content="病毒與牠們的產地-透過熱區圖顯示地理分布、折線圖顯示確診增加趨勢"
+    />
+    <meta name="keyword" content="前端三分鐘, 武漢肺炎, 疫情地圖" />
     <meta charset="utf-8" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <meta property="og:site_name" content="前端三分鐘" />
-    <meta property="og:title" content="病毒與牠們的產地" />
+    <meta
+      property="og:title"
+      content="前端三分鐘-武漢肺炎疫情地圖 (病毒與牠們的產地)"
+    />
     <meta property="og:image" content="/meta-heat.jpg" />
-    <meta property="og:description" content="使用熱區圖顯示病毒與牠們的產地" />
+    <meta
+      property="og:description"
+      content="病毒與牠們的產地-透過熱區圖顯示地理分布、折線圖顯示確診增加趨勢"
+    />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link
       rel="stylesheet"
@@ -18,7 +29,7 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"
     />
     <link
-      href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css"
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/app.css" />
@@ -44,13 +55,14 @@
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
-    <script src="https://leaflet.github.io/Leaflet.heat/dist/leaflet-heat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.23/dayjs.min.js"></script>
 
     <script src="./index.js"></script>
+    <script defer src="./src/ga.js"></script>
   </body>
 </html>

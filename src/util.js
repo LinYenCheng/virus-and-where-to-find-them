@@ -200,21 +200,24 @@ function modifyCountryName(name) {
 }
 
 function modifyCountryParam(name) {
-  let finalName = name;
+  let finalName = name.toLowerCase();
   switch (name) {
     case "taiwan":
       finalName = "taiwan*";
       break;
-    case "United Arab Emirates":
+    case "united arab emirates":
       finalName = "UAE";
       break;
-    case "Korea":
+    case "korea, south":
       finalName = "S. Korea";
       break;
-    case "United Kingdom":
+    case "united kingdom":
       finalName = "UK";
       break;
-    case "Bosnia and Herzegovina":
+    case "us":
+      finalName = "USA";
+      break;
+    case "bosnia and herzegovina":
       finalName = "Bosnia";
       break;
 

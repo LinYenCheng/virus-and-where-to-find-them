@@ -2,7 +2,6 @@
   "name": "virus-and-where-to-find-them",
   "dependencies": {
     "axios": "^0.19.2",
-    "axios-cache-adapter": "^2.5.0",
     "vanilla-router": "^1.2.8"
   },
   "devDependencies": {
@@ -15,7 +14,7 @@
     "build": "parcel build  index.html --no-content-hash --out-dir docs --public-url ./",
     "release": "standard-version"
   },
-  "description": "看到了 [CNA][cna] 新聞網有做了即時資訊更新。",
+  "description": "武漢肺炎疫情地圖",
   "version": "1.3.0",
   "main": "index.js",
   "directories": {
@@ -25,10 +24,10 @@
     "type": "git",
     "url": "git+https://github.com/LinYenCheng/virus-and-where-to-find-them.git"
   },
-  "author": "",
+  "author": "Lin Yen Cheng",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/LinYenCheng/virus-and-where-to-find-them/issues"
   },
-  "homepage": "https://github.com/LinYenCheng/virus-and-where-to-find-them#readme"
+  "homepage": "https://linyencheng.github.io/virus-and-where-to-find-them/"
 }

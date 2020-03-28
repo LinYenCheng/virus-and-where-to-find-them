@@ -17,11 +17,17 @@ const instance = axios.create({
 instance.get("analytics/country").then(res => {
   writeResToJOSON(res, "country");
 });
-instance.get("v2/analytics/area?limit=100").then(res => {
-  writeResToJOSON(res, "china");
+instance.get("v2/analytics/area?limit=500").then(res => {
+  writeResToJOSON(res, "area");
 });
 instance.get("v2/stats/diff/global").then(res => {
   writeResToJOSON(res, "global");
+});
+axios.get("https://corona.lmao.ninja/v2/historical/").then(res => {
+  writeResToJOSON(res, "historical");
+});
+axios.get("https://corona.lmao.ninja/v2/historical/china").then(res => {
+  writeResToJOSON(res, "historicalChina");
 });
 axios
   .get("https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json")

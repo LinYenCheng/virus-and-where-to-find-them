@@ -12,7 +12,7 @@ import {
 } from "./src/util.js";
 import srcVirus from "./virus.png";
 
-import jsonChina from "./data/china.json";
+import jsonArea from "./data/area.json";
 import jsonCountry from "./data/country.json";
 import jsonChart from "./data/global.json";
 import jsonTaiwan from "./data/taiwan.json";
@@ -67,7 +67,6 @@ function generateInformation() {
       selectOptions.push({
         id: modifyCountryName(elm.country).toLowerCase(),
         text: `${modifyCountryName(elm.country)} (${elm.total_confirmed})`,
-        // selected: modifyCountryName(elm.country) === "Taiwan",
         paramCountry: modifyCountryParam(elm.country),
         lng: elm.lng,
         lat: elm.lat
@@ -87,7 +86,7 @@ function generateInformation() {
         elm[0] !== "N/A"
     )
     .concat(
-      jsonChina
+      jsonArea
         .filter(elm => elm.state !== "N/A")
         .map(elm => [
           elm.state,
@@ -156,7 +155,6 @@ function generateInformation() {
     });
 
   generateChart({ data: jsonChart });
-  generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
   generateDounutChartTaiwan({
     otherCounts,
     taiwanCounts
