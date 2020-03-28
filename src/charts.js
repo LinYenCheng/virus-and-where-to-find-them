@@ -4,14 +4,17 @@ function generateChart(resChart) {
   const confirmPatientCounts = [];
   const deathCounts = [];
   const recoverCounts = [];
+  if (!resChart.data[0]) return;
   const { todayConfirmed, todayDeath, todayRecover } = resChart.data[0];
 
   resChart.data.forEach(elm => {
-    dates.push(elm.ytd.toString().substring(0, 10));
-    diffConfirmCounts.push(elm.diffConfirmed);
-    confirmPatientCounts.push(elm.todayConfirmed);
-    deathCounts.push(elm.todayDeath);
-    recoverCounts.push(elm.todayRecover);
+    if (elm) {
+      dates.push(elm.ytd.toString().substring(0, 10));
+      diffConfirmCounts.push(elm.diffConfirmed);
+      confirmPatientCounts.push(elm.todayConfirmed);
+      deathCounts.push(elm.todayDeath);
+      recoverCounts.push(elm.todayRecover);
+    }
   });
   const chart = c3.generate({
     bindto: "#chart--bar",
