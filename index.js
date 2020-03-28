@@ -1,21 +1,21 @@
 import router from "./src/router.js";
 import {
-  generateChart,
   generateDounutChartTaiwan,
-  generateChartCountry
+  generateChartGlobal,
+  generateChartCountry,
 } from "./src/charts.js";
+
 import {
   locations,
   getRandomAround,
   modifyCountryName,
-  modifyCountryParam
+  modifyCountryParam,
 } from "./src/util.js";
+
 import srcVirus from "./virus.png";
 
-import jsonChina from "./data/china.json";
-import jsonCountry from "./data/country.json";
-import jsonChart from "./data/global.json";
 import jsonTaiwan from "./data/taiwan.json";
+import jsonFinalTimeSeriesData from "./data/finalTimeSeriesData.json";
 
 let addressPoints = [];
 let cityMarkers = [];
@@ -25,26 +25,26 @@ const tiles = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
     attribution:
-      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+      '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
   }
 ).addTo(map);
 const virusIcon = L.icon({
   iconUrl: srcVirus,
   iconSize: [25, 25], // size of the icon
   iconAnchor: [22, 22], // point of the icon which will correspond to marker's location
-  popupAnchor: [-10, -25] // point from which the popup should open relative to the iconAnchor
+  popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
 });
 
 function generateInformation() {
   let otherCounts = 0;
   let taiwanCounts = 0;
   const selectOptions = [];
-  const countries = jsonCountry;
+  const countries = jsonFinalTimeSeriesData;
 
   $(".loading__overlay").css("zIndex", -1);
   $(".loading__content").css("zIndex", -1);
-  $(jsonTaiwan).each(function(k, v) {
-    const nowIndex = locations.findIndex(elm => elm.location === v["縣市"]);
+  $(jsonTaiwan).each(function (k, v) {
+    const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
     if (v["是否為境外移入"] === "是") {
       otherCounts += 1;
     } else {
@@ -59,53 +59,44 @@ function generateInformation() {
     }
   });
 
-  countries.sort(function(a, b) {
-    return a && b && parseInt(b.total_confirmed) - parseInt(a.total_confirmed);
+  countries.sort(function (a, b) {
+    return a && b && parseInt(b.confirmed) - parseInt(a.confirmed);
   });
   countries
-    .map(elm => {
+    .filter((elm) => elm.lat)
+    .map((elm) => {
+      const tempName = elm.region;
       selectOptions.push({
-        id: modifyCountryName(elm.country).toLowerCase(),
-        text: `${modifyCountryName(elm.country)} (${elm.total_confirmed})`,
-        // selected: modifyCountryName(elm.country) === "Taiwan",
-        paramCountry: modifyCountryParam(elm.country),
-        lng: elm.lng,
-        lat: elm.lat
+        id: modifyCountryName(tempName).toLowerCase(),
+        text: `${modifyCountryName(tempName)} (${elm.confirmed})`,
+        paramCountry: tempName,
+        lng: parseInt(elm.lng),
+        lat: parseInt(elm.lat),
       });
-      return [
-        elm.country,
-        elm.total_confirmed,
-        "確診",
-        `${elm.lat} ${elm.lng}`
-      ];
+      return [tempName, elm.confirmed, "確診", `${elm.lat} ${elm.lng}`];
     })
     .filter(
-      elm =>
-        elm[0] !== "China" &&
-        elm[0] !== "Hong Kong" &&
-        elm[0] !== "Taiwan*" &&
-        elm[0] !== "N/A"
-    )
-    .concat(
-      jsonChina
-        .filter(elm => elm.state !== "N/A")
-        .map(elm => [
-          elm.state,
-          elm.total_confirmed,
-          "確診",
-          `${elm.lat} ${elm.lng}`
-        ])
+      (elm) =>
+        // elm[0] !== "China" &&
+        // elm[0] !== "Hong Kong" &&
+        elm[0] !== "Taiwan*" && elm[0] !== "N/A"
     )
     .concat(
       locations
-        .filter(elm => elm.count)
-        .map(elm => [elm.location, elm.count, "確診", `${elm.lat} ${elm.lng}`])
+        .filter((elm) => elm.count)
+        .map((elm) => [
+          elm.location,
+          elm.count,
+          "確診",
+          `${elm.lat} ${elm.lng}`,
+        ])
     )
-    .forEach(elm => {
+    .forEach((elm) => {
       let nowCount = parseInt(elm[1]);
       const tempMarker = L.marker(elm[3].split(" "), {
-        icon: virusIcon
+        icon: virusIcon,
       }).bindPopup(`${elm[0]}確診：${elm[1]}`);
+
       cityMarkers.push(tempMarker);
       while (nowCount--) {
         const arrayLatLng = elm[3].split(" ");
@@ -126,50 +117,48 @@ function generateInformation() {
   $("#select-country")
     .select2({
       data: selectOptions,
-      placeholder: "國家 (確診數)",
-      allowClear: true
+      placeholder: "區域 (確診數)",
+      allowClear: true,
     })
-    .on("select2:open", function() {
+    .on("select2:open", function () {
       $("#chart--bar").css("display", "none");
     })
-    .on("select2:close", function() {
+    .on("select2:close", function () {
       $("#chart--bar").css("display", "initial");
     })
-    .on("select2:select", function(e) {
-      var data = e.params.data;
-      map.panTo([data.lat, data.lng]);
-      generateChartCountry({
-        title: data.paramCountry,
-        paramCountry: modifyCountryParam(data.paramCountry)
-      });
-      if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
-        $("#chart--dounut").css("zIndex", 1);
-      } else {
-        $("#chart--dounut").css("zIndex", -1);
+    .on("select2:select", function (e) {
+      var { data } = e.params;
+      if (data) {
+        map.panTo([data.lat, data.lng]);
+        generateChartCountry({
+          title: data.paramCountry,
+          paramCountry: modifyCountryParam(data.paramCountry),
+        });
+        if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
+          $("#chart--dounut").css("zIndex", 1);
+        } else {
+          $("#chart--dounut").css("zIndex", -1);
+        }
+        router.navigateTo(
+          `country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`
+        );
       }
-      router.navigateTo(
-        `country/${data.id
-          .toString()
-          .toLowerCase()
-          .replace(/ /g, "-")}`
-      );
     });
 
-  generateChart({ data: jsonChart });
-  generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
+  generateChartGlobal();
   generateDounutChartTaiwan({
     otherCounts,
-    taiwanCounts
+    taiwanCounts,
   });
 
   router
-    .add("", function() {
+    .add("", function () {
       generateChartCountry({
         title: "Taiwan",
-        paramCountry: "taiwan*"
+        paramCountry: "taiwan*",
       });
     })
-    .add("country/(:any)", function(country) {
+    .add("country/(:any)", function (country) {
       const nowCountry = country.replace(/-/g, " ").toLocaleLowerCase();
 
       $("#select-country")
@@ -180,11 +169,11 @@ function generateInformation() {
           params: {
             data:
               selectOptions[
-                selectOptions.findIndex(elm => {
+                selectOptions.findIndex((elm) => {
                   return elm.id.toLowerCase() === nowCountry;
                 })
-              ]
-          }
+              ],
+          },
         });
     })
     .check();
@@ -193,10 +182,10 @@ function generateInformation() {
   const heat = L.heatLayer(addressPoints, {
     radius: 25,
     blur: 20,
-    minOpacity: 0.5
+    minOpacity: 0.5,
   }).addTo(map);
 
-  map.on("zoomend", function() {
+  map.on("zoomend", function () {
     const zoomLevel = map.getZoom();
     if (zoomLevel < 5) {
       map.removeLayer(cities);
@@ -215,13 +204,13 @@ function generateInformation() {
 
 generateInformation();
 
-$("#btn-open").click(function() {
+$("#btn-open").click(function () {
   $("#modal").css("opacity", 1);
   $("#modal").css("zIndex", 1000);
   $("#btn-open").css("zIndex", -1);
 });
 
-$("#btn-close").click(function() {
+$("#btn-close").click(function () {
   $("#modal").css("opacity", 0);
   $("#modal").css("zIndex", -1);
   $("#btn-open").css("zIndex", 2);
