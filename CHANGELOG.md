@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.2.0...v1.3.0) (2020-03-28)
+
+
+### Features
+
+* auto generate new data in github action ([7604594](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/76045948d3d88249b8c2791ea6bddd1bf58a8790))
+* 每日增加量 ([ed8bde6](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/ed8bde6816de9203cbcb04fd8930a1de90aa0d24))
+
+
+### Bug Fixes
+
+* add timeout error ([04b00e8](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/04b00e867735657d699b47b2be704e3d4e8d8d21))
+* auto resize chart ([b91cb92](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/b91cb920645587fcb95a42baf7162ce616f2447f))
+* disable animation ([798f0ab](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/798f0ab777d8099ec889753349e587636c7d9c67))
+* show taiwan only ([cefc6c2](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/cefc6c247445d1e3218aa811c1bf8a01fbe0862f))
+* ux of mobile ([525892d](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/525892d000b397f4d3fd461ad6d728ff36ba75e3))
+* 顏色統一 ([13147ee](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/13147ee79a3f8798f937a97b56a532e56b142165))
+
 ## [1.2.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.1.2...v1.2.0) (2020-03-26)
 
 

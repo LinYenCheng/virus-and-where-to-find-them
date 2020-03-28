@@ -16,7 +16,7 @@
     "release": "standard-version"
   },
   "description": "看到了 [CNA][cna] 新聞網有做了即時資訊更新。",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "main": "index.js",
   "directories": {
     "doc": "docs"

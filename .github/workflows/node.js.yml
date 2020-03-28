@@ -3,7 +3,7 @@ name: Node CI
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "* */8 * * *"
+    - cron: "1 */8 * * *"
   push:
     branches:
       - master
@@ -34,5 +34,5 @@ jobs:
           commit-message: "publish with new data"
           force-add: "true"
           files: docs/
-          name: Lin Yen Cheng
-          email: linyencheng.tw@gmail.com
+          name: LinYenCheng
+          email: breaking0215@hotmail.com
