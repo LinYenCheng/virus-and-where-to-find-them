@@ -11,7 +11,7 @@
   "scripts": {
     "start": "parcel --out-dir dev index.html ",
     "generate": "node ./generateJSON.js",
-    "build": "parcel build  index.html --no-content-hash --out-dir docs --public-url ./",
+    "build": "parcel build  index.html --no-content-hash --no-source-maps --out-dir docs --public-url ./",
     "release": "standard-version"
   },
   "description": "武漢肺炎疫情地圖",
