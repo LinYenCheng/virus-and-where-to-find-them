@@ -13,7 +13,7 @@ function generateChart(resChart) {
 
   resChart.data.forEach(elm => {
     if (elm) {
-      dates.push(elm.ytd.toString().substring(0, 10));
+      dates.push(elm.today.toString().substring(0, 10));
       diffConfirmCounts.push(elm.diffConfirmed);
       confirmPatientCounts.push(elm.todayConfirmed);
       deathCounts.push(elm.todayDeath);
