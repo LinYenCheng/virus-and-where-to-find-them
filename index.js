@@ -1,21 +1,21 @@
 import router from "./src/router.js";
 import {
-  generateChart,
   generateDounutChartTaiwan,
+  generateChartGlobal,
   generateChartCountry,
 } from "./src/charts.js";
+
 import {
   locations,
   getRandomAround,
   modifyCountryName,
   modifyCountryParam,
 } from "./src/util.js";
+
 import srcVirus from "./virus.png";
 
-import jsonArea from "./data/area.json";
-import jsonCountry from "./data/country.json";
-import jsonChart from "./data/global.json";
 import jsonTaiwan from "./data/taiwan.json";
+import jsonFinalTimeSeriesData from "./data/finalTimeSeriesData.json";
 
 let addressPoints = [];
 let cityMarkers = [];
@@ -39,7 +39,7 @@ function generateInformation() {
   let otherCounts = 0;
   let taiwanCounts = 0;
   const selectOptions = [];
-  const countries = jsonCountry;
+  const countries = jsonFinalTimeSeriesData;
 
   $(".loading__overlay").css("zIndex", -1);
   $(".loading__content").css("zIndex", -1);
@@ -65,36 +65,21 @@ function generateInformation() {
   countries
     .filter((elm) => elm.lat)
     .map((elm) => {
+      const tempName = elm.region;
       selectOptions.push({
-        id: modifyCountryName(elm.countryName).toLowerCase(),
-        text: `${modifyCountryName(elm.countryName)} (${elm.confirmed})`,
-        paramCountry: modifyCountryParam(elm.countryName),
-        lng: elm.lng,
-        lat: elm.lat,
+        id: modifyCountryName(tempName).toLowerCase(),
+        text: `${modifyCountryName(tempName)} (${elm.confirmed})`,
+        paramCountry: tempName,
+        lng: parseInt(elm.lng),
+        lat: parseInt(elm.lat),
       });
-      return [
-        elm.country,
-        elm.total_confirmed,
-        "確診",
-        `${elm.lat} ${elm.lng}`,
-      ];
+      return [tempName, elm.confirmed, "確診", `${elm.lat} ${elm.lng}`];
     })
     .filter(
       (elm) =>
-        elm[0] !== "China" &&
-        elm[0] !== "Hong Kong" &&
-        elm[0] !== "Taiwan*" &&
-        elm[0] !== "N/A"
-    )
-    .concat(
-      jsonArea
-        .filter((elm) => elm.state !== "N/A")
-        .map((elm) => [
-          elm.state,
-          elm.total_confirmed,
-          "確診",
-          `${elm.lat} ${elm.lng}`,
-        ])
+        // elm[0] !== "China" &&
+        // elm[0] !== "Hong Kong" &&
+        elm[0] !== "Taiwan*" && elm[0] !== "N/A"
     )
     .concat(
       locations
@@ -132,7 +117,7 @@ function generateInformation() {
   $("#select-country")
     .select2({
       data: selectOptions,
-      placeholder: "國家 (確診數)",
+      placeholder: "區域 (確診數)",
       allowClear: true,
     })
     .on("select2:open", function () {
@@ -142,23 +127,25 @@ function generateInformation() {
       $("#chart--bar").css("display", "initial");
     })
     .on("select2:select", function (e) {
-      var data = e.params.data;
-      map.panTo([data.lat, data.lng]);
-      generateChartCountry({
-        title: data.paramCountry,
-        paramCountry: modifyCountryParam(data.paramCountry),
-      });
-      if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
-        $("#chart--dounut").css("zIndex", 1);
-      } else {
-        $("#chart--dounut").css("zIndex", -1);
+      var { data } = e.params;
+      if (data) {
+        map.panTo([data.lat, data.lng]);
+        generateChartCountry({
+          title: data.paramCountry,
+          paramCountry: modifyCountryParam(data.paramCountry),
+        });
+        if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
+          $("#chart--dounut").css("zIndex", 1);
+        } else {
+          $("#chart--dounut").css("zIndex", -1);
+        }
+        router.navigateTo(
+          `country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`
+        );
       }
-      router.navigateTo(
-        `country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`
-      );
     });
 
-  generateChart({ data: jsonChart });
+  generateChartGlobal();
   generateDounutChartTaiwan({
     otherCounts,
     taiwanCounts,
