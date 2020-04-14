@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.4.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.3.0...v1.4.0) (2020-04-14)
+
+
+### Features
+
+* **DataTable:** 新增 DataTable ([57d3bcd](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/57d3bcd46961c7f68ffbd796409953d3750d62d4))
+
+
+### Bug Fixes
+
+* change data source ([cb5886d](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/cb5886d89f3e0edb0f03bc0eaec25885dec76d43))
+
 ## [1.3.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.2.0...v1.3.0) (2020-03-28)
 
 
