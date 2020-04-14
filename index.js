@@ -16,6 +16,7 @@ import srcVirus from "./virus.png";
 
 import jsonTaiwan from "./data/taiwan.json";
 import jsonFinalTimeSeriesData from "./data/finalTimeSeriesData.json";
+import { generateGlobalTable, generateTaiwanTable } from "./src/dataTable.js";
 
 let addressPoints = [];
 let cityMarkers = [];
@@ -46,9 +47,9 @@ function generateInformation() {
   $(jsonTaiwan).each(function (k, v) {
     const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
     if (v["是否為境外移入"] === "是") {
-      otherCounts += 1;
+      otherCounts += parseInt(v["確定病例數"]);
     } else {
-      taiwanCounts += 1;
+      taiwanCounts += parseInt(v["確定病例數"]);
     }
     if (locations[nowIndex]) {
       if (locations[nowIndex].count) {
@@ -136,8 +137,10 @@ function generateInformation() {
         });
         if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
           $("#chart--dounut").css("zIndex", 1);
+          generateTaiwanTable();
         } else {
           $("#chart--dounut").css("zIndex", -1);
+          generateGlobalTable();
         }
         router.navigateTo(
           `country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`
@@ -150,6 +153,7 @@ function generateInformation() {
     otherCounts,
     taiwanCounts,
   });
+  generateTaiwanTable();
 
   router
     .add("", function () {
