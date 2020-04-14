@@ -21,7 +21,7 @@ import { generateGlobalTable, generateTaiwanTable } from "./src/dataTable.js";
 let addressPoints = [];
 let cityMarkers = [];
 
-const map = L.map("map").setView([23.5, 120.644], 5);
+const map = L.map("map").setView([23.5, 120.644], 6);
 const tiles = L.tileLayer(
   "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
   {
@@ -31,8 +31,8 @@ const tiles = L.tileLayer(
 ).addTo(map);
 const virusIcon = L.icon({
   iconUrl: srcVirus,
-  iconSize: [25, 25], // size of the icon
-  iconAnchor: [22, 22], // point of the icon which will correspond to marker's location
+  iconSize: [22, 22], // size of the icon
+  iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
   popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
 });
 
@@ -101,16 +101,18 @@ function generateInformation() {
       cityMarkers.push(tempMarker);
       while (nowCount--) {
         const arrayLatLng = elm[3].split(" ");
-        if (nowCount > 1000) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-        } else if (nowCount > 2000) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.5));
-        } else if (nowCount > 3000) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.2));
-        } else if (nowCount > 4000) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1.1));
-        } else {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
+        if (nowCount < 100) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount));
+        } else if (nowCount < 1000 && nowCount % 11 === 0) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+        } else if (nowCount < 5000 && nowCount % 53 === 0) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 25));
+        } else if (nowCount < 20000 && nowCount % 199 === 0) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 35));
+        } else if (nowCount > 40000 && nowCount % 599 === 0) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.8));
+        } else if (nowCount > 20000 && nowCount % 397 === 0) {
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1));
         }
       }
     });
@@ -184,17 +186,17 @@ function generateInformation() {
 
   const cities = L.layerGroup(cityMarkers).addTo(map);
   const heat = L.heatLayer(addressPoints, {
-    radius: 25,
-    blur: 20,
-    minOpacity: 0.5,
+    radius: 9,
+    blur: 12,
+    minOpacity: 0.6,
   }).addTo(map);
 
   map.on("zoomend", function () {
     const zoomLevel = map.getZoom();
-    if (zoomLevel < 5) {
+    if (zoomLevel < 6) {
       map.removeLayer(cities);
     }
-    if (zoomLevel >= 5) {
+    if (zoomLevel >= 6) {
       if (map.hasLayer(cities)) {
         console.log("layer already added");
       } else {
