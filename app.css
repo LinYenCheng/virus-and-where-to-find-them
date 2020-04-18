@@ -21,6 +21,10 @@
   z-index: 999;
 }
 
+#dataTable-global {
+  max-width: 45vw;
+}
+
 @media (max-width: 480px) {
   #dataTable {
     display: none;
