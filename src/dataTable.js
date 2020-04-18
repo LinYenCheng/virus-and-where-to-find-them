@@ -1,6 +1,21 @@
 import jsonTaiwan from "../data/taiwan.json";
 import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
 
+function getPercentHTMLString({ intChild, intParent }) {
+  let finalString = "";
+  if (intChild && intParent) {
+    const percent = ((intChild * 100) / intParent).toFixed(2);
+    if (percent > 5) {
+      finalString = `<span style="color: red;">+${percent}%</span>`;
+    } else {
+      finalString = `+${percent}%`;
+    }
+  } else {
+    finalString = "0%";
+  }
+  return finalString;
+}
+
 function generateGlobalTable() {
   let table = "";
   table += `<table id="dataTable-global" class="dataTable-virus display responsive nowrap">
@@ -8,7 +23,11 @@ function generateGlobalTable() {
             <tr>
                 <th>Country</th>
                 <th>Confirmed</th>
+                <th>NewCon.</th>
+                <th>NewCon.</th>
                 <th>Deaths</th>
+                <th>NewDea.</th>
+                <th>NewDea.</th>
                 <th>Recovered</th>
             </tr>
         </thead>
@@ -20,7 +39,17 @@ function generateGlobalTable() {
     table += `<tr>
     <td>${item.region}</td>
     <td>${item.confirmed}</td>
+    <td>${item.newConfirmed}</td>
+    <td>${getPercentHTMLString({
+      intChild: item.newConfirmed,
+      intParent: item.confirmed,
+    })}</td>
     <td>${item.deaths}</td>
+    <td>${item.newDeaths}</td>
+    <td>${getPercentHTMLString({
+      intChild: item.newDeaths,
+      intParent: item.deaths,
+    })}</td>
     <td>${item.recovered}</td>
     </tr>`;
   });

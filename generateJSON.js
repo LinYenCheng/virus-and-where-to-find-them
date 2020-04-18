@@ -61,6 +61,22 @@ function getLastData(obj) {
   );
 }
 
+function getLastDiffData(obj) {
+  const nowDate = new Date();
+  let intLastDiff = 0;
+
+  if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
+    intLastDiff =
+      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
+      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
+  } else {
+    intLastDiff =
+      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
+      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
+  }
+  return intLastDiff;
+}
+
 function sumObjectsByKey(...objs) {
   return objs.reduce((a, b) => {
     for (let k in b) {
@@ -142,6 +158,9 @@ axios
             confirmed: getLastData(cases),
             deaths: getLastData(deaths),
             recovered: getLastData(recovered),
+            newConfirmed: getLastDiffData(cases),
+            newDeaths: getLastDiffData(deaths),
+            newRecovered: getLastDiffData(recovered),
             timeline: {
               cases,
               deaths,
@@ -157,6 +176,9 @@ axios
             todayConfirmed: getLastData(sumCases),
             todayDeath: getLastData(sumDeaths),
             todayRecover: getLastData(sumRecovered),
+            newConfirmed: getLastDiffData(sumCases),
+            newDeaths: getLastDiffData(sumDeaths),
+            newRecovered: getLastDiffData(sumRecovered),
             timeline: {
               cases: sumCases,
               deaths: sumDeaths,
