@@ -56,7 +56,14 @@ function generateGlobalTable() {
   table += "</tbody></table>";
   $("#dataTable").html(table);
   $(`#dataTable-global`).DataTable({
-    order: [[1, "desc"]],
+    order: [
+      [2, "desc"],
+      [3, "desc"],
+    ],
+    lengthMenu: [
+      [8, 12],
+      [8, 12],
+    ],
     responsive: true,
     language: {
       search: "搜尋:",
@@ -101,6 +108,10 @@ function generateTaiwanTable() {
   $(`#dataTable-taiwan`).DataTable({
     order: [[0, "desc"]],
     responsive: true,
+    lengthMenu: [
+      [8, 12],
+      [8, 12],
+    ],
     language: {
       search: "搜尋:",
       info: "_START_ - _END_ / _TOTAL_",
