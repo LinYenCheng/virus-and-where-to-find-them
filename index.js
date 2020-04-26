@@ -10,6 +10,7 @@ import {
   getRandomAround,
   modifyCountryName,
   modifyCountryParam,
+  removeFbclid,
 } from "./src/util.js";
 
 import srcVirus from "./virus.png";
@@ -242,3 +243,5 @@ $("#btn-close").click(function () {
   $("#modal").css("zIndex", -1);
   $("#btn-open").css("zIndex", 2);
 });
+
+removeFbclid();
