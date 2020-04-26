@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.5.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.4.0...v1.5.0) (2020-04-26)
+
+
+### Features
+
+* 新增增加量及百分比 ([fc8545c](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/fc8545ca2dc4538b56372f5627c7a9c667df0ad5))
+
+
+### Bug Fixes
+
+* 亂數點位計算方法 ([b25a699](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/b25a6999df3057d59c93dc92d388f22ab7c4b352))
+* 修正參數 ([fd372c1](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/fd372c101218f2532514bd4184fa9ca84e0a7159))
+* 樣式 ([81c5957](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/81c5957fe23d45e0ba631267bdd5c665dfc32931))
+
 ## [1.4.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.3.0...v1.4.0) (2020-04-14)
 
 
