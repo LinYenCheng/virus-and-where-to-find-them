@@ -163,8 +163,6 @@ function generateChartCountry({ title, paramCountry }) {
       if (chartCountry) chartCountry.resize();
     });
   }
-
-  $("#btn-open").click();
 }
 
 function generateChartGlobal() {

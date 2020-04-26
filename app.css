@@ -97,6 +97,10 @@
   padding: 5px 5px;
 }
 
+#dataTable-now_wrapper {
+  margin-top: 15px;
+}
+
 #select-country,
 .select2-container {
   width: 180px !important;

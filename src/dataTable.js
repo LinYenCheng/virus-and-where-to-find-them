@@ -18,7 +18,9 @@ function getPercentHTMLString({ intChild, intParent }) {
 
 function generateGlobalTable() {
   let table = "";
-  table += `<table id="dataTable-global" class="dataTable-virus display responsive nowrap">
+  table += `
+  <button id="btn-toggle">顯示/隱藏</button>
+  <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
                 <th>Country</th>
@@ -55,7 +57,7 @@ function generateGlobalTable() {
   });
   table += "</tbody></table>";
   $("#dataTable").html(table);
-  $(`#dataTable-global`).DataTable({
+  $(`#dataTable-now`).DataTable({
     order: [
       [2, "desc"],
       [3, "desc"],
@@ -74,11 +76,17 @@ function generateGlobalTable() {
       },
     },
   });
+  $("#btn-toggle").click(function () {
+    $("#dataTable-now_wrapper").toggle();
+  });
+  $("#btn-toggle").click();
 }
 
 function generateTaiwanTable() {
   let table = "";
-  table += `<table id="dataTable-taiwan" class="dataTable-virus display responsive nowrap">
+  table += `
+  <button id="btn-toggle">顯示/隱藏</button>
+  <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
                 <th>週別</th>    
@@ -105,7 +113,7 @@ function generateTaiwanTable() {
   });
   table += "</tbody></table>";
   $("#dataTable").html(table);
-  $(`#dataTable-taiwan`).DataTable({
+  $(`#dataTable-now`).DataTable({
     order: [[0, "desc"]],
     responsive: true,
     lengthMenu: [
@@ -121,6 +129,10 @@ function generateTaiwanTable() {
       },
     },
   });
+  $("#btn-toggle").click(function () {
+    $("#dataTable-now_wrapper").toggle();
+  });
+  $("#btn-toggle").click();
 }
 
 export { generateGlobalTable, generateTaiwanTable };
