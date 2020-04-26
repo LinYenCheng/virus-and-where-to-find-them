@@ -93,25 +93,46 @@ function generateInformation() {
         ])
     )
     .forEach((elm) => {
-      let nowCount = parseInt(elm[1]);
+      const totalCount = parseInt(elm[1]);
+      let nowCount = 0;
       const tempMarker = L.marker(elm[3].split(" "), {
         icon: virusIcon,
       }).bindPopup(`${elm[0]}確診：${elm[1]}`);
 
       cityMarkers.push(tempMarker);
-      while (nowCount--) {
+
+      while (nowCount < totalCount) {
         const arrayLatLng = elm[3].split(" ");
         if (nowCount < 100) {
+          nowCount += 1;
           addressPoints.push(getRandomAround(arrayLatLng, nowCount));
-        } else if (nowCount < 1000 && nowCount % 11 === 0) {
+        } else if (nowCount < 1000) {
+          // 10 ~ 100 公里
+          nowCount += 17;
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
+        } else if (nowCount < 5000) {
+          // 50 ~ 250 公里
+          nowCount += 37;
           addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
-        } else if (nowCount < 5000 && nowCount % 53 === 0) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 25));
-        } else if (nowCount < 20000 && nowCount % 199 === 0) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 35));
-        } else if (nowCount > 40000 && nowCount % 599 === 0) {
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.8));
-        } else if (nowCount > 20000 && nowCount % 397 === 0) {
+        } else if (nowCount < 20000) {
+          // 75 ~ 300 公里
+          nowCount += 157;
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 15));
+        } else if (nowCount < 40000) {
+          // 100 ~ 200 公里
+          nowCount += 317;
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 5));
+        } else if (nowCount < 80000) {
+          // 120 ~ 240 公里
+          nowCount += 487;
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+        } else if (nowCount < 100000) {
+          // 240 ~ 300 公里
+          nowCount += 617;
+          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+        } else {
+          // 100 ~  公里
+          nowCount += 1487;
           addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1));
         }
       }

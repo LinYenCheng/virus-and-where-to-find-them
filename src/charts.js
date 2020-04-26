@@ -114,7 +114,7 @@ function generateChartCountry({ title, paramCountry }) {
       recoverCounts.push(value);
     }
 
-    const chartBar = c3.generate({
+    const chartCountry = c3.generate({
       bindto: "#chart--line",
       title: {
         text: `${title}  
@@ -161,7 +161,7 @@ function generateChartCountry({ title, paramCountry }) {
   }
 
   window.addEventListener("resize", () => {
-    chartBar.resize();
+    if (chartCountry) chartCountry.resize();
   });
 
   $("#btn-open").click();
