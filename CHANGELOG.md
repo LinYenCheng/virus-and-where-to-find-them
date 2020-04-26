@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.5.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.5.0...v1.5.1) (2020-04-26)
+
+
+### Bug Fixes
+
+* chartCountry undefined ([c2f1060](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/c2f1060e176c2d173052c849882a6f008984f50f))
+* select 樣式 ([12aebad](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/12aebad5ec904ba9805736c2ce0ffc45f59d89b5))
+
 ## [1.5.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.4.0...v1.5.0) (2020-04-26)
 
 
