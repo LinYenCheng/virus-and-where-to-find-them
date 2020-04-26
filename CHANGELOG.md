@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.6.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.5.1...v1.6.0) (2020-04-26)
+
+
+### Features
+
+* **dataTable.js:** 預設隱藏 DataTable ([b5484f7](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/b5484f7e5edc1763caf55817387c0c51ac5fc594))
+
 ### [1.5.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.5.0...v1.5.1) (2020-04-26)
 
 
