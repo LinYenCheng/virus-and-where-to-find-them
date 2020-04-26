@@ -158,11 +158,11 @@ function generateChartCountry({ title, paramCountry }) {
         },
       },
     });
-  }
 
-  window.addEventListener("resize", () => {
-    if (chartCountry) chartCountry.resize();
-  });
+    window.addEventListener("resize", () => {
+      if (chartCountry) chartCountry.resize();
+    });
+  }
 
   $("#btn-open").click();
 }
