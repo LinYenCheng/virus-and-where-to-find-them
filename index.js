@@ -16,6 +16,7 @@ import {
 import srcVirus from "./virus.png";
 
 import jsonTaiwan from "./data/taiwan.json";
+import jsonUSA from "./data/usa.json";
 import jsonFinalTimeSeriesData from "./data/finalTimeSeriesData.json";
 import { generateGlobalTable, generateTaiwanTable } from "./src/dataTable.js";
 
@@ -42,6 +43,7 @@ function generateInformation() {
   let taiwanCounts = 0;
   const selectOptions = [];
   const countries = jsonFinalTimeSeriesData;
+  const usaCounties = jsonUSA;
 
   $(".loading__overlay").css("zIndex", -1);
   $(".loading__content").css("zIndex", -1);
@@ -66,6 +68,7 @@ function generateInformation() {
   });
   countries
     .filter((elm) => elm.lat)
+    .concat(usaCounties)
     .map((elm) => {
       const tempName = elm.region;
       selectOptions.push({
@@ -96,45 +99,46 @@ function generateInformation() {
     .forEach((elm) => {
       const totalCount = parseInt(elm[1]);
       let nowCount = 0;
-      const tempMarker = L.marker(elm[3].split(" "), {
-        icon: virusIcon,
-      }).bindPopup(`${elm[0]}確診：${elm[1]}`);
+      if (elm[0] !== "US") {
+        const tempMarker = L.marker(elm[3].split(" "), {
+          icon: virusIcon,
+        }).bindPopup(`${elm[0]}確診：${elm[1]}`);
 
-      cityMarkers.push(tempMarker);
-
-      while (nowCount < totalCount) {
-        const arrayLatLng = elm[3].split(" ");
-        if (nowCount < 100) {
-          nowCount += 1;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount));
-        } else if (nowCount < 1000) {
-          // 10 ~ 100 公里
-          nowCount += 17;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
-        } else if (nowCount < 5000) {
-          // 50 ~ 250 公里
-          nowCount += 37;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
-        } else if (nowCount < 20000) {
-          // 75 ~ 300 公里
-          nowCount += 157;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 15));
-        } else if (nowCount < 40000) {
-          // 100 ~ 200 公里
-          nowCount += 317;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 5));
-        } else if (nowCount < 80000) {
-          // 120 ~ 240 公里
-          nowCount += 487;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-        } else if (nowCount < 100000) {
-          // 240 ~ 300 公里
-          nowCount += 617;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-        } else {
-          // 100 ~  公里
-          nowCount += 1487;
-          addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1));
+        cityMarkers.push(tempMarker);
+        while (nowCount < totalCount) {
+          const arrayLatLng = elm[3].split(" ");
+          if (nowCount < 100) {
+            nowCount += 1;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount));
+          } else if (nowCount < 1000) {
+            // 10 ~ 100 公里
+            nowCount += 17;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
+          } else if (nowCount < 5000) {
+            // 50 ~ 250 公里
+            nowCount += 37;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+          } else if (nowCount < 20000) {
+            // 75 ~ 300 公里
+            nowCount += 157;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 15));
+          } else if (nowCount < 40000) {
+            // 100 ~ 200 公里
+            nowCount += 317;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 5));
+          } else if (nowCount < 80000) {
+            // 120 ~ 240 公里
+            nowCount += 487;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+          } else if (nowCount < 100000) {
+            // 240 ~ 300 公里
+            nowCount += 617;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+          } else {
+            // 100 ~  公里
+            nowCount += 1487;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1));
+          }
         }
       }
     });

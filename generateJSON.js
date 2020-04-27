@@ -54,26 +54,35 @@ function removeProperty(obj) {
 }
 
 function getLastData(obj) {
-  const nowDate = new Date();
-  return (
-    obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`] ||
-    obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]
-  );
+  //   const nowDate = new Date();
+  //   return (
+  //     obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`] ||
+  //     obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]
+  //   );
+  const keys = Object.keys(obj);
+  const last = keys[keys.length-1];
+  return obj[last];
 }
 
 function getLastDiffData(obj) {
   const nowDate = new Date();
   let intLastDiff = 0;
-
-  if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
-    intLastDiff =
-      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
-      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
-  } else {
-    intLastDiff =
-      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
-      parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
+  const keys = Object.keys(obj);
+  const last = keys[keys.length-1];
+  const last1 = keys[keys.length-2];
+  if (last1) {
+    intLastDiff = obj[last] - obj[last1];
   }
+  
+//   if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
+//     intLastDiff =
+//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
+//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
+//   } else {
+//     intLastDiff =
+//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
+//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
+//   }
   return intLastDiff;
 }
 
@@ -191,3 +200,20 @@ axios
       writeResToJSON({ data: finalTimeSeriesData }, "finalTimeSeriesData");
     })
   );
+
+instanceGithub.get("/time_series_covid19_confirmed_US.csv").then((resCases) => {
+  const jsonCases = csv2JSON(resCases.data);
+  const finalData = jsonCases
+    .map((elm) => {
+      let cases = removeProperty(elm);
+      return {
+        region: elm["Combined_Key"],
+        country: elm["Country_Region"],
+        lat: elm["Lat"],
+        lng: elm["Long_"],
+        confirmed: getLastData(cases),
+      };
+    })
+    .filter((elm) => elm.confirmed !== "0" && parseInt(elm.confirmed) > 500);
+  writeResToJSON({ data: finalData }, "usa");
+});
