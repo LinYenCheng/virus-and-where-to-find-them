@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.7.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.6.0...v1.7.0) (2020-05-05)
+
+
+### Features
+
+* removeFbclid ([8439eb1](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/8439eb156db1a8cdea66d6d921c4b9b573de9e2d))
+* 更新美國資料，顯示大於 500 確診數的區域 ([445655e](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/445655e81e5069363cdeac9e7b5eabb5ea7c12da))
+
 ## [1.6.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.5.1...v1.6.0) (2020-04-26)
 
 
