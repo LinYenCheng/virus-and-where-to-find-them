@@ -60,7 +60,7 @@ function getLastData(obj) {
   //     obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]
   //   );
   const keys = Object.keys(obj);
-  const last = keys[keys.length-1];
+  const last = keys[keys.length - 1];
   return obj[last];
 }
 
@@ -68,21 +68,21 @@ function getLastDiffData(obj) {
   const nowDate = new Date();
   let intLastDiff = 0;
   const keys = Object.keys(obj);
-  const last = keys[keys.length-1];
-  const last1 = keys[keys.length-2];
+  const last = keys[keys.length - 1];
+  const last1 = keys[keys.length - 2];
   if (last1) {
     intLastDiff = obj[last] - obj[last1];
   }
-  
-//   if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
-//     intLastDiff =
-//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
-//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
-//   } else {
-//     intLastDiff =
-//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
-//       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
-//   }
+
+  //   if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
+  //     intLastDiff =
+  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
+  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
+  //   } else {
+  //     intLastDiff =
+  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
+  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
+  //   }
   return intLastDiff;
 }
 
@@ -121,21 +121,31 @@ axios
           if (elm["Province/State"] === "") {
             cases = elm;
             deaths = jsonDeaths.find(
-              (elmIn) => elmIn["Country/Region"] === elm["Country/Region"]
+              (elmIn) =>
+                elmIn["Country/Region"] === elm["Country/Region"] &&
+                elmIn["Province/State"] === ""
             );
             recovered = jsonRecovered.find(
-              (elmIn) => elmIn["Country/Region"] === elm["Country/Region"]
+              (elmIn) =>
+                elmIn["Country/Region"] === elm["Country/Region"] &&
+                elmIn["Province/State"] === ""
             );
             strRegion = elm["Country/Region"];
           } else {
             cases = jsonCases.find(
-              (elmIn) => elmIn["Province/State"] === elm["Province/State"]
+              (elmIn) =>
+                elmIn["Province/State"] === elm["Province/State"] &&
+                elmIn["Province/State"] !== ""
             );
             deaths = jsonDeaths.find(
-              (elmIn) => elmIn["Province/State"] === elm["Province/State"]
+              (elmIn) =>
+                elmIn["Province/State"] === elm["Province/State"] &&
+                elmIn["Province/State"] !== ""
             );
             recovered = jsonRecovered.find(
-              (elmIn) => elmIn["Province/State"] === elm["Province/State"]
+              (elmIn) =>
+                elmIn["Province/State"] === elm["Province/State"] &&
+                elmIn["Province/State"] !== ""
             );
             if (deaths === undefined || recovered === undefined) {
               console.log(elm["Province/State"]);
