@@ -32,7 +32,8 @@ function csv2JSON(csv) {
 }
 
 axios
-  .get("https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json")
+  // .get("https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json")
+  .get("https://od.cdc.gov.tw/eic/Age_County_Gender_19Cov.json")
   .then((res) => {
     writeResToJSON(res, "taiwan");
   });
