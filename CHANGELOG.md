@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.7.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.7.0...v1.7.1) (2020-06-09)
+
+
+### Bug Fixes
+
+* cdc data ([02e92ad](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/02e92add248391d88f45fc887b4468d067549c5f))
+* 英國資料抓錯 ([9f7b304](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/9f7b304f928b1cba729c991204d7f9ff7b565755))
+* 負值歸零 ([32295b4](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/32295b40da3e85b58d050f1130a76e7d1d45f506))
+
 ## [1.7.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.6.0...v1.7.0) (2020-05-05)
 
 
