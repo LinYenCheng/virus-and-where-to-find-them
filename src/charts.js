@@ -102,7 +102,7 @@ function generateChartCountry({ title, paramCountry }) {
     for (let [key, value] of Object.entries(cases)) {
       dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
       totalCounts.push(value);
-      diffConfirmCounts.push(value - prevValue);
+      diffConfirmCounts.push(value - prevValue || 0);
       prevValue = value;
     }
 
