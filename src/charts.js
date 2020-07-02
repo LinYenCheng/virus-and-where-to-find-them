@@ -67,8 +67,8 @@ function generateDounutChartTaiwan({ otherCounts, taiwanCounts }) {
     bindto: "#chart--dounut",
     data: {
       columns: [
-        ["境外移入", otherCounts],
-        ["本土", taiwanCounts],
+        ["非本國籍", otherCounts],
+        ["本國籍", taiwanCounts],
       ],
       type: "donut",
     },
