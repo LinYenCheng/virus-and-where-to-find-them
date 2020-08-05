@@ -49,7 +49,7 @@ function generateInformation() {
   $(".loading__content").css("zIndex", -1);
   $(jsonTaiwan).each(function (k, v) {
     const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
-    if (v["是否為境外移入"] === "是") {
+    if (v["國籍"] === "非本國籍") {
       otherCounts += parseInt(v["確定病例數"]);
     } else {
       taiwanCounts += parseInt(v["確定病例數"]);

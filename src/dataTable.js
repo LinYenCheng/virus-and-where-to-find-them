@@ -92,7 +92,7 @@ function generateTaiwanTable() {
                 <th>月份</th>    
                 <th>縣市</th>
                 <th>性別</th>
-                <th>境外移入</th>
+                <th>國籍</th>
                 <th>年齡層</th>
                 <th>病例數</th>
             </tr>
@@ -108,7 +108,7 @@ function generateTaiwanTable() {
     <td>${item["發病月份"]}</td>
     <td>${item["縣市"]}</td>
     <td>${item["性別"]}</td>
-    <td>${item["是否為境外移入"]}</td>
+    <td>${item["國籍"]}</td>
     <td>${item["年齡層"]}</td>
     <td>${item["確定病例數"]}</td>
     </tr>`;
