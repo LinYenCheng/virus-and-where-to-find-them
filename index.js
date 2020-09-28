@@ -68,7 +68,7 @@ function generateInformation() {
   });
   countries
     .filter((elm) => elm.lat)
-    .concat(usaCounties)
+    .concat(usaCounties.filter((elm) => Number(elm.confirmed) > 5000))
     .map((elm) => {
       const tempName = elm.region;
       selectOptions.push({
@@ -113,31 +113,35 @@ function generateInformation() {
           } else if (nowCount < 1000) {
             // 10 ~ 100 公里
             nowCount += 17;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 100));
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
           } else if (nowCount < 5000) {
             // 50 ~ 250 公里
             nowCount += 37;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 20));
           } else if (nowCount < 20000) {
             // 75 ~ 300 公里
             nowCount += 157;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 15));
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 10));
           } else if (nowCount < 40000) {
             // 100 ~ 200 公里
             nowCount += 317;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 5));
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
           } else if (nowCount < 80000) {
             // 120 ~ 240 公里
             nowCount += 487;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
           } else if (nowCount < 100000) {
-            // 240 ~ 300 公里
-            nowCount += 617;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+            nowCount += 1109;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.5));
+          } else if (nowCount < 500000) {
+            nowCount += 2027;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.05));
+          } else if (nowCount < 5000000) {
+            nowCount += 3163;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.005));
           } else {
-            // 100 ~  公里
-            nowCount += 1487;
-            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 1));
+            nowCount += 3571;
+            addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.0005));
           }
         }
       }

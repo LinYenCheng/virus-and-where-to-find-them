@@ -1,12 +1,12 @@
 {
   "name": "virus-and-where-to-find-them",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "vanilla-router": "^1.2.8"
   },
   "devDependencies": {
     "parcel": "^1.12.4",
-    "standard-version": "^8.0.1"
+    "standard-version": "^9.0.0"
   },
   "scripts": {
     "start": "parcel --out-dir dev index.html ",
