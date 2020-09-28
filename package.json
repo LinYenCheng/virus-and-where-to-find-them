@@ -6,7 +6,7 @@
   },
   "devDependencies": {
     "parcel": "^1.12.4",
-    "standard-version": "^8.0.1"
+    "standard-version": "^8.0.2"
   },
   "scripts": {
     "start": "parcel --out-dir dev index.html ",
