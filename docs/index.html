@@ -1,1 +1,79 @@
-<!DOCTYPE html><html><head><title>COVID-19 全球即時疫情地圖 | 前端三分鐘</title><meta name="site_name" content="COVID-19 全球即時疫情地圖 | COVID-19 Global Dashboard by Taiwan | 前端三分鐘"><meta name="description" content="病毒與牠們的產地-將 COVID-19 疫情透過熱區圖顯示地理分布、折線圖顯示趨勢"><meta property="og:title" content="COVID-19 全球即時疫情地圖 | COVID-19 Global Dashboard by Taiwan | 前端三分鐘"><meta property="og:type" content="website"><meta property="og:url" content="https://linyencheng.github.io/virus-and-where-to-find-them/"><meta property="og:image" content="meta-heat.2a9eed85.jpg"><meta property="og:site_name" content="COVID-19 全球疫情地圖 | 前端三分鐘"><meta property="og:description" content="將 COVID-19 疫情透過熱區圖顯示地理分布、折線圖顯示趨勢"><meta property="keywords" content="全球疫情地圖,Dashboard,COVID-19,新冠肺炎,疫情地圖,Taiwan,前端三分鐘"><meta charset="utf-8"><link rel="shortcut icon" href="favicon.26242483.ico"><meta name="viewport" content="width=device-width, initial-scale=1"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"><link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css" rel="stylesheet"><link href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css" rel="stylesheet"><link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet"><link rel="stylesheet" href="app.ae05fb60.css"></head><body>  <div id="map"> <div id="dataTable"></div> </div> <select id="select-country" name="country"> <option></option> </select> <button id="btn-open">開啟圖表</button> <div id="modal"> <button id="btn-close">關閉圖表</button> <div id="chart--line"></div> <div id="chart--bar"></div> </div> <div id="chart--dounut"></div> <div class="loading__overlay"> <div class="loading__content"> <div class="loader">Loading...</div> </div> </div> <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script> <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.23/dayjs.min.js"></script> <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script> <script src="virus-and-where-to-find-them.e31bb0bc.js"></script> <script defer src="ga.77373f5c.js"></script> </body></html>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>COVID-19 全球即時疫情地圖 | 前端三分鐘</title>
+    <meta
+      name="site_name"
+      content="COVID-19 全球即時疫情地圖 | COVID-19 Global Dashboard by Taiwan | 前端三分鐘"
+    />
+    <meta
+      name="description"
+      content="病毒與牠們的產地-將 COVID-19 疫情透過熱區圖顯示地理分布、折線圖顯示趨勢"
+    />
+    <meta
+      property="og:title"
+      content="COVID-19 全球即時疫情地圖 | COVID-19 Global Dashboard by Taiwan | 前端三分鐘"
+    />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:url"
+      content="https://linyencheng.github.io/virus-and-where-to-find-them/"
+    />
+    <meta
+      property="og:site_name"
+      content="COVID-19 全球疫情地圖 | 前端三分鐘"
+    />
+    <meta
+      property="og:description"
+      content="將 COVID-19 疫情透過熱區圖顯示地理分布、折線圖顯示趨勢"
+    />
+    <meta
+      property="keywords"
+      content="全球疫情地圖,Dashboard,COVID-19,新冠肺炎,疫情地圖,Taiwan,前端三分鐘"
+    />
+    <meta property="og:image" content="/meta-heat.jpg" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.css"
+    />
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/css/select2.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css"
+      rel="stylesheet"
+    />
+
+    <link rel="shortcut icon" href="favicon.ico" />
+
+    <link rel="stylesheet" href="global.css" />
+  </head>
+
+  <body>
+    <!-- 台灣對抗病毒加油!!!! -->
+    <!-- <div id="root"></div> -->
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.12/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.0/d3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.12/c3.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dayjs/1.8.23/dayjs.min.js"></script>
+    <script src="//cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+
+    <script defer src="bundle.js"></script>
+  </body>
+</html>
