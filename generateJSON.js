@@ -14,7 +14,7 @@ function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
     finalTimeSeriesData,
     function (file, callback) {
       fs.writeFile(
-        "./docs/data/" + file.region.toLowerCase() + ".json",
+        "./docs/data/" + file.region.toLowerCase().replace('*', '') + ".json",
         JSON.stringify([{ ...file }], null, 4),
         function (err) {
           if (err) {
