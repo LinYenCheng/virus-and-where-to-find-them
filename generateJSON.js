@@ -8,6 +8,36 @@ function writeResToJSON(res, fileName) {
   fs.writeFileSync(`./data/${fileName}.json`, data);
 }
 
+function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
+  var async = require("async");
+  async.each(
+    finalTimeSeriesData,
+    function (file, callback) {
+      fs.writeFile(
+        "./docs/data/" + file.region.toLowerCase() + ".json",
+        JSON.stringify([{ ...file }], null, 4),
+        function (err) {
+          if (err) {
+            console.log(err);
+          } else {
+            console.log(file.region + ".json was updated.");
+          }
+          callback();
+        }
+      );
+    },
+    function (err) {
+      if (err) {
+        // One of the iterations produced an error.
+        // All processing will now stop.
+        console.log("A file failed to process");
+      } else {
+        console.log("All files have been processed successfully");
+      }
+    }
+  );
+}
+
 //var csv is the CSV file with headers
 function csv2JSON(csv) {
   const lines = csv.split("\n");
@@ -208,7 +238,22 @@ axios
         },
         "global"
       );
-      writeResToJSON({ data: finalTimeSeriesData }, "finalTimeSeriesData");
+      // TODO: perf 分國家
+      // 一個總的統計 for 畫圖
+      writePartialTimeSeriesForAPI(finalTimeSeriesData);
+      const finalTimeSeriesDataWithoutTimeline = finalTimeSeriesData.map(function (element) {
+        // 拿掉 timeline 減少大小
+        if (element.timeline !== undefined) {
+          delete element.timeline;
+        }
+        return element;
+      })
+      writeResToJSON(
+        {
+          data: finalTimeSeriesDataWithoutTimeline,
+        },
+        "finalTimeSeriesData"
+      );
     })
   );
 
