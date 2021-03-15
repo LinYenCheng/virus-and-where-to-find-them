@@ -1,4 +1,4 @@
-import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
+// import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
 import jsonFinalGlobalTimeSeriesData from "../data/global.json";
 // import { modifyCountryParam } from "./util.js";
 
@@ -83,86 +83,95 @@ function generateDounutChartTaiwan({ otherCounts, taiwanCounts }) {
   });
 }
 
+// 抓出個別的表
 function generateChartCountry({ title, paramCountry }) {
-  let resChart = jsonFinalTimeSeriesData.filter(
-    (historicalRecord) =>
-      historicalRecord.region.toLowerCase() === paramCountry.toLowerCase()
-  );
-
-  const dates = [];
-  const totalCounts = [];
-  const deathCounts = [];
-  const recoverCounts = [];
-  const diffConfirmCounts = [];
-  let prevValue = 0;
-  if (resChart[0]) {
-    const {
-      timeline: { cases, deaths, recovered },
-    } = resChart[0];
-    for (let [key, value] of Object.entries(cases)) {
-      dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
-      totalCounts.push(value);
-      diffConfirmCounts.push(value - prevValue || 0);
-      prevValue = value;
-    }
-
-    for (let [key, value] of Object.entries(deaths)) {
-      deathCounts.push(value);
-    }
-
-    for (let [key, value] of Object.entries(recovered)) {
-      recoverCounts.push(value);
-    }
-
-    const chartCountry = c3.generate({
-      bindto: "#chart--line",
-      title: {
-        text: `${title}  
-        Death:${(
-          (deathCounts[deathCounts.length - 1] * 100) /
-          totalCounts[totalCounts.length - 1]
-        ).toFixed(2)}%
-        Recovered: ${(
-          (recoverCounts[recoverCounts.length - 1] * 100) /
-          totalCounts[totalCounts.length - 1]
-        ).toFixed(2)}%`,
-      },
-      data: {
-        x: "date",
-        xFormat: "%Y-%m-%d",
-        columns: [
-          ["date", ...dates],
-          ["每日增加", ...diffConfirmCounts],
-          ["確診", ...totalCounts],
-          ["死亡", ...deathCounts],
-          ["恢復", ...recoverCounts],
-        ],
-        axes: {
-          確診: "y",
-          每日增加: "y2",
-        },
-      },
-      axis: {
-        x: {
-          type: "timeseries",
-          tick: {
-            format: "%m-%d",
-          },
-        },
-        y: {
-          min: 0,
-        },
-        y2: {
-          min: 0,
-          show: true,
-        },
-      },
-    });
-
-    window.addEventListener("resize", () => {
-      if (chartCountry) chartCountry.resize();
-    });
-  }
+  fetch(`data/${paramCountry.replace('*', '')}.json`)
+   .then(response => {
+       if (!response.ok) {
+           throw new Error("HTTP error " + response.status);
+       }
+       return response.json();
+   })
+   .then(json => {
+       let resChart = json;
+       const dates = [];
+       const totalCounts = [];
+       const deathCounts = [];
+       const recoverCounts = [];
+       const diffConfirmCounts = [];
+       let prevValue = 0;
+       if (resChart[0]) {
+         const {
+           timeline: { cases, deaths, recovered },
+         } = resChart[0];
+         for (let [key, value] of Object.entries(cases)) {
+           dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
+           totalCounts.push(value);
+           diffConfirmCounts.push(value - prevValue || 0);
+           prevValue = value;
+         }
+     
+         for (let [key, value] of Object.entries(deaths)) {
+           deathCounts.push(value);
+         }
+     
+         for (let [key, value] of Object.entries(recovered)) {
+           recoverCounts.push(value);
+         }
+     
+         const chartCountry = c3.generate({
+           bindto: "#chart--line",
+           title: {
+             text: `${title}  
+             Death:${(
+               (deathCounts[deathCounts.length - 1] * 100) /
+               totalCounts[totalCounts.length - 1]
+             ).toFixed(2)}%
+             Recovered: ${(
+               (recoverCounts[recoverCounts.length - 1] * 100) /
+               totalCounts[totalCounts.length - 1]
+             ).toFixed(2)}%`,
+           },
+           data: {
+             x: "date",
+             xFormat: "%Y-%m-%d",
+             columns: [
+               ["date", ...dates],
+               ["每日增加", ...diffConfirmCounts],
+               ["確診", ...totalCounts],
+               ["死亡", ...deathCounts],
+               ["恢復", ...recoverCounts],
+             ],
+             axes: {
+               確診: "y",
+               每日增加: "y2",
+             },
+           },
+           axis: {
+             x: {
+               type: "timeseries",
+               tick: {
+                 format: "%m-%d",
+               },
+             },
+             y: {
+               min: 0,
+             },
+             y2: {
+               min: 0,
+               show: true,
+             },
+           },
+         });
+     
+         window.addEventListener("resize", () => {
+           if (chartCountry) chartCountry.resize();
+         });
+       }
+   })
+   .catch(function (error) {
+       console.log(error);
+   })
 }
 
 function generateChartGlobal() {
