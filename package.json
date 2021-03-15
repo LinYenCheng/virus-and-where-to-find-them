@@ -1,6 +1,7 @@
 {
   "name": "virus-and-where-to-find-them",
   "dependencies": {
+    "async": "^3.2.0",
     "axios": "^0.21.1",
     "sirv-cli": "^1.0.0",
     "vanilla-router": "^1.2.8"
