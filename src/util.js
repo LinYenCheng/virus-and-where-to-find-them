@@ -111,6 +111,51 @@ const locations = [
   },
 ];
 
+const ages = [
+  {
+    range: "5-9",
+  },
+  {
+    range: "10-14",
+  },
+  {
+    range: "15-19",
+  },
+  {
+    range: "20-24",
+  },
+  {
+    range: "25-29",
+  },
+  {
+    range: "30-34",
+  },
+  {
+    range: "35-39",
+  },
+  {
+    range: "40-44",
+  },
+  {
+    range: "45-49",
+  },
+  {
+    range: "50-54",
+  },
+  {
+    range: "55-59",
+  },
+  {
+    range: "60-64",
+  },
+  {
+    range: "65-69",
+  },
+  {
+    range: "70+",
+  },
+];
+
 //var csv is the CSV file with headers
 function csvJSON(csv) {
   var lines = csv.split("\n");
@@ -266,6 +311,7 @@ function removeFbclid(theWindow = window) {
 }
 
 export {
+  ages,
   locations,
   csvJSON,
   removeFbclid,

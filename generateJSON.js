@@ -2,10 +2,27 @@
 
 const fs = require("fs");
 const axios = require("axios");
+const csvToJSON = require("csvjson-csv2json");
 
 function writeResToJSON(res, fileName) {
   let data = JSON.stringify(res.data);
   fs.writeFileSync(`./data/${fileName}.json`, data);
+}
+
+function writeResToCSV(res, fileName) {
+  fs.writeFileSync(`./data/${fileName}.csv`, res.data);
+  const data = fs.readFileSync(`./data/${fileName}.csv`, { encoding: "utf8" });
+  const json = csvToJSON(data);
+  fs.writeFileSync(
+    `./data/${fileName}.json`,
+    JSON.stringify(
+      json.map((elm) => {
+        const tempElement = { ...elm };
+        delete tempElement.GeoJSON;
+        return tempElement;
+      })
+    )
+  );
 }
 
 function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
@@ -14,7 +31,7 @@ function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
     finalTimeSeriesData,
     function (file, callback) {
       fs.writeFile(
-        "./docs/data/" + file.region.toLowerCase().replace('*', '') + ".json",
+        "./docs/data/" + file.region.toLowerCase().replace("*", "") + ".json",
         JSON.stringify([{ ...file }], null, 4),
         function (err) {
           if (err) {
@@ -66,6 +83,14 @@ axios
   .get("https://od.cdc.gov.tw/eic/Age_County_Gender_19Cov.json")
   .then((res) => {
     writeResToJSON(res, "taiwan");
+  });
+
+axios
+  .get(
+    "https://docs.google.com/spreadsheets/d/e/2PACX-1vTLkgDcQOvZO_UVnvWzF06vkX8YfD_TD3vdjTCBsnYJD8nCumrvIQxaQAAfdsjxEI1J12VD8m-NDgJW/pub?gid=582904711&single=true&output=csv"
+  )
+  .then((res) => {
+    writeResToCSV(res, "covid-activity");
   });
 
 const instanceGithub = axios.create({
@@ -241,13 +266,15 @@ axios
       // TODO: perf 分國家
       // 一個總的統計 for 畫圖
       writePartialTimeSeriesForAPI(finalTimeSeriesData);
-      const finalTimeSeriesDataWithoutTimeline = finalTimeSeriesData.map(function (element) {
-        // 拿掉 timeline 減少大小
-        if (element.timeline !== undefined) {
-          delete element.timeline;
+      const finalTimeSeriesDataWithoutTimeline = finalTimeSeriesData.map(
+        function (element) {
+          // 拿掉 timeline 減少大小
+          if (element.timeline !== undefined) {
+            delete element.timeline;
+          }
+          return element;
         }
-        return element;
-      })
+      );
       writeResToJSON(
         {
           data: finalTimeSeriesDataWithoutTimeline,
