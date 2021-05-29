@@ -87,45 +87,45 @@
         }).bindPopup(`${elm[0]}確診：${elm[1]}`);
 
         cityMarkers.push(tempMarker);
-        if (arrLatLng[1] > 120.1 && arrLatLng[1] < 121.8) {
-          // 不做事
-        } else {
-          while (nowCount < totalCount) {
-            const arrayLatLng = elm[3].split(" ");
-            if (nowCount < 100) {
-              nowCount += 1;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount));
-            } else if (nowCount < 1000) {
-              // 10 ~ 100 公里
-              nowCount += 17;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
-            } else if (nowCount < 5000) {
-              // 50 ~ 250 公里
-              nowCount += 37;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 20));
-            } else if (nowCount < 20000) {
-              // 75 ~ 300 公里
-              nowCount += 157;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 10));
-            } else if (nowCount < 40000) {
-              // 100 ~ 200 公里
-              nowCount += 317;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-            } else if (nowCount < 80000) {
-              // 120 ~ 240 公里
-              nowCount += 487;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
-            } else if (nowCount < 100000) {
-              nowCount += 1109 * 17;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.5));
-            } else if (nowCount < 2000000) {
-              nowCount += 5393 * 17;
-              addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.05));
-            } else {
-              nowCount += 5000000;
-            }
-          }
-        }
+        // if (arrLatLng[1] > 120.1 && arrLatLng[1] < 121.8) {
+        //   // 不做事
+        // } else {
+        //   while (nowCount < totalCount) {
+        //     const arrayLatLng = elm[3].split(" ");
+        //     if (nowCount < 100) {
+        //       nowCount += 1;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount));
+        //     } else if (nowCount < 1000) {
+        //       // 10 ~ 100 公里
+        //       nowCount += 17;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
+        //     } else if (nowCount < 5000) {
+        //       // 50 ~ 250 公里
+        //       nowCount += 37;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 20));
+        //     } else if (nowCount < 20000) {
+        //       // 75 ~ 300 公里
+        //       nowCount += 157;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 10));
+        //     } else if (nowCount < 40000) {
+        //       // 100 ~ 200 公里
+        //       nowCount += 317;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
+        //     } else if (nowCount < 80000) {
+        //       // 120 ~ 240 公里
+        //       nowCount += 487;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
+        //     } else if (nowCount < 100000) {
+        //       nowCount += 1109 * 17;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.5));
+        //     } else if (nowCount < 2000000) {
+        //       nowCount += 5393 * 17;
+        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.05));
+        //     } else {
+        //       nowCount += 5000000;
+        //     }
+        //   }
+        // }
       }
     });
 
