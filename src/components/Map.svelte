@@ -2,8 +2,10 @@
   import { onMount } from "svelte";
   import srcVirus from "../../virus.png";
   import convidActivityJSON from "../../data/covid-activity.json";
+  // https://github.com/ronnywang/twgeojson/blob/master/twcounty2010.2.2.json
+  import twcounty2010 from "../../data/twcounty2010.2.json";
 
-  import { getRandomAround, locations } from "../util.js";
+  // import { getRandomAround, locations } from "../util.js";
 
   export let countries = [];
 
@@ -134,6 +136,20 @@
       radius: 9,
       blur: 12,
       minOpacity: 0.6,
+    }).addTo(map);
+
+    // 鄉鎮市界
+    L.geoJson(twcounty2010, {
+      style: function (feature) {
+        return {
+          fillColor: "white",
+          weight: 3,
+          opacity: 0.8,
+          color: "gray",
+          dashArray: "3",
+          fillOpacity: 0.1,
+        };
+      },
     }).addTo(map);
 
     map.on("zoomend", function () {
