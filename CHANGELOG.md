@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.8.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.7.1...v1.8.0) (2021-05-29)
+
+
+### Features
+
+* add sma ([6ad3bbf](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/6ad3bbf140c937ddcd22453249209d176728bb8f))
+* update docs' files ([d4a5c62](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/d4a5c62fec16587e8d0f114ab7077fb0bcc9ea84))
+* Update markerClusterGroup and Chart ([fb5d9bb](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/fb5d9bbddf61bac8c181adacdbb819fb9792d38c))
+
+
+### Bug Fixes
+
+* taiwan ([24507c4](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/24507c48746361f706b6280806eb7cc9354aea10))
+
 ### [1.7.1](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.7.0...v1.7.1) (2020-06-09)
 
 
