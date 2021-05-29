@@ -112,7 +112,7 @@ function initApp({ selectOptions, finalCountries }) {
       .on("select2:select", function (e) {
         var { data } = e.params;
         if (data) {
-          map.panTo([data.lat, data.lng]);
+          // map.panTo([data.lat, data.lng]);
           generateChartCountry({
             title: data.paramCountry,
             paramCountry: modifyCountryParam(data.paramCountry),
