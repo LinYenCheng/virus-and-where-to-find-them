@@ -1,5 +1,6 @@
 // import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
 import jsonFinalGlobalTimeSeriesData from "../data/global.json";
+import { sma } from "./util";
 // import { modifyCountryParam } from "./util.js";
 
 function generateChart(resChart) {
@@ -23,8 +24,11 @@ function generateChart(resChart) {
   const chart = c3.generate({
     bindto: "#chart--bar",
     title: {
-      text: `累積死亡: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
+      text: `累積死亡: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}%
       累積恢復: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`,
+    },
+    zoom: {
+      enabled: true,
     },
     data: {
       x: "date",
@@ -164,6 +168,8 @@ function generateChartCountry({ title, paramCountry }) {
       const deathCounts = [];
       const recoverCounts = [];
       const diffConfirmCounts = [];
+      let sma14 = [];
+      let sma7 = [];
       let prevValue = 0;
       if (resChart[0]) {
         const {
@@ -176,6 +182,11 @@ function generateChartCountry({ title, paramCountry }) {
           prevValue = value;
         }
 
+        sma14.length = 14;
+        sma14.fill(0);
+        sma14 = [...sma14, ...sma(totalCounts, 14)];
+        sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(totalCounts, 7)];
+
         for (let [key, value] of Object.entries(deaths)) {
           deathCounts.push(value);
         }
@@ -186,8 +197,12 @@ function generateChartCountry({ title, paramCountry }) {
 
         const chartCountry = c3.generate({
           bindto: "#chart--line",
+          zoom: {
+            enabled: true,
+            rescale: true,
+          },
           title: {
-            text: `${title}  
+            text: `${title}
              Death:${(
                (deathCounts[deathCounts.length - 1] * 100) /
                totalCounts[totalCounts.length - 1]
@@ -203,9 +218,11 @@ function generateChartCountry({ title, paramCountry }) {
             columns: [
               ["date", ...dates],
               ["每日增加", ...diffConfirmCounts],
-              ["確診", ...totalCounts],
-              ["死亡", ...deathCounts],
-              ["恢復", ...recoverCounts],
+              ["當日確診", ...totalCounts],
+              ["7日平均", ...sma7],
+              ["14日平均", ...sma14],
+              // ["死亡", ...deathCounts],
+              // ["恢復", ...recoverCounts],
             ],
             axes: {
               確診: "y",
@@ -245,6 +262,8 @@ function generateChartGlobal() {
   const confirmPatientCounts = [];
   const deathCounts = [];
   const recoverCounts = [];
+  let sma30 = [];
+  let sma60 = [];
   let prevValue = 0;
   const {
     todayRecover,
@@ -259,6 +278,13 @@ function generateChartGlobal() {
     prevValue = value;
   }
 
+  sma30.length = 30;
+  sma60.length = 60;
+  sma60.fill(0);
+  sma30.fill(0);
+  sma60 = [...sma60, ...sma(confirmPatientCounts, 60)];
+  sma30 = [...sma30, ...sma(confirmPatientCounts, 30)];
+
   for (let [key, value] of Object.entries(deaths)) {
     deathCounts.push(value);
   }
@@ -270,8 +296,12 @@ function generateChartGlobal() {
   const chart = c3.generate({
     bindto: "#chart--bar",
     title: {
-      text: `Global Death: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}% 
+      text: `Global Death: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}%
       recovered: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`,
+    },
+    zoom: {
+      enabled: true,
+      rescale: true,
     },
     data: {
       x: "date",
@@ -280,8 +310,10 @@ function generateChartGlobal() {
         ["date", ...dates],
         ["每日增加", ...diffConfirmCounts],
         ["全球確診", ...confirmPatientCounts],
-        ["全球死亡", ...deathCounts],
-        ["全球恢復", ...recoverCounts],
+        ["30日平均", ...sma30],
+        ["60日平均", ...sma60],
+        // ["全球死亡", ...deathCounts],
+        // ["全球恢復", ...recoverCounts],
       ],
       axes: {
         全球確診病例: "y",
