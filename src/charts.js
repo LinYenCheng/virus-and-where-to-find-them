@@ -182,10 +182,11 @@ function generateChartCountry({ title, paramCountry }) {
           prevValue = value;
         }
 
+        const finalDiffConfirmCounts = [...diffConfirmCounts];
         sma14.length = 14;
         sma14.fill(0);
-        sma14 = [...sma14, ...sma(totalCounts, 14)];
-        sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(totalCounts, 7)];
+        sma14 = [...sma14, ...sma(finalDiffConfirmCounts, 14)];
+        sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(finalDiffConfirmCounts, 7)];
 
         for (let [key, value] of Object.entries(deaths)) {
           deathCounts.push(value);
@@ -217,16 +218,18 @@ function generateChartCountry({ title, paramCountry }) {
             xFormat: "%Y-%m-%d",
             columns: [
               ["date", ...dates],
+              ["累積確診", ...totalCounts],
               ["每日增加", ...diffConfirmCounts],
-              ["當日確診", ...totalCounts],
               ["7日平均", ...sma7],
               ["14日平均", ...sma14],
               // ["死亡", ...deathCounts],
               // ["恢復", ...recoverCounts],
             ],
             axes: {
-              確診: "y",
+              累積確診: "y",
               每日增加: "y2",
+              "7日平均": "y2",
+              "14日平均": "y2",
             },
           },
           axis: {
@@ -278,12 +281,13 @@ function generateChartGlobal() {
     prevValue = value;
   }
 
+  const finalDiffConfirmCounts = [...diffConfirmCounts];
   sma30.length = 30;
   sma60.length = 60;
   sma60.fill(0);
   sma30.fill(0);
-  sma60 = [...sma60, ...sma(confirmPatientCounts, 60)];
-  sma30 = [...sma30, ...sma(confirmPatientCounts, 30)];
+  sma60 = [...sma60, ...sma(finalDiffConfirmCounts, 60)];
+  sma30 = [...sma30, ...sma(finalDiffConfirmCounts, 30)];
 
   for (let [key, value] of Object.entries(deaths)) {
     deathCounts.push(value);
@@ -308,16 +312,18 @@ function generateChartGlobal() {
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
-        ["每日增加", ...diffConfirmCounts],
         ["全球確診", ...confirmPatientCounts],
+        ["全球日增", ...diffConfirmCounts],
         ["30日平均", ...sma30],
         ["60日平均", ...sma60],
         // ["全球死亡", ...deathCounts],
         // ["全球恢復", ...recoverCounts],
       ],
       axes: {
-        全球確診病例: "y",
-        每日增加: "y2",
+        全球確診: "y",
+        全球日增: "y2",
+        "30日平均": "y2",
+        "60日平均": "y2",
       },
     },
     axis: {
