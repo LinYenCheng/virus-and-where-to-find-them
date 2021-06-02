@@ -16,13 +16,13 @@ import {
 } from "./util.js";
 
 import jsonTaiwan from "../data/taiwan.json";
-import jsonUSA from "../data/usa.json";
+// import jsonUSA from "../data/usa.json";
 import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
 
 import { generateGlobalTable, generateTaiwanTable } from "./dataTable.js";
 
 function generateInformation() {
-  const usaCounties = jsonUSA;
+  const usaCounties = [];
   const finalSelectOptions = [];
   const finalCountries = jsonFinalTimeSeriesData
     .sort(function (a, b) {
