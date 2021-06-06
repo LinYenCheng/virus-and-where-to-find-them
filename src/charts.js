@@ -210,21 +210,22 @@ function generateChartCountry({ title, paramCountry }) {
           },
           title: {
             text: `${title}
-             Death:${(
-               (deathCounts[deathCounts.length - 1] * 100) /
-               totalCounts[totalCounts.length - 1]
-             ).toFixed(2)}%
-             Recovered: ${(
-               (recoverCounts[recoverCounts.length - 1] * 100) /
-               totalCounts[totalCounts.length - 1]
-             ).toFixed(2)}%`,
+             確診: ${totalCounts[totalCounts.length - 1]}
+             死亡:${deathCounts[deathCounts.length - 1]} (${(
+              (deathCounts[deathCounts.length - 1] * 100) /
+              totalCounts[totalCounts.length - 1]
+            ).toFixed(2)}%)
+             恢復: ${recoverCounts[recoverCounts.length - 1]}(${(
+              (recoverCounts[recoverCounts.length - 1] * 100) /
+              totalCounts[totalCounts.length - 1]
+            ).toFixed(2)}%)`,
           },
           data: {
             x: "date",
             xFormat: "%Y-%m-%d",
             columns: [
               ["date", ...dates],
-              ["累積確診", ...totalCounts],
+              // ["累積確診", ...totalCounts],
               ["每日增加", ...diffConfirmCounts],
               ["7日平均", ...sma7],
               ["14日平均", ...sma14],
@@ -232,7 +233,7 @@ function generateChartCountry({ title, paramCountry }) {
               // ["恢復", ...recoverCounts],
             ],
             axes: {
-              累積確診: "y",
+              死亡: "y",
               每日增加: "y2",
               "7日平均": "y2",
               "14日平均": "y2",
@@ -306,8 +307,15 @@ function generateChartGlobal() {
   const chart = c3.generate({
     bindto: "#chart--bar",
     title: {
-      text: `Global Death: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}%
-      recovered: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`,
+      text: `
+      確診: ${todayConfirmed}
+      全球死亡: ${todayDeath} (${((todayDeath * 100) / todayConfirmed).toFixed(
+        2
+      )}%)
+      全球恢復: ${todayRecover} (${(
+        (todayRecover * 100) /
+        todayConfirmed
+      ).toFixed(2)}%)`,
     },
     zoom: {
       enabled: true,
@@ -318,7 +326,7 @@ function generateChartGlobal() {
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
-        ["全球確診", ...confirmPatientCounts],
+        // ["全球確診", ...confirmPatientCounts],
         ["全球日增", ...diffConfirmCounts],
         ["30日平均", ...sma30],
         ["60日平均", ...sma60],
@@ -326,7 +334,7 @@ function generateChartGlobal() {
         // ["全球恢復", ...recoverCounts],
       ],
       axes: {
-        全球確診: "y",
+        // 全球確診: "y",
         全球日增: "y2",
         "30日平均": "y2",
         "60日平均": "y2",
