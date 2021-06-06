@@ -73,9 +73,12 @@ function generateDounutChartTaiwan({
   ages,
 }) {
   let nowChart = 0;
+  let chartDounutNations;
+  let chartDounutCounty;
+  let chartDounutAge;
 
   function generateNations() {
-    var chartDounut = c3.generate({
+    chartDounutNations = c3.generate({
       bindto: "#chart--dounut",
       data: {
         columns: [
@@ -99,7 +102,7 @@ function generateDounutChartTaiwan({
     const cloumns = locations
       .filter(({ count }) => count > 0)
       .map(({ location, count }) => [location, count]);
-    var chartDounut = c3.generate({
+    chartDounutCounty = c3.generate({
       bindto: "#chart--dounut",
       data: {
         columns: [...cloumns],
@@ -120,7 +123,7 @@ function generateDounutChartTaiwan({
     const cloumns = ages
       .filter(({ count }) => count > 0)
       .map(({ range, count }) => [range, count]);
-    var chartDounut = c3.generate({
+    chartDounutAge = c3.generate({
       bindto: "#chart--dounut",
       data: {
         columns: [...cloumns],
@@ -140,12 +143,15 @@ function generateDounutChartTaiwan({
   setInterval(() => {
     if (nowChart === 0) {
       nowChart = 1;
+      chartDounutCounty.destroy();
       generateAges();
     } else if (nowChart === 1) {
       nowChart = 2;
+      chartDounutAge.destroy();
       generateNations();
     } else {
       nowChart = 0;
+      chartDounutNations.destroy();
       generateCounties();
     }
   }, 10000);
@@ -222,7 +228,7 @@ function generateChartCountry({ title, paramCountry }) {
               ["每日增加", ...diffConfirmCounts],
               ["7日平均", ...sma7],
               ["14日平均", ...sma14],
-              // ["死亡", ...deathCounts],
+              ["死亡", ...deathCounts],
               // ["恢復", ...recoverCounts],
             ],
             axes: {
