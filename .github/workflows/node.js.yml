@@ -3,7 +3,7 @@ name: Node CI
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron: "1 3-6/2 * * *"
+    - cron: "1 4-9/4 * * *"
   push:
     branches:
       - master
@@ -18,27 +18,27 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
-      
+
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      
+
       - name: Cache dependencies
         uses: actions/cache@v2
         with:
           path: |
             **/node_modules
           key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
-      
+
       - name: Install dependencies
         run: npm install
-        
+
       - name: generate new build
         run: |
           npm run generate
           npm run build
-      
+
       - name: push
         uses: github-actions-x/commit@v2.5
         with:
