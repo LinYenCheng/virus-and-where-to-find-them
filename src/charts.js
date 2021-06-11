@@ -174,17 +174,27 @@ function generateChartCountry({ title, paramCountry }) {
       const deathCounts = [];
       const recoverCounts = [];
       const diffConfirmCounts = [];
+      const DAYS_TO_SHOW = 300;
+
       let sma14 = [];
       let sma7 = [];
       let prevValue = 0;
+
       if (resChart[0]) {
         const {
           timeline: { cases, deaths, recovered },
         } = resChart[0];
         for (let [key, value] of Object.entries(cases)) {
-          dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
-          totalCounts.push(value);
-          diffConfirmCounts.push(value - prevValue || 0);
+          const dayjsNowItem = dayjs(key, "MM/DD/YY");
+          const date1 = dayjs(dayjsNowItem);
+          const date2 = dayjs();
+          const hours = date2.diff(date1, "hours");
+          const days = Math.floor(hours / 24);
+          if (days < DAYS_TO_SHOW) {
+            dates.push(dayjsNowItem.format("YYYY-MM-DD"));
+            totalCounts.push(value);
+            diffConfirmCounts.push(value - prevValue || 0);
+          }
           prevValue = value;
         }
 
@@ -195,11 +205,25 @@ function generateChartCountry({ title, paramCountry }) {
         sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(finalDiffConfirmCounts, 7)];
 
         for (let [key, value] of Object.entries(deaths)) {
-          deathCounts.push(value);
+          const dayjsNowItem = dayjs(key, "MM/DD/YY");
+          const date1 = dayjs(dayjsNowItem);
+          const date2 = dayjs();
+          const hours = date2.diff(date1, "hours");
+          const days = Math.floor(hours / 24);
+          if (days < DAYS_TO_SHOW) {
+            deathCounts.push(value);
+          }
         }
 
         for (let [key, value] of Object.entries(recovered)) {
-          recoverCounts.push(value);
+          const dayjsNowItem = dayjs(key, "MM/DD/YY");
+          const date1 = dayjs(dayjsNowItem);
+          const date2 = dayjs();
+          const hours = date2.diff(date1, "hours");
+          const days = Math.floor(hours / 24);
+          if (days < DAYS_TO_SHOW) {
+            recoverCounts.push(value);
+          }
         }
 
         const chartCountry = c3.generate({
