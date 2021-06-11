@@ -29,7 +29,7 @@
     "release": "standard-version"
   },
   "description": "武漢肺炎疫情地圖",
-  "version": "1.8.0",
+  "version": "1.9.0",
   "main": "index.js",
   "directories": {
     "doc": "docs"

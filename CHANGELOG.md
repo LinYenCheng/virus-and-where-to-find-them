@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.9.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.8.0...v1.9.0) (2021-06-11)
+
+
+### Features
+
+* add twcountry ([1e7e132](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/1e7e1321a765ae4daaaca25d48339a46a5bddfba))
+
+
+### Bug Fixes
+
+* **chart.js:** sma ([8ae093c](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/8ae093c6ddc68e7ce3925739fa7ecac3413bcf81))
+
 ## [1.8.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.7.1...v1.8.0) (2021-05-29)
 
 
