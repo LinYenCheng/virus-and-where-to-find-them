@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 const axios = require("axios");
+const dayjs = require("dayjs");
 const csvToJSON = require("csvjson-csv2json");
 
 function writeResToJSON(res, fileName) {
@@ -12,7 +13,14 @@ function writeResToJSON(res, fileName) {
 function writeResToCSV(res, fileName) {
   fs.writeFileSync(`./data/${fileName}.csv`, res.data);
   const data = fs.readFileSync(`./data/${fileName}.csv`, { encoding: "utf8" });
-  const json = csvToJSON(data);
+  const json = csvToJSON(data).filter((elm) => {
+    const { end } = elm;
+    const date1 = dayjs(end);
+    const date2 = dayjs();
+    const hours = date2.diff(date1, "hours");
+    const days = Math.floor(hours / 24);
+    return days < 14;
+  });
   fs.writeFileSync(
     `./data/${fileName}.json`,
     JSON.stringify(

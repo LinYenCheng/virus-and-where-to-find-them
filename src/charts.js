@@ -140,22 +140,22 @@ function generateDounutChartTaiwan({
     });
   }
 
-  setInterval(() => {
-    if (nowChart === 0) {
-      nowChart = 1;
-      chartDounutCounty.destroy();
-      generateAges();
-    } else if (nowChart === 1) {
-      nowChart = 2;
-      chartDounutAge.destroy();
-      generateNations();
-    } else {
-      nowChart = 0;
-      chartDounutNations.destroy();
-      generateCounties();
-    }
-  }, 10000);
-  generateCounties();
+  // setInterval(() => {
+  //   if (nowChart === 0) {
+  //     nowChart = 1;
+  //     chartDounutCounty.destroy();
+  //     generateAges();
+  //   } else if (nowChart === 1) {
+  //     nowChart = 2;
+  //     chartDounutAge.destroy();
+  //     generateNations();
+  //   } else {
+  //     nowChart = 0;
+  //     chartDounutNations.destroy();
+  //     generateCounties();
+  //   }
+  // }, 10000);
+  generateAges();
 }
 
 // 抓出個別的表

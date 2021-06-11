@@ -38,45 +38,54 @@
       }
     ).addTo(map);
 
-    convidActivityJSON.forEach((elm) => {
-      const { latitude, longitude, begin, end, name, address } = elm;
-      if (longitude !== "" && latitude !== "") {
-        var marker = L.marker(
-          new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
-            title: name,
-          })
-        );
-        var strPopup = "";
-        addressPoints.push([latitude, longitude]);
+    convidActivityJSON
+      // .filter((elm) => {
+      //   const { end } = elm;
+      //   const date1 = dayjs(end);
+      //   const date2 = dayjs();
+      //   const hours = date2.diff(date1, "hours");
+      //   const days = Math.floor(hours / 24);
+      //   return days < 14;
+      // })
+      .forEach((elm) => {
+        const { latitude, longitude, begin, end, name, address } = elm;
+        if (longitude !== "" && latitude !== "") {
+          var marker = L.marker(
+            new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
+              title: name,
+            })
+          );
+          var strPopup = "";
+          addressPoints.push([latitude, longitude]);
 
-        if (elm["案號"] !== "") {
-          strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
+          if (elm["案號"] !== "") {
+            strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
+          }
+
+          if (name !== "") {
+            strPopup = `${strPopup} + ${name} <br>`;
+          }
+
+          if (begin !== "") {
+            strPopup = `${strPopup} + 開始:${begin} <br> `;
+          }
+
+          if (end !== "") {
+            strPopup = `${strPopup} + 結束:${end} <br> `;
+          }
+
+          if (address !== "") {
+            strPopup = `${strPopup} + 地址:${address} <br> `;
+          }
+
+          if (elm["資料來源"] !== "") {
+            strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
+          }
+
+          marker.bindPopup(strPopup);
+          convidMarkers.addLayer(marker);
         }
-
-        if (name !== "") {
-          strPopup = `${strPopup} + ${name} <br>`;
-        }
-
-        if (begin !== "") {
-          strPopup = `${strPopup} + 開始:${begin} <br> `;
-        }
-
-        if (end !== "") {
-          strPopup = `${strPopup} + 結束:${end} <br> `;
-        }
-
-        if (address !== "") {
-          strPopup = `${strPopup} + 地址:${address} <br> `;
-        }
-
-        if (elm["資料來源"] !== "") {
-          strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
-        }
-
-        marker.bindPopup(strPopup);
-        convidMarkers.addLayer(marker);
-      }
-    });
+      });
     map.addLayer(convidMarkers);
 
     countries.forEach((elm) => {
