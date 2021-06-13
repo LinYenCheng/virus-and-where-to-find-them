@@ -165,17 +165,17 @@ function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
   let prevValue = 0;
 
   for (let [key, value] of Object.entries(objOfTotalCountsByDate)) {
-    const DAYS_TO_SHOW = 300;
+    // const DAYS_TO_SHOW = 300;
     const dayjsNowItem = dayjs(key, "MM/DD/YY");
     const date1 = dayjs(dayjsNowItem);
     const date2 = dayjs();
     const hours = date2.diff(date1, "hours");
     const days = Math.floor(hours / 24);
-    if (days < DAYS_TO_SHOW) {
-      dates.push(dayjsNowItem.format("YYYY-MM-DD"));
-      counts.push(value);
-      diffCounts.push(value - prevValue || 0);
-    }
+    // if (days < DAYS_TO_SHOW) {
+    dates.push(dayjsNowItem.format("YYYY-MM-DD"));
+    counts.push(value);
+    diffCounts.push(value - prevValue || 0);
+    // }
     prevValue = value;
   }
   return {
@@ -268,7 +268,11 @@ function generateChartCountry({ title, paramCountry }) {
             x: {
               type: "timeseries",
               tick: {
+                centered: true,
                 format: "%m-%d",
+                culling: true,
+                count: 350,
+                fit: true,
               },
             },
             y: {
@@ -367,10 +371,14 @@ function generateChartGlobal() {
         type: "timeseries",
         tick: {
           format: "%m-%d",
+          culling: true,
+          count: 350,
+          fit: true,
         },
       },
       y: {
         min: 0,
+        max: 900000,
       },
       // y2: {
       //   min: 0,
