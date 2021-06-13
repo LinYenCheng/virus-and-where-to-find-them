@@ -158,6 +158,34 @@ function generateDounutChartTaiwan({
   generateAges();
 }
 
+function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
+  const counts = [];
+  const diffCounts = [];
+  const dates = [];
+  let prevValue = 0;
+
+  for (let [key, value] of Object.entries(objOfTotalCountsByDate)) {
+    const DAYS_TO_SHOW = 300;
+    const dayjsNowItem = dayjs(key, "MM/DD/YY");
+    const date1 = dayjs(dayjsNowItem);
+    const date2 = dayjs();
+    const hours = date2.diff(date1, "hours");
+    const days = Math.floor(hours / 24);
+    if (days < DAYS_TO_SHOW) {
+      dates.push(dayjsNowItem.format("YYYY-MM-DD"));
+      counts.push(value);
+      diffCounts.push(value - prevValue || 0);
+    }
+    prevValue = value;
+  }
+  return {
+    counts: [...counts],
+    diffCounts: [...diffCounts],
+    // 一張表只需要用一次日期
+    dates: [...dates],
+  };
+}
+
 // 抓出個別的表
 function generateChartCountry({ title, paramCountry }) {
   fetch(`data/${paramCountry.replace("*", "")}.json`)
@@ -169,62 +197,28 @@ function generateChartCountry({ title, paramCountry }) {
     })
     .then((json) => {
       let resChart = json;
-      const dates = [];
-      const totalCounts = [];
-      const deathCounts = [];
-      const recoverCounts = [];
-      const diffConfirmCounts = [];
-      const DAYS_TO_SHOW = 300;
-
       let sma14 = [];
       let sma7 = [];
-      let prevValue = 0;
 
       if (resChart[0]) {
         const {
           timeline: { cases, deaths, recovered },
         } = resChart[0];
-        for (let [key, value] of Object.entries(cases)) {
-          const dayjsNowItem = dayjs(key, "MM/DD/YY");
-          const date1 = dayjs(dayjsNowItem);
-          const date2 = dayjs();
-          const hours = date2.diff(date1, "hours");
-          const days = Math.floor(hours / 24);
-          if (days < DAYS_TO_SHOW) {
-            dates.push(dayjsNowItem.format("YYYY-MM-DD"));
-            totalCounts.push(value);
-            diffConfirmCounts.push(value - prevValue || 0);
-          }
-          prevValue = value;
-        }
+        const {
+          dates,
+          counts: totalCounts,
+          diffCounts: diffConfirmCounts,
+        } = getCountsAndDiffPreviousCount(cases);
+        const { counts: deathCounts, diffCounts: diffDeathCounts } =
+          getCountsAndDiffPreviousCount(deaths);
+        const { counts: recoverCounts } =
+          getCountsAndDiffPreviousCount(recovered);
 
         const finalDiffConfirmCounts = [...diffConfirmCounts];
         sma14.length = 14;
         sma14.fill(0);
         sma14 = [...sma14, ...sma(finalDiffConfirmCounts, 14)];
         sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(finalDiffConfirmCounts, 7)];
-
-        for (let [key, value] of Object.entries(deaths)) {
-          const dayjsNowItem = dayjs(key, "MM/DD/YY");
-          const date1 = dayjs(dayjsNowItem);
-          const date2 = dayjs();
-          const hours = date2.diff(date1, "hours");
-          const days = Math.floor(hours / 24);
-          if (days < DAYS_TO_SHOW) {
-            deathCounts.push(value);
-          }
-        }
-
-        for (let [key, value] of Object.entries(recovered)) {
-          const dayjsNowItem = dayjs(key, "MM/DD/YY");
-          const date1 = dayjs(dayjsNowItem);
-          const date2 = dayjs();
-          const hours = date2.diff(date1, "hours");
-          const days = Math.floor(hours / 24);
-          if (days < DAYS_TO_SHOW) {
-            recoverCounts.push(value);
-          }
-        }
 
         const chartCountry = c3.generate({
           bindto: "#chart--line",
@@ -244,24 +238,31 @@ function generateChartCountry({ title, paramCountry }) {
               totalCounts[totalCounts.length - 1]
             ).toFixed(2)}%)`,
           },
+
           data: {
             x: "date",
             xFormat: "%Y-%m-%d",
             columns: [
               ["date", ...dates],
               // ["累積確診", ...totalCounts],
-              ["每日增加", ...diffConfirmCounts],
               ["7日平均", ...sma7],
               ["14日平均", ...sma14],
-              ["死亡", ...deathCounts],
+              ["新增病例", ...diffConfirmCounts],
+              ["新增死亡", ...diffDeathCounts],
               // ["恢復", ...recoverCounts],
             ],
-            axes: {
-              死亡: "y",
-              每日增加: "y2",
-              "7日平均": "y2",
-              "14日平均": "y2",
+            type: "bar",
+            types: {
+              "7日平均": "spline",
+              "14日平均": "spline",
             },
+            groups: [["新增病例", "新增死亡"]],
+            // axes: {
+            //   死亡: "y2",
+            //   新增病例: "y2",
+            //   "7日平均": "y",
+            //   "14日平均": "y",
+            // },
           },
           axis: {
             x: {
@@ -273,10 +274,10 @@ function generateChartCountry({ title, paramCountry }) {
             y: {
               min: 0,
             },
-            y2: {
-              min: 0,
-              show: true,
-            },
+            // y2: {
+            //   min: 0,
+            //   show: true,
+            // },
           },
         });
 
@@ -291,26 +292,24 @@ function generateChartCountry({ title, paramCountry }) {
 }
 
 function generateChartGlobal() {
-  const dates = [];
-  const diffConfirmCounts = [];
-  const confirmPatientCounts = [];
-  const deathCounts = [];
-  const recoverCounts = [];
   let sma30 = [];
   let sma60 = [];
-  let prevValue = 0;
+
   const {
     todayRecover,
     todayConfirmed,
     todayDeath,
     timeline: { cases, deaths, recovered },
   } = jsonFinalGlobalTimeSeriesData;
-  for (let [key, value] of Object.entries(cases)) {
-    dates.push(dayjs(key, "MM/DD/YY").format("YYYY-MM-DD"));
-    confirmPatientCounts.push(value);
-    diffConfirmCounts.push(value - prevValue);
-    prevValue = value;
-  }
+
+  const {
+    dates,
+    // counts: confirmPatientCounts,
+    diffCounts: diffConfirmCounts,
+  } = getCountsAndDiffPreviousCount(cases);
+  const { counts: deathCounts, diffCounts: diffDeathCounts } =
+    getCountsAndDiffPreviousCount(deaths);
+  const { counts: recoverCounts } = getCountsAndDiffPreviousCount(recovered);
 
   const finalDiffConfirmCounts = [...diffConfirmCounts];
   sma30.length = 30;
@@ -319,14 +318,6 @@ function generateChartGlobal() {
   sma30.fill(0);
   sma60 = [...sma60, ...sma(finalDiffConfirmCounts, 60)];
   sma30 = [...sma30, ...sma(finalDiffConfirmCounts, 30)];
-
-  for (let [key, value] of Object.entries(deaths)) {
-    deathCounts.push(value);
-  }
-
-  for (let [key, value] of Object.entries(recovered)) {
-    recoverCounts.push(value);
-  }
 
   const chart = c3.generate({
     bindto: "#chart--bar",
@@ -350,18 +341,25 @@ function generateChartGlobal() {
       xFormat: "%Y-%m-%d",
       columns: [
         ["date", ...dates],
-        // ["全球確診", ...confirmPatientCounts],
-        ["全球日增", ...diffConfirmCounts],
         ["30日平均", ...sma30],
         ["60日平均", ...sma60],
+        ["新增病例", ...diffConfirmCounts],
+        ["新增死亡", ...diffDeathCounts],
+        // ["全球確診", ...confirmPatientCounts],
         // ["全球死亡", ...deathCounts],
         // ["全球恢復", ...recoverCounts],
       ],
+      type: "bar",
+      types: {
+        "30日平均": "spline",
+        "60日平均": "spline",
+      },
+      groups: [["新增病例", "新增死亡"]],
       axes: {
-        // 全球確診: "y",
-        全球日增: "y2",
-        "30日平均": "y2",
-        "60日平均": "y2",
+        新增病例: "y",
+        // 全球日增: "y2",
+        // "30日平均": "y2",
+        // "60日平均": "y2",
       },
     },
     axis: {
@@ -374,10 +372,10 @@ function generateChartGlobal() {
       y: {
         min: 0,
       },
-      y2: {
-        min: 0,
-        show: true,
-      },
+      // y2: {
+      //   min: 0,
+      //   show: true,
+      // },
     },
   });
   window.addEventListener("resize", () => {
