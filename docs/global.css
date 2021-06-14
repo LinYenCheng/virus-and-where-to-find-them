@@ -48,7 +48,7 @@
   top: 50px;
   left: 20px;
   background: none;
-  max-width: 50vw;
+  max-width: 90vw;
   min-width: 90vw;
   max-height: 40vh;
   min-height: 40vh;
@@ -61,8 +61,8 @@
   background: none;
   max-width: 30vw;
   min-width: 30vw;
-  max-height: 40vh;
-  min-height: 40vh;
+  max-height: 45vh;
+  min-height: 45vh;
 }
 
 @media (max-width: 480px) {
@@ -103,7 +103,7 @@
 
 #select-country,
 .select2-container {
-  width: 180px !important;
+  width: 200px !important;
   position: fixed;
 
   top: 10px;
