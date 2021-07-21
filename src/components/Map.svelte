@@ -28,7 +28,7 @@
   var convidMarkers = L.markerClusterGroup();
 
   onMount(() => {
-    const map = L.map("map").setView([23.5, 120.644], 6);
+    const map = L.map("map").setView([23.5, 120.644], 7);
     window.map = map;
     const tiles = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
