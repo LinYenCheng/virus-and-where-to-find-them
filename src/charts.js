@@ -271,7 +271,7 @@ function generateChartCountry({ title, paramCountry }) {
                 centered: true,
                 format: "%m-%d",
                 culling: true,
-                count: 350,
+                count: 250,
                 fit: true,
               },
             },
@@ -372,7 +372,7 @@ function generateChartGlobal() {
         tick: {
           format: "%m-%d",
           culling: true,
-          count: 350,
+          count: 250,
           fit: true,
         },
       },
