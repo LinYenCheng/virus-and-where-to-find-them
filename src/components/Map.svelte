@@ -28,7 +28,7 @@
   var convidMarkers = L.markerClusterGroup();
 
   onMount(() => {
-    const map = L.map("map").setView([23.5, 120.644], 7);
+    const map = L.map("map").setView([23.5, 120.8], 8);
     window.map = map;
     const tiles = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -163,10 +163,10 @@
 
     map.on("zoomend", function () {
       const zoomLevel = map.getZoom();
-      if (zoomLevel < 6) {
+      if (zoomLevel < 7) {
         map.removeLayer(cities);
       }
-      if (zoomLevel >= 6) {
+      if (zoomLevel >= 7) {
         if (map.hasLayer(cities)) {
           // console.log("layer already added");
         } else {
