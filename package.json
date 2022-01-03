@@ -2,7 +2,7 @@
   "name": "virus-and-where-to-find-them",
   "dependencies": {
     "async": "^3.2.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "csvjson-csv2json": "^5.0.6",
     "sirv-cli": "^1.0.0",
     "vanilla-router": "^1.2.8"
