@@ -14,7 +14,7 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 12.x
+          - 14.x
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
@@ -40,12 +40,12 @@ jobs:
           npm run build
 
       - name: push
-        uses: github-actions-x/commit@v2.5
+        uses: github-actions-x/commit@v2.8
         with:
           github-token: ${{ secrets.TOKEN }}
           push-branch: "master"
-          commit-message: "publish with new data"
+          commit-message: "chore: publish with new data"
           force-add: "true"
           files: docs/
-          name: LinYenCheng
-          email: breaking0215@hotmail.com
+          name: Github Action
+          email: 41898282+github-actions[bot]@users.noreply.github.com
