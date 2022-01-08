@@ -232,11 +232,11 @@ function generateChartCountry({ title, paramCountry }) {
              死亡:${deathCounts[deathCounts.length - 1]} (${(
               (deathCounts[deathCounts.length - 1] * 100) /
               totalCounts[totalCounts.length - 1]
-            ).toFixed(2)}%)
-             恢復: ${recoverCounts[recoverCounts.length - 1]}(${(
-              (recoverCounts[recoverCounts.length - 1] * 100) /
-              totalCounts[totalCounts.length - 1]
             ).toFixed(2)}%)`,
+            //  恢復: ${recoverCounts[recoverCounts.length - 1]}(${(
+            //   (recoverCounts[recoverCounts.length - 1] * 100) /
+            //   totalCounts[totalCounts.length - 1]
+            // ).toFixed(2)}%)`
           },
 
           data: {
@@ -378,7 +378,7 @@ function generateChartGlobal() {
       },
       y: {
         min: 0,
-        max: 1500000,
+        max: 3500000,
       },
       // y2: {
       //   min: 0,
