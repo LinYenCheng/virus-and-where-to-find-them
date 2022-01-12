@@ -193,12 +193,14 @@ const app = new App({
 });
 
 $("#btn-open").click(function () {
+  $("#modal").css("display", "block");
   $("#modal").css("opacity", 1);
   $("#modal").css("zIndex", 1000);
   $("#btn-open").css("zIndex", -1);
 });
 
 $("#btn-close").click(function () {
+  $("#modal").css("display", "none");
   $("#modal").css("opacity", 0);
   $("#modal").css("zIndex", -1);
   $("#btn-open").css("zIndex", 2);

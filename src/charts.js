@@ -330,11 +330,11 @@ function generateChartGlobal() {
       確診: ${todayConfirmed}
       全球死亡: ${todayDeath} (${((todayDeath * 100) / todayConfirmed).toFixed(
         2
-      )}%)
-      全球恢復: ${todayRecover} (${(
-        (todayRecover * 100) /
-        todayConfirmed
-      ).toFixed(2)}%)`,
+      )}%)`,
+      // 全球恢復: ${todayRecover} (${(
+      //   (todayRecover * 100) /
+      //   todayConfirmed
+      // ).toFixed(2)}%)`,
     },
     zoom: {
       enabled: true,
@@ -387,7 +387,7 @@ function generateChartGlobal() {
     },
   });
   window.addEventListener("resize", () => {
-    chart.resize();
+    if (chart) chart.resize();
   });
 }
 
