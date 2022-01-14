@@ -164,12 +164,12 @@ function initApp({ selectOptions, finalCountries }) {
     $(".loading__overlay").css("zIndex", -1);
     $(".loading__content").css("zIndex", -1);
     generateChartGlobal();
-    generateDounutChartTaiwan({
-      otherCounts,
-      taiwanCounts,
-      locations,
-      ages,
-    });
+    // generateDounutChartTaiwan({
+    //   otherCounts,
+    //   taiwanCounts,
+    //   locations,
+    //   ages,
+    // });
     generateTaiwanTable();
   }, 500);
 
