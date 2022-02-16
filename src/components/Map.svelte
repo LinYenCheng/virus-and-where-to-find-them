@@ -1,7 +1,7 @@
 <script>
-  import { onMount } from "svelte";
-  import srcVirus from "../../virus.png";
-  import convidActivityJSON from "../../data/covid-activity.json";
+  import { onMount } from 'svelte';
+  import srcVirus from '../../virus.png';
+  import convidActivityJSON from '../../data/covid-activity.json';
   // https://github.com/ronnywang/twgeojson/blob/master/twcounty2010.2.2.json
   // import twcounty2010 from "../../data/twcounty2010.2.json";
 
@@ -27,17 +27,23 @@
   let addressPoints = [];
   var convidMarkers = L.markerClusterGroup();
 
-  onMount(() => {
-    const map = L.map("map").setView([23.5, 120.8], 8);
+  const initialView = [23.5, 120.8];
+  function createMap(container) {
+    let map = L.map(container, { preferCanvas: true }).setView(initialView, 8);
     window.map = map;
     const tiles = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+      // 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
       {
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       }
     ).addTo(map);
+    return map;
+  }
 
+  function mapAction(container) {
+    map = createMap(container);
     convidActivityJSON
       // .filter((elm) => {
       //   const { end } = elm;
@@ -49,37 +55,37 @@
       // })
       .forEach((elm) => {
         const { latitude, longitude, begin, end, name, address } = elm;
-        if (longitude !== "" && latitude !== "") {
+        if (longitude !== '' && latitude !== '') {
           var marker = L.marker(
             new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
               title: name,
             })
           );
-          var strPopup = "";
+          var strPopup = '';
           addressPoints.push([latitude, longitude]);
 
-          if (elm["案號"] !== "") {
-            strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
+          if (elm['案號'] !== '') {
+            strPopup = `${strPopup} + 案號: ${elm['案號']} <br>`;
           }
 
-          if (name !== "") {
+          if (name !== '') {
             strPopup = `${strPopup} + ${name} <br>`;
           }
 
-          if (begin !== "") {
+          if (begin !== '') {
             strPopup = `${strPopup} + 開始:${begin} <br> `;
           }
 
-          if (end !== "") {
+          if (end !== '') {
             strPopup = `${strPopup} + 結束:${end} <br> `;
           }
 
-          if (address !== "") {
+          if (address !== '') {
             strPopup = `${strPopup} + 地址:${address} <br> `;
           }
 
-          if (elm["資料來源"] !== "") {
-            strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
+          if (elm['資料來源'] !== '') {
+            strPopup = `${strPopup} + <a href="${elm['資料來源']}" target="_blank">資料來源連結<a> <br> `;
           }
 
           marker.bindPopup(strPopup);
@@ -89,54 +95,15 @@
     map.addLayer(convidMarkers);
 
     countries.forEach((elm) => {
-      const totalCount = parseInt(elm[1]);
-      let nowCount = 0;
-      const arrLatLng = elm[3].split(" ");
-      if (elm[0] !== "US" && !isNaN(parseFloat(arrLatLng[0]))) {
-        const tempMarker = L.marker(elm[3].split(" "), {
+      // const totalCount = parseInt(elm[1]);
+      // let nowCount = 0;
+      const arrLatLng = elm[3].split(' ');
+      if (elm[0] !== 'US' && !isNaN(parseFloat(arrLatLng[0]))) {
+        const tempMarker = L.marker(elm[3].split(' '), {
           icon: virusIcon,
         }).bindPopup(`${elm[0]}確診：${elm[1]}`);
 
         cityMarkers.push(tempMarker);
-        // if (arrLatLng[1] > 120.1 && arrLatLng[1] < 121.8) {
-        //   // 不做事
-        // } else {
-        //   while (nowCount < totalCount) {
-        //     const arrayLatLng = elm[3].split(" ");
-        //     if (nowCount < 100) {
-        //       nowCount += 1;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount));
-        //     } else if (nowCount < 1000) {
-        //       // 10 ~ 100 公里
-        //       nowCount += 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
-        //     } else if (nowCount < 5000) {
-        //       // 50 ~ 250 公里
-        //       nowCount += 37;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 20));
-        //     } else if (nowCount < 20000) {
-        //       // 75 ~ 300 公里
-        //       nowCount += 157;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 10));
-        //     } else if (nowCount < 40000) {
-        //       // 100 ~ 200 公里
-        //       nowCount += 317;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-        //     } else if (nowCount < 80000) {
-        //       // 120 ~ 240 公里
-        //       nowCount += 487;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
-        //     } else if (nowCount < 100000) {
-        //       nowCount += 1109 * 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.5));
-        //     } else if (nowCount < 2000000) {
-        //       nowCount += 5393 * 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.05));
-        //     } else {
-        //       nowCount += 5000000;
-        //     }
-        //   }
-        // }
       }
     });
 
@@ -161,7 +128,7 @@
     //   },
     // }).addTo(map);
 
-    map.on("zoomend", function () {
+    map.on('zoomend', function () {
       const zoomLevel = map.getZoom();
       if (zoomLevel < 7) {
         map.removeLayer(cities);
@@ -175,14 +142,23 @@
       }
     });
 
+    return {
+      destroy: () => {
+        map.remove();
+        map = null;
+      },
+    };
+  }
+
+  onMount(() => {
     // 加入 GA
-    var _gaId = "UA-106834789-1";
-    var _gaDomain = "linyencheng.github.io";
+    var _gaId = 'UA-106834789-1';
+    var _gaDomain = 'linyencheng.github.io';
 
     if (location.host === _gaDomain) {
       // Originial
       (function (i, s, o, g, r, a, m) {
-        i["GoogleAnalyticsObject"] = r;
+        i['GoogleAnalyticsObject'] = r;
         (i[r] =
           i[r] ||
           function () {
@@ -196,17 +172,17 @@
       })(
         window,
         document,
-        "script",
-        "//www.google-analytics.com/analytics.js",
-        "ga"
+        'script',
+        '//www.google-analytics.com/analytics.js',
+        'ga'
       );
 
-      ga("create", _gaId, _gaDomain);
-      ga("send", "pageview");
+      ga('create', _gaId, _gaDomain);
+      ga('send', 'pageview');
     }
   });
 </script>
 
-<div id="map">
+<div id="map" use:mapAction>
   <div id="dataTable" />
 </div>
