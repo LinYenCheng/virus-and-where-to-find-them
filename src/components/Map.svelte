@@ -2,23 +2,14 @@
   import { onMount } from 'svelte';
   import srcVirus from '../../virus.png';
   import convidActivityJSON from '../../data/covid-activity.json';
-  // https://github.com/ronnywang/twgeojson/blob/master/twcounty2010.2.2.json
-  // import twcounty2010 from "../../data/twcounty2010.2.json";
-
   // import { getRandomAround, locations } from "../util.js";
 
   export let countries = [];
+  let map;
 
   const virusIcon = L.icon({
     iconUrl: srcVirus,
     iconSize: [22, 22], // size of the icon
-    iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
-    popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
-  });
-
-  const virusIconSmall = L.icon({
-    iconUrl: srcVirus,
-    iconSize: [12, 12], // size of the icon
     iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
     popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
   });
@@ -29,8 +20,8 @@
 
   const initialView = [23.5, 120.8];
   function createMap(container) {
-    let map = L.map(container, { preferCanvas: true }).setView(initialView, 8);
-    window.map = map;
+    let _map = L.map(container, { preferCanvas: true }).setView(initialView, 8);
+    window.map = _map;
     const tiles = L.tileLayer(
       'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
       // 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -38,8 +29,8 @@
         attribution:
           '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors',
       }
-    ).addTo(map);
-    return map;
+    ).addTo(_map);
+    return _map;
   }
 
   function mapAction(container) {
@@ -114,20 +105,6 @@
       minOpacity: 0.6,
     }).addTo(map);
 
-    // 鄉鎮市界
-    // L.geoJson(twcounty2010, {
-    //   style: function (feature) {
-    //     return {
-    //       fillColor: "white",
-    //       weight: 3,
-    //       opacity: 0.8,
-    //       color: "gray",
-    //       dashArray: "3",
-    //       fillOpacity: 0.1,
-    //     };
-    //   },
-    // }).addTo(map);
-
     map.on('zoomend', function () {
       const zoomLevel = map.getZoom();
       if (zoomLevel < 7) {
@@ -181,7 +158,15 @@
       ga('send', 'pageview');
     }
   });
+
+  function resizeMap() {
+    if (map) {
+      map.invalidateSize();
+    }
+  }
 </script>
+
+<svelte:window on:resize={resizeMap} />
 
 <div id="map" use:mapAction>
   <div id="dataTable" />
