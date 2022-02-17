@@ -11,6 +11,10 @@
   z-index: 0;
 }
 
+.leaflet-popup-content {
+  word-break: break-all;
+}
+
 /* DataTable */
 #dataTable {
   background-color: rgba(255, 255, 255, 0.7);
