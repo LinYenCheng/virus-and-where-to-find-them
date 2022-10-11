@@ -40,14 +40,17 @@ jobs:
           npm run generate
           npm run build
 
-      - name: push
-        uses: github-actions-x/commit@v2.9
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
         with:
-          github-token: ${{ secrets.TOKEN }}
-          push-branch: "gh-pages"
+          # github-token: ${{ secrets.TOKEN }}
+          branch: "gh-pages"
           commit-message: "chore: publish with new data"
-          force-add: "true"
-          rebase: "true"
-          files: docs/
-          name: Github Action
-          email: 41898282+github-actions[bot]@users.noreply.github.com
+          # force-add: "true"
+          # rebase: "true"
+          folder: docs
+          # files: docs/
+          # name: Github Action
+          # email: 41898282+github-actions[bot]@users.noreply.github.com
+          git-config-name: Github Action
+          git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
