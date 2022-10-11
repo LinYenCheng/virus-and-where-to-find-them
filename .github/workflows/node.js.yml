@@ -17,15 +17,15 @@ jobs:
           - 16.x
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v3
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
       - name: Cache dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: |
             **/node_modules
@@ -34,18 +34,20 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: generate new build
+      - name: generate new data
         run: |
+          export NODE_OPTIONS="--max_old_space_size=4096"
           npm run generate
           npm run build
 
       - name: push
-        uses: github-actions-x/commit@v2.8
+        uses: github-actions-x/commit@v2.9
         with:
           github-token: ${{ secrets.TOKEN }}
-          push-branch: "master"
+          push-branch: "gh-pages"
           commit-message: "chore: publish with new data"
           force-add: "true"
+          rebase: "true"
           files: docs/
           name: Github Action
           email: 41898282+github-actions[bot]@users.noreply.github.com
