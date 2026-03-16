@@ -1,9 +1,9 @@
-"use strict";
+import fs from "fs";
+import axios from "axios";
+import csvToJSONLib from "csvjson-csv2json";
+import asyncLib from "async";
 
-const fs = require("fs");
-const axios = require("axios");
-const dayjs = require("dayjs");
-const csvToJSON = require("csvjson-csv2json");
+const csvToJSON = csvToJSONLib;
 
 function writeResToJSON(res, fileName) {
   let data = JSON.stringify(res.data);
@@ -15,9 +15,9 @@ function writeResToCSV(res, fileName) {
   const data = fs.readFileSync(`./data/${fileName}.csv`, { encoding: "utf8" });
   const json = csvToJSON(data).filter((elm) => {
     const { end } = elm;
-    const date1 = dayjs(end);
-    const date2 = dayjs();
-    const hours = date2.diff(date1, "hours");
+    const date1 = new Date(end);
+    const date2 = new Date();
+    const hours = (date2.getTime() - date1.getTime()) / (1000 * 60 * 60);
     const days = Math.floor(hours / 24);
     return days < 14;
   });
@@ -34,12 +34,11 @@ function writeResToCSV(res, fileName) {
 }
 
 function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
-  var async = require("async");
-  async.each(
+  asyncLib.each(
     finalTimeSeriesData,
     function (file, callback) {
       fs.writeFile(
-        "./docs/data/" + file.region.toLowerCase().replace("*", "") + ".json",
+        "./public/data/" + file.region.toLowerCase().replace("*", "") + ".json",
         JSON.stringify([{ ...file }], null, 4),
         function (err) {
           if (err) {
@@ -104,7 +103,7 @@ axios
 const instanceGithub = axios.create({
   baseURL:
     "https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series",
-  timeout: 5000,
+  timeout: 10000,
   headers: { "X-Custom-Header": "foobar" },
 });
 

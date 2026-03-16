@@ -1,3 +1,4 @@
+import "../public/global.css";
 import App from "./components/App.svelte";
 
 import router from "./router.js";

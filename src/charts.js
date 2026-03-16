@@ -164,19 +164,28 @@ function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
   const dates = [];
   let prevValue = 0;
 
-  for (let [key, value] of Object.entries(objOfTotalCountsByDate)) {
-    const DAYS_TO_SHOW = 300;
-    const dayjsNowItem = dayjs(key, "MM/DD/YY");
-    const date1 = dayjs(dayjsNowItem);
-    const date2 = dayjs();
-    const hours = date2.diff(date1, "hours");
-    const days = Math.floor(hours / 24);
-    if (days < DAYS_TO_SHOW) {
-      dates.push(dayjsNowItem.format("YYYY-MM-DD"));
-      counts.push(value);
-      diffCounts.push(value - prevValue || 0);
+  const entries = Object.entries(objOfTotalCountsByDate);
+  if (entries.length === 0) return { counts, diffCounts, dates };
+
+  const DAYS_TO_SHOW = 300;
+  // Use the latest date in the dataset as reference instead of today's date
+  const lastKey = entries[entries.length - 1][0];
+  const lastDate = new Date(lastKey);
+
+  for (let [key, value] of entries) {
+    const currentDate = new Date(key);
+    const diffTime = lastDate.getTime() - currentDate.getTime();
+    const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < DAYS_TO_SHOW) {
+      const year = currentDate.getFullYear();
+      const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+      const day = String(currentDate.getDate()).padStart(2, "0");
+      dates.push(`${year}-${month}-${day}`);
+      counts.push(Number(value));
+      diffCounts.push(Number(value) - prevValue || 0);
     }
-    prevValue = value;
+    prevValue = Number(value);
   }
   return {
     counts: [...counts],
@@ -204,6 +213,7 @@ function generateChartCountry({ title, paramCountry }) {
         const {
           timeline: { cases, deaths, recovered },
         } = resChart[0];
+
         const {
           dates,
           counts: totalCounts,
@@ -215,10 +225,9 @@ function generateChartCountry({ title, paramCountry }) {
           getCountsAndDiffPreviousCount(recovered);
 
         const finalDiffConfirmCounts = [...diffConfirmCounts];
-        sma14.length = 14;
-        sma14.fill(0);
-        sma14 = [...sma14, ...sma(finalDiffConfirmCounts, 14)];
-        sma7 = [0, 0, 0, 0, 0, 0, 0, ...sma(finalDiffConfirmCounts, 7)];
+        // For SMA with range N, we need N-1 padding items to align with the original data
+        sma14 = [...Array(13).fill(0), ...sma(finalDiffConfirmCounts, 14)];
+        sma7 = [...Array(6).fill(0), ...sma(finalDiffConfirmCounts, 7)];
 
         const chartCountry = c3.generate({
           bindto: "#chart--line",
@@ -316,12 +325,9 @@ function generateChartGlobal() {
   const { counts: recoverCounts } = getCountsAndDiffPreviousCount(recovered);
 
   const finalDiffConfirmCounts = [...diffConfirmCounts];
-  sma30.length = 30;
-  sma60.length = 60;
-  sma60.fill(0);
-  sma30.fill(0);
-  sma60 = [...sma60, ...sma(finalDiffConfirmCounts, 60)];
-  sma30 = [...sma30, ...sma(finalDiffConfirmCounts, 30)];
+  // For SMA with range N, we need N-1 padding items to align with the original data
+  sma30 = [...Array(29).fill(0), ...sma(finalDiffConfirmCounts, 30)];
+  sma60 = [...Array(59).fill(0), ...sma(finalDiffConfirmCounts, 60)];
 
   const chart = c3.generate({
     bindto: "#chart--bar",
@@ -378,7 +384,6 @@ function generateChartGlobal() {
       },
       y: {
         min: 0,
-        max: 4500000,
       },
       // y2: {
       //   min: 0,

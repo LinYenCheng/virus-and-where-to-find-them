@@ -1,9 +1,9 @@
 <script>
   import { onMount } from "svelte";
   import srcVirus from "../../virus.png";
-  // import convidActivityJSON from "../../data/covid-activity.json";
+  import convidActivityJSON from "../../data/covid-activity.json";
   // https://github.com/ronnywang/twgeojson/blob/master/twcounty2010.2.2.json
-  // import twcounty2010 from "../../data/twcounty2010.2.json";
+  import twcounty2010 from "../../data/twcounty2010.2.json";
 
   // import { getRandomAround, locations } from "../util.js";
 
@@ -25,7 +25,7 @@
 
   let cityMarkers = [];
   let addressPoints = [];
-  // var convidMarkers = L.markerClusterGroup();
+  var convidMarkers = L.markerClusterGroup();
 
   onMount(() => {
     const map = L.map("map").setView([23.5, 120.8], 8);
@@ -38,55 +38,59 @@
       }
     ).addTo(map);
 
-    // convidActivityJSON
-    //   // .filter((elm) => {
-    //   //   const { end } = elm;
-    //   //   const date1 = dayjs(end);
-    //   //   const date2 = dayjs();
-    //   //   const hours = date2.diff(date1, "hours");
-    //   //   const days = Math.floor(hours / 24);
-    //   //   return days < 14;
-    //   // })
-    //   .forEach((elm) => {
-    //     const { latitude, longitude, begin, end, name, address } = elm;
-    //     if (longitude !== "" && latitude !== "") {
-    //       var marker = L.marker(
-    //         new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
-    //           title: name,
-    //         })
-    //       );
-    //       var strPopup = "";
-    //       addressPoints.push([latitude, longitude]);
+    const latestEntryDate = convidActivityJSON.reduce((max, elm) => {
+      const current = new Date(elm.end).getTime();
+      return current > max ? current : max;
+    }, 0);
 
-    //       if (elm["案號"] !== "") {
-    //         strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
-    //       }
+    convidActivityJSON
+      .filter((elm) => {
+        const { end } = elm;
+        const date1 = new Date(end);
+        const diffTime = latestEntryDate - date1.getTime();
+        const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        return days < 20;
+      })
+      .forEach((elm) => {
+        const { latitude, longitude, begin, end, name, address } = elm;
+        if (longitude !== "" && latitude !== "") {
+          var marker = L.marker(
+            new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
+              title: name,
+            })
+          );
+          var strPopup = "";
+          addressPoints.push([latitude, longitude]);
 
-    //       if (name !== "") {
-    //         strPopup = `${strPopup} + ${name} <br>`;
-    //       }
+          if (elm["案號"] !== "") {
+            strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
+          }
 
-    //       if (begin !== "") {
-    //         strPopup = `${strPopup} + 開始:${begin} <br> `;
-    //       }
+          if (name !== "") {
+            strPopup = `${strPopup} + ${name} <br>`;
+          }
 
-    //       if (end !== "") {
-    //         strPopup = `${strPopup} + 結束:${end} <br> `;
-    //       }
+          if (begin !== "") {
+            strPopup = `${strPopup} + 開始:${begin} <br> `;
+          }
 
-    //       if (address !== "") {
-    //         strPopup = `${strPopup} + 地址:${address} <br> `;
-    //       }
+          if (end !== "") {
+            strPopup = `${strPopup} + 結束:${end} <br> `;
+          }
 
-    //       if (elm["資料來源"] !== "") {
-    //         strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
-    //       }
+          if (address !== "") {
+            strPopup = `${strPopup} + 地址:${address} <br> `;
+          }
 
-    //       marker.bindPopup(strPopup);
-    //       convidMarkers.addLayer(marker);
-    //     }
-    //   });
-    // map.addLayer(convidMarkers);
+          if (elm["資料來源"] !== "") {
+            strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
+          }
+
+          marker.bindPopup(strPopup);
+          convidMarkers.addLayer(marker);
+        }
+      });
+    map.addLayer(convidMarkers);
 
     countries.forEach((elm) => {
       const totalCount = parseInt(elm[1]);
@@ -148,18 +152,18 @@
     }).addTo(map);
 
     // 鄉鎮市界
-    // L.geoJson(twcounty2010, {
-    //   style: function (feature) {
-    //     return {
-    //       fillColor: "white",
-    //       weight: 3,
-    //       opacity: 0.8,
-    //       color: "gray",
-    //       dashArray: "3",
-    //       fillOpacity: 0.1,
-    //     };
-    //   },
-    // }).addTo(map);
+    L.geoJson(twcounty2010, {
+      style: function (feature) {
+        return {
+          fillColor: "white",
+          weight: 3,
+          opacity: 0.8,
+          color: "gray",
+          dashArray: "3",
+          fillOpacity: 0.1,
+        };
+      },
+    }).addTo(map);
 
     map.on("zoomend", function () {
       const zoomLevel = map.getZoom();

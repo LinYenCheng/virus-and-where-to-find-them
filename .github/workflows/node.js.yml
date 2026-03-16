@@ -14,13 +14,13 @@ jobs:
     strategy:
       matrix:
         node-version:
-          - 16.x
+          - 24.x
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
 
@@ -36,8 +36,8 @@ jobs:
 
       - name: generate new data
         run: |
-          export NODE_OPTIONS="--max_old_space_size=4096"
-          npm run generate
+          export NODE_OPTIONS="--max_old_space_size=8192"
+          # npm run generate
           npm run build
 
       - name: Deploy 🚀
