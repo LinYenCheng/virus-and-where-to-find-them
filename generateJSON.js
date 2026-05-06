@@ -5,6 +5,70 @@ import asyncLib from "async";
 
 const csvToJSON = csvToJSONLib;
 
+// Mapping for rat data headers
+const RAT_HEADER_MAP = {
+  "通報時間": "time",
+  "類型": "type",
+  "地點": "location",
+  "狀態": "status",
+  "說明": "description",
+  "照片網址": "image",
+  "緯度": "lat",
+  "經度": "lng"
+};
+
+/**
+ * ACTIVE LOGIC: Taipei Rat Map Data Fetching
+ */
+function fetchRatData() {
+  axios.get("https://ratdar.taipei/reports/export").then((res) => {
+    console.log("Fetching rat data...");
+    fs.writeFileSync(`./data/mouse.csv`, res.data);
+    const json = csv2JSON(res.data, RAT_HEADER_MAP);
+    console.log(`Rat data fetched: ${json.length} items`);
+    fs.writeFileSync(`./data/mouse.json`, JSON.stringify(json, null, 2));
+    console.log("mouse.json was updated with English keys.");
+  });
+}
+
+//var csv is the CSV file with headers
+function csv2JSON(csv, mapping = null) {
+  const lines = csv.split("\n");
+  const result = [];
+  let headers = lines[0].split(",").map((h) => h.trim().replace(/^\"|\"$/g, ""));
+
+  if (mapping) {
+    headers = headers.map(h => mapping[h] || h);
+  }
+
+  for (let i = 1; i < lines.length; i++) {
+    if (!lines[i]) continue;
+    const obj = {};
+    const currentLine = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+
+    for (let j = 0; j < headers.length; j++) {
+      let val = currentLine[j] || "";
+      val = val.trim().replace(/^\"|\"$/g, "").replace(/\"\"/g, '\"');
+      
+      if (!mapping && (headers[j] === "Country/Region" || headers[j] === "Country_Region")) {
+        val = val.replace("Korea, South", "S.Korea")
+                 .replace("Bonaire, Sint Eustatius and Saba", "Sint Eustatius and Saba");
+      }
+      obj[headers[j]] = val;
+    }
+    result.push(obj);
+  }
+  return result;
+}
+
+// Execute active tasks
+fetchRatData();
+
+/**
+ * HISTORICAL LOGIC: COVID-19 Data Fetching (Disabled)
+ * The following code is kept for reference only.
+ */
+/*
 function writeResToJSON(res, fileName) {
   let data = JSON.stringify(res.data);
   fs.writeFileSync(`./data/${fileName}.json`, data);
@@ -52,8 +116,6 @@ function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
     },
     function (err) {
       if (err) {
-        // One of the iterations produced an error.
-        // All processing will now stop.
         console.log("A file failed to process");
       } else {
         console.log("All files have been processed successfully");
@@ -62,31 +124,7 @@ function writePartialTimeSeriesForAPI(finalTimeSeriesData) {
   );
 }
 
-//var csv is the CSV file with headers
-function csv2JSON(csv) {
-  const lines = csv.split("\n");
-  const result = [];
-  const headers = lines[0].split(",");
-
-  for (let i = 1; i < lines.length; i++) {
-    if (!lines[i]) continue;
-    const obj = {};
-    const currentLine = lines[i]
-      .replace("Korea, South", "S.Korea")
-      .replace("Bonaire, Sint Eustatius and Saba", "Sint Eustatius and Saba")
-      .replace(/\"/g, "")
-      .split(",");
-
-    for (let j = 0; j < headers.length; j++) {
-      obj[headers[j]] = currentLine[j];
-    }
-    result.push(obj);
-  }
-  return result;
-}
-
 axios
-  // .get("https://od.cdc.gov.tw/eic/Weekly_Age_County_Gender_19CoV.json")
   .get("https://od.cdc.gov.tw/eic/Age_County_Gender_19Cov.json")
   .then((res) => {
     writeResToJSON(res, "taiwan");
@@ -117,11 +155,6 @@ function removeProperty(obj) {
 }
 
 function getLastData(obj) {
-  //   const nowDate = new Date();
-  //   return (
-  //     obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`] ||
-  //     obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]
-  //   );
   const keys = Object.keys(obj);
   const last = keys[keys.length - 1];
   return obj[last];
@@ -136,16 +169,6 @@ function getLastDiffData(obj) {
   if (last1) {
     intLastDiff = obj[last] - obj[last1];
   }
-
-  //   if (obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) {
-  //     intLastDiff =
-  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 1}/20`]) -
-  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]);
-  //   } else {
-  //     intLastDiff =
-  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 2}/20`]) -
-  //       parseInt(obj[`${nowDate.getMonth() + 1}/${nowDate.getDate() - 3}/20`]);
-  //   }
   return intLastDiff;
 }
 
@@ -270,12 +293,9 @@ axios
         },
         "global"
       );
-      // TODO: perf 分國家
-      // 一個總的統計 for 畫圖
       writePartialTimeSeriesForAPI(finalTimeSeriesData);
       const finalTimeSeriesDataWithoutTimeline = finalTimeSeriesData.map(
         function (element) {
-          // 拿掉 timeline 減少大小
           if (element.timeline !== undefined) {
             delete element.timeline;
           }
@@ -307,3 +327,4 @@ instanceGithub.get("/time_series_covid19_confirmed_US.csv").then((resCases) => {
     .filter((elm) => elm.confirmed !== "0" && parseInt(elm.confirmed) > 500);
   writeResToJSON({ data: finalData }, "usa");
 });
+*/

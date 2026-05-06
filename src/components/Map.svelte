@@ -8,6 +8,9 @@
   // import { getRandomAround, locations } from "../util.js";
 
   export let countries = [];
+  export let mapMode = "virus";
+
+  import ratData from "../../data/mouse.json";
 
   const virusIcon = L.icon({
     iconUrl: srcVirus,
@@ -26,9 +29,32 @@
   let cityMarkers = [];
   let addressPoints = [];
   var convidMarkers = L.markerClusterGroup();
+  let map;
+  let virusLayers = L.layerGroup();
+  let ratLayers = L.layerGroup();
+  let ratMarkers = L.markerClusterGroup();
+  let ratHeatPoints = [];
+
+  $: if (map && mapMode) {
+    updateMapMode();
+  }
+
+  function updateMapMode() {
+    if (mapMode === "virus") {
+      map.removeLayer(ratLayers);
+      map.removeLayer(ratMarkers);
+      map.addLayer(virusLayers);
+      map.addLayer(convidMarkers);
+    } else {
+      map.removeLayer(virusLayers);
+      map.removeLayer(convidMarkers);
+      map.addLayer(ratLayers);
+      map.addLayer(ratMarkers);
+    }
+  }
 
   onMount(() => {
-    const map = L.map("map").setView([23.5, 120.8], 8);
+    map = L.map("map").setView([23.5, 120.8], 8);
     window.map = map;
     const tiles = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
@@ -90,7 +116,6 @@
           convidMarkers.addLayer(marker);
         }
       });
-    map.addLayer(convidMarkers);
 
     countries.forEach((elm) => {
       const totalCount = parseInt(elm[1]);
@@ -99,57 +124,55 @@
       if (elm[0] !== "US" && !isNaN(parseFloat(arrLatLng[0]))) {
         const tempMarker = L.marker(elm[3].split(" "), {
           icon: virusIcon,
-        }).bindPopup(`${elm[0]}確診：${elm[1]}`);
+        }).bindPopup(`${elm[0]}${elm[2]}：${elm[1]}`);
 
         cityMarkers.push(tempMarker);
-        // if (arrLatLng[1] > 120.1 && arrLatLng[1] < 121.8) {
-        //   // 不做事
-        // } else {
-        //   while (nowCount < totalCount) {
-        //     const arrayLatLng = elm[3].split(" ");
-        //     if (nowCount < 100) {
-        //       nowCount += 1;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount));
-        //     } else if (nowCount < 1000) {
-        //       // 10 ~ 100 公里
-        //       nowCount += 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 50));
-        //     } else if (nowCount < 5000) {
-        //       // 50 ~ 250 公里
-        //       nowCount += 37;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 20));
-        //     } else if (nowCount < 20000) {
-        //       // 75 ~ 300 公里
-        //       nowCount += 157;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 10));
-        //     } else if (nowCount < 40000) {
-        //       // 100 ~ 200 公里
-        //       nowCount += 317;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 3));
-        //     } else if (nowCount < 80000) {
-        //       // 120 ~ 240 公里
-        //       nowCount += 487;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 2));
-        //     } else if (nowCount < 100000) {
-        //       nowCount += 1109 * 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.5));
-        //     } else if (nowCount < 2000000) {
-        //       nowCount += 5393 * 17;
-        //       addressPoints.push(getRandomAround(arrayLatLng, nowCount * 0.05));
-        //     } else {
-        //       nowCount += 5000000;
-        //     }
-        //   }
-        // }
       }
     });
 
-    const cities = L.layerGroup(cityMarkers).addTo(map);
+    const cities = L.layerGroup(cityMarkers);
     const heat = L.heatLayer(addressPoints, {
       radius: 9,
       blur: 12,
       minOpacity: 0.6,
-    }).addTo(map);
+    });
+    virusLayers.addLayer(cities);
+    virusLayers.addLayer(heat);
+
+    // Rat Map Data
+    window.ratMarkerMap = new Map();
+    ratData.forEach((elm, index) => {
+      const lat = parseFloat(elm.lat);
+      const lng = parseFloat(elm.lng);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        ratHeatPoints.push([lat, lng]);
+        const marker = L.marker([lat, lng]);
+        const id = `rat-${index}`;
+        let popupContent = `
+          <div class="rat-popup">
+            <strong>時間:</strong> ${elm.time}<br>
+            <strong>地點:</strong> ${elm.location}<br>
+            <strong>類型:</strong> ${elm.type}<br>
+            <strong>說明:</strong> ${elm.description}<br>
+        `;
+        if (elm.image && elm.image.startsWith('http')) {
+          popupContent += `<img src="${elm.image}" style="width:100%;max-width:250px;margin-top:8px;border-radius:4px;display:block;" alt="通報照片" />`;
+        }
+        popupContent += `</div>`;
+        marker.bindPopup(popupContent);
+        ratMarkers.addLayer(marker);
+        window.ratMarkerMap.set(id, marker);
+      }
+    });
+
+    const ratHeat = L.heatLayer(ratHeatPoints, {
+      radius: 15,
+      blur: 20,
+      minOpacity: 0.4,
+    });
+    ratLayers.addLayer(ratHeat);
+
+    updateMapMode();
 
     // 鄉鎮市界
     L.geoJson(twcounty2010, {

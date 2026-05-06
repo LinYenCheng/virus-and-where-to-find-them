@@ -3,4 +3,6 @@
 /.vite
 /dev
 /data
+!/data/mouse.csv
+!/data/mouse.json
 /docs

@@ -19,12 +19,45 @@ import {
 import jsonTaiwan from "../data/taiwan.json";
 // import jsonUSA from "../data/usa.json";
 import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
+import jsonRat from "../data/mouse.json";
 
-import { generateGlobalTable, generateTaiwanTable } from "./dataTable.js";
+import { generateGlobalTable, generateTaiwanTable, generateRatTable } from "./dataTable.js";
 
-function generateInformation() {
+const urlParams = new URLSearchParams(window.location.search);
+const mapMode = urlParams.get("map") || "virus";
+
+function generateInformation(mode) {
   const usaCounties = [];
   const finalSelectOptions = [];
+
+  if (mode === "rat") {
+    // Reset counts first
+    locations.forEach(loc => loc.count = 0);
+
+    jsonRat.forEach((elm) => {
+      const nowLocationIndex = locations.findIndex((loc) => 
+        elm.location.includes(loc.location)
+      );
+      if (nowLocationIndex !== -1) {
+        locations[nowLocationIndex].count = (locations[nowLocationIndex].count || 0) + 1;
+      }
+    });
+
+    locations.filter(loc => loc.count > 0).forEach((loc) => {
+      finalSelectOptions.push({
+        id: loc.location,
+        text: `${loc.location} (${loc.count})`,
+        lat: loc.lat,
+        lng: loc.lng,
+      });
+    });
+
+    return {
+      finalSelectOptions,
+      finalCountries: [],
+    };
+  }
+
   const finalCountries = jsonFinalTimeSeriesData
     .sort(function (a, b) {
       return a && b && parseInt(b.confirmed) - parseInt(a.confirmed);
@@ -44,8 +77,6 @@ function generateInformation() {
     })
     .filter(
       (elm) =>
-        // elm[0] !== 'China' &&
-        // elm[0] !== 'Hong Kong' &&
         elm[0] !== "Taiwan*" && elm[0] !== "N/A"
     )
     .concat(
@@ -64,116 +95,92 @@ function generateInformation() {
   };
 }
 
-const { finalSelectOptions, finalCountries } = generateInformation();
-
-function initApp({ selectOptions, finalCountries }) {
+function initApp({ selectOptions, finalCountries, mapMode }) {
   let otherCounts = 0;
   let taiwanCounts = 0;
 
-  $(".loading__overlay").css("zIndex", -1);
-  $(".loading__content").css("zIndex", -1);
-  $(jsonTaiwan).each(function (k, v) {
-    const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
-    const nowAgeIndex = ages.findIndex((elm) => elm.range === v["年齡層"]);
-    if (v["是否為境外移入"] === "是") {
-      otherCounts += parseInt(v["確定病例數"]);
-    } else {
-      taiwanCounts += parseInt(v["確定病例數"]);
-    }
-    if (locations[nowIndex]) {
-      if (locations[nowIndex].count) {
-        locations[nowIndex].count += parseInt(v["確定病例數"]);
+  if (mapMode === "virus") {
+    $(jsonTaiwan).each(function (k, v) {
+      const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
+      const nowAgeIndex = ages.findIndex((elm) => elm.range === v["年齡層"]);
+      if (v["是否為境外移入"] === "是") {
+        otherCounts += parseInt(v["確定病例數"]);
       } else {
-        locations[nowIndex].count = 1;
+        taiwanCounts += parseInt(v["確定病例數"]);
       }
-    }
+      if (locations[nowIndex]) {
+        locations[nowIndex].count = (locations[nowIndex].count || 0) + parseInt(v["確定病例數"]);
+      }
 
-    if (ages[nowAgeIndex]) {
-      if (ages[nowAgeIndex].count) {
-        ages[nowAgeIndex].count += parseInt(v["確定病例數"]);
-      } else {
-        ages[nowAgeIndex].count = 1;
+      if (ages[nowAgeIndex]) {
+        ages[nowAgeIndex].count = (ages[nowAgeIndex].count || 0) + parseInt(v["確定病例數"]);
       }
+    });
+  }
+
+  // Initial UI Setup
+  setupSelect2(selectOptions, mapMode);
+  
+  if (mapMode === "virus") {
+    setupRouter(selectOptions);
+  }
+
+  return getFinalCountriesForMap(finalCountries, mapMode);
+}
+
+function setupSelect2(selectOptions, mode) {
+  $("#select-country").empty().select2({
+    data: selectOptions,
+    placeholder: mode === "rat" ? "區域 (老鼠通報總數)" : "區域 (確診數)",
+    allowClear: true,
+  }).off("select2:select").on("select2:select", function (e) {
+    var { data } = e.params;
+    if (data) {
+      if (mode === "rat") {
+        window.map.panTo([data.lat, data.lng]);
+        window.map.setZoom(16);
+        generateRatTable(data.id);
+        return;
+      }
+      generateChartCountry({
+        title: data.paramCountry,
+        paramCountry: modifyCountryParam(data.paramCountry),
+      });
+      if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
+        $("#chart--dounut").css("zIndex", 1);
+        generateTaiwanTable();
+      } else {
+        $("#chart--dounut").css("zIndex", -1);
+        generateGlobalTable();
+      }
+      router.navigateTo(`country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`);
     }
   });
+}
 
-  setTimeout(() => {
-    $("#select-country")
-      .select2({
-        data: selectOptions,
-        placeholder: "區域 (確診數)",
-        allowClear: true,
-      })
-      .on("select2:open", function () {
-        $("#chart--bar").css("display", "none");
-      })
-      .on("select2:close", function () {
-        $("#chart--bar").css("display", "initial");
-      })
-      .on("select2:select", function (e) {
-        var { data } = e.params;
-        if (data) {
-          // map.panTo([data.lat, data.lng]);
-          generateChartCountry({
-            title: data.paramCountry,
-            paramCountry: modifyCountryParam(data.paramCountry),
-          });
-          if (
-            data.paramCountry === "Taiwan*" ||
-            data.paramCountry === "Taiwan"
-          ) {
-            $("#chart--dounut").css("zIndex", 1);
-            generateTaiwanTable();
-          } else {
-            $("#chart--dounut").css("zIndex", -1);
-            generateGlobalTable();
-          }
-          router.navigateTo(
-            `country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`
-          );
-        }
-      });
-  }, 500);
-
+function setupRouter(selectOptions) {
   router
     .add("", function () {
-      generateChartCountry({
-        title: "Taiwan",
-        paramCountry: "taiwan*",
-      });
+      generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
     })
     .add("country/(:any)", function (country) {
       const nowCountry = country.replace(/-/g, " ").toLocaleLowerCase();
-
-      $("#select-country")
-        .val(nowCountry)
-        .trigger("change")
-        .trigger({
-          type: "select2:select",
-          params: {
-            data: selectOptions[
-              selectOptions.findIndex((elm) => {
-                return elm.id.toLowerCase() === nowCountry;
-              })
-            ],
-          },
-        });
+      $("#select-country").val(nowCountry).trigger("change").trigger({
+        type: "select2:select",
+        params: {
+          data: selectOptions[selectOptions.findIndex((elm) => elm.id.toLowerCase() === nowCountry)],
+        },
+      });
     })
     .check();
+}
 
-  setTimeout(() => {
-    $(".loading__overlay").css("zIndex", -1);
-    $(".loading__content").css("zIndex", -1);
-    generateChartGlobal();
-    // generateDounutChartTaiwan({
-    //   otherCounts,
-    //   taiwanCounts,
-    //   locations,
-    //   ages,
-    // });
-    generateTaiwanTable();
-  }, 500);
-
+function getFinalCountriesForMap(finalCountries, mode) {
+  if (mode === "rat") {
+    return locations
+      .filter((elm) => elm.count)
+      .map((elm) => [elm.location, elm.count, "老鼠通報", `${elm.lat} ${elm.lng}`]);
+  }
   return finalCountries.concat(
     locations
       .filter((elm) => elm.count)
@@ -181,17 +188,49 @@ function initApp({ selectOptions, finalCountries }) {
   );
 }
 
+// Global update function
+window.updateMapModeUI = (mode) => {
+  const { finalSelectOptions, finalCountries } = generateInformation(mode);
+  setupSelect2(finalSelectOptions, mode);
+  
+  if (mode === "rat") {
+    generateRatTable();
+    $("#chart--bar, #chart--line, #chart--dounut").css("display", "none");
+  } else {
+    generateTaiwanTable();
+    generateChartGlobal();
+    $("#chart--bar, #chart--line, #chart--dounut").css("display", "block");
+  }
+  
+  const finalMapData = getFinalCountriesForMap(finalCountries, mode);
+  app.$set({ finalCountries: finalMapData, mapMode: mode });
+};
+
+const initialMode = mapMode;
+const { finalSelectOptions, finalCountries } = generateInformation(initialMode);
 const finalCountriesWithTaiwan = initApp({
   selectOptions: finalSelectOptions,
   finalCountries,
+  mapMode: initialMode,
 });
 
 const app = new App({
   target: document.body,
   props: {
     finalCountries: finalCountriesWithTaiwan,
+    mapMode: initialMode,
   },
 });
+
+setTimeout(() => {
+  app.$set({ showLoading: false });
+  if (initialMode === "virus") {
+    generateChartGlobal();
+    generateTaiwanTable();
+  } else {
+    generateRatTable();
+  }
+}, 500);
 
 $("#btn-open").click(function () {
   $("#modal").css("display", "block");

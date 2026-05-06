@@ -1,5 +1,6 @@
 import jsonTaiwan from '../data/taiwan.json';
 import jsonFinalTimeSeriesData from '../data/finalTimeSeriesData.json';
+import jsonRat from '../data/mouse.json';
 
 function getPercentHTMLString({ intChild, intParent }) {
   let finalString = '';
@@ -14,6 +15,72 @@ function getPercentHTMLString({ intChild, intParent }) {
     finalString = '0%';
   }
   return finalString;
+}
+
+function generateRatTable(filterRegion = null) {
+  let table = '';
+  table += `
+  <button id="btn-toggle">顯示/隱藏</button>
+  <table id="dataTable-now" class="dataTable-rat display responsive nowrap">
+      <thead>
+            <tr>
+                <th>地點</th>
+                <th>類型</th>    
+                <th>時間</th>
+                <th>說明</th>
+            </tr>
+        </thead>
+        <tbody>
+        `;
+
+  /* loop over each object in the array to create rows*/
+  jsonRat
+    .filter((item) => !filterRegion || item.location.includes(filterRegion))
+    .forEach((item, index) => {
+      table += `<tr class="rat-row" data-lat="${item.lat}" data-lng="${item.lng}" data-id="rat-${index}">
+    <td>${item.location}</td>
+    <td>${item.type}</td>
+    <td>${item.time}</td>
+    <td>${item.description}</td>
+    </tr>`;
+    });
+  table += '</tbody></table>';
+  $('#dataTable').html(table);
+
+  // Add click handler for rows
+  $('.rat-row').on('click', function() {
+    const lat = $(this).data('lat');
+    const lng = $(this).data('lng');
+    const id = $(this).data('id');
+    if (window.map && lat && lng) {
+      window.map.setView([lat, lng], 18);
+      // Trigger popup if marker exists in global marker map
+      if (window.ratMarkerMap && window.ratMarkerMap.has(id)) {
+        window.ratMarkerMap.get(id).openPopup();
+      }
+    }
+  });
+
+  $(`#dataTable-now`).DataTable({
+    order: [[0, 'desc']],
+    responsive: true,
+    lengthMenu: [
+      [8, 12],
+      [8, 12],
+    ],
+    language: {
+      search: '搜尋:',
+      info: '_START_ - _END_ / _TOTAL_',
+      paginate: {
+        previous: '<',
+        next: '>',
+      },
+    },
+  });
+  $('#btn-toggle').click(function () {
+    $('#dataTable-now_wrapper').toggle();
+  });
+  $('#btn-toggle').click();
 }
 
 function generateGlobalTable() {
@@ -137,4 +204,4 @@ function generateTaiwanTable() {
   $('#btn-toggle').click();
 }
 
-export { generateGlobalTable, generateTaiwanTable };
+export { generateGlobalTable, generateTaiwanTable, generateRatTable };
