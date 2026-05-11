@@ -6,20 +6,48 @@ on:
   workflow_dispatch:
 
 jobs:
-  fetch:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version:
+          - 24.x
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm install
-      - run: npm run generate
-      - name: Commit and push if changed
+          node-version: ${{ matrix.node-version }}
+
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            **/node_modules
+          key: ${{ runner.os }}-${{ hashFiles('**/package-lock.json') }}
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: generate new data
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add data/mouse.csv data/mouse.json
-          git commit -m "Update rat data" || exit 0
-          git push
+          export NODE_OPTIONS="--max_old_space_size=8192"
+          npm run generate
+          npm run build
+
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@v4.2.3
+        with:
+          # github-token: ${{ secrets.TOKEN }}
+          branch: "gh-pages"
+          commit-message: "chore: publish with new data"
+          # force-add: "true"
+          # rebase: "true"
+          folder: docs
+          # files: docs/
+          # name: Github Action
+          # email: 41898282+github-actions[bot]@users.noreply.github.com
+          git-config-name: Github Action
+          git-config-email: 41898282+github-actions[bot]@users.noreply.github.com
