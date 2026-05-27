@@ -111,6 +111,14 @@
   right: 100px;
 }
 
+@media (max-width: 480px) {
+  #select-country,
+  .select2-container {
+    width: 150px !important;
+    right: 60px;
+  }
+}
+
 #select-country {
   height: 35px;
   line-height: 35px;

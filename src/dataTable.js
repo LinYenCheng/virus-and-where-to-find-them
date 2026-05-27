@@ -1,6 +1,7 @@
 import jsonTaiwan from '../data/taiwan.json';
 import jsonFinalTimeSeriesData from '../data/finalTimeSeriesData.json';
 import jsonRat from '../data/mouse.json';
+import jsonFood from '../data/food.json';
 
 function getPercentHTMLString({ intChild, intParent }) {
   let finalString = '';
@@ -15,6 +16,70 @@ function getPercentHTMLString({ intChild, intParent }) {
     finalString = '0%';
   }
   return finalString;
+}
+
+function generateFoodTable() {
+  let table = '';
+  table += `
+  <button id="btn-toggle">顯示/隱藏</button>
+  <table id="dataTable-now" class="dataTable-food display responsive nowrap">
+      <thead>
+            <tr>
+                <th>名稱</th>
+                <th>評價</th>    
+                <th>地址</th>
+                <th>說明</th>
+            </tr>
+        </thead>
+        <tbody>
+        `;
+
+  /* loop over each object in the array to create rows*/
+  jsonFood.forEach((item, index) => {
+    table += `<tr class="food-row" data-lat="${item.lat}" data-lng="${item.lng}" data-id="food-${index}">
+    <td>${item.name}</td>
+    <td>${item.rating}</td>
+    <td>${item.fullAddress}</td>
+    <td>${item.description}</td>
+    </tr>`;
+  });
+  table += '</tbody></table>';
+  $('#dataTable').html(table);
+
+  // Add click handler for rows
+  $('.food-row').on('click', function() {
+    const lat = $(this).data('lat');
+    const lng = $(this).data('lng');
+    const id = $(this).data('id');
+    if (window.map && lat && lng) {
+      window.map.setView([lat, lng], 18);
+      // Trigger popup if marker exists
+      if (window.foodMarkerMap && window.foodMarkerMap.has(id)) {
+        window.foodMarkerMap.get(id).openPopup();
+      }
+    }
+  });
+
+  $(`#dataTable-now`).DataTable({
+    order: [[1, 'desc']],
+    responsive: true,
+    lengthMenu: [
+      [8, 12],
+      [8, 12],
+    ],
+    language: {
+      search: '搜尋:',
+      info: '_START_ - _END_ / _TOTAL_',
+      paginate: {
+        previous: '<',
+        next: '>',
+      },
+    },
+  });
+  $('#btn-toggle').click(function () {
+    $('#dataTable-now_wrapper').toggle();
+  });
+  $('#btn-toggle').click();
 }
 
 function generateRatTable(filterRegion = null) {
@@ -204,4 +269,4 @@ function generateTaiwanTable() {
   $('#btn-toggle').click();
 }
 
-export { generateGlobalTable, generateTaiwanTable, generateRatTable };
+export { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoodTable };

@@ -4,6 +4,7 @@
     "async": "^3.2.6",
     "axios": "^1.13.6",
     "csvjson-csv2json": "^5.0.6",
+    "iconv-lite": "^0.7.2",
     "sirv-cli": "^3.0.1",
     "vanilla-router": "^1.2.8"
   },
@@ -18,7 +19,7 @@
     "dev": "vite",
     "preview": "vite preview",
     "generate": "node ./generateJSON.js",
-    "start": "sirv docs",
+    "start": "sirv dist",
     "release": "standard-version"
   },
   "description": "武漢肺炎疫情地圖",
@@ -26,7 +27,7 @@
   "type": "module",
   "main": "index.js",
   "directories": {
-    "doc": "docs"
+    "doc": "dist"
   },
   "repository": {
     "type": "git",
