@@ -50,17 +50,17 @@
   <button id="btn-open">開啟圖表</button>
   <div id="modal">
     <button id="btn-close">關閉圖表</button>
-    <div id="chart--line" />
-    <div id="chart--bar" />
+    <div id="chart--line"></div>
+    <div id="chart--bar"></div>
     <p>
       <span>資料來源:</span>
       <a href="https://github.com/CSSEGISandData/COVID-19" target="_blank"
         >JHU CSSE COVID-19 Data</a
       >
     </p>
-    <p />
+    <p></p>
   </div>
-  <div id="chart--dounut" />
+  <div id="chart--dounut"></div>
 {/if}
 <Loading show={showLoading} />
 

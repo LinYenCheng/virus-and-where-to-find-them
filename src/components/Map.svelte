@@ -290,5 +290,5 @@
 </script>
 
 <div id="map">
-  <div id="dataTable" />
+  <div id="dataTable"></div>
 </div>

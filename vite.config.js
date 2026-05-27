@@ -3,7 +3,15 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 
 export default defineConfig({
-  plugins: [svelte()],
+  plugins: [
+    svelte({
+      compilerOptions: {
+        compatibility: {
+          componentApi: 4,
+        },
+      },
+    }),
+  ],
   base: '/virus-and-where-to-find-them/',
   build: {
     outDir: 'dist',

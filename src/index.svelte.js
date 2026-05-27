@@ -1,4 +1,5 @@
 import "../public/global.css";
+import { mount } from "svelte";
 import App from "./components/App.svelte";
 
 import router from "./router.js";
@@ -26,6 +27,13 @@ import { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoo
 
 const urlParams = new URLSearchParams(window.location.search);
 const mapMode = urlParams.get("map") || "virus";
+
+// Create reactive state for Svelte 5
+const state = $state({
+  finalCountries: [],
+  mapMode: mapMode,
+  showLoading: true
+});
 
 function generateInformation(mode) {
   const usaCounties = [];
@@ -118,7 +126,7 @@ function initApp({ selectOptions, finalCountries, mapMode }) {
   let taiwanCounts = 0;
 
   if (mapMode === "virus") {
-    $(jsonTaiwan).each(function (k, v) {
+    globalThis.$(jsonTaiwan).each(function (k, v) {
       const nowIndex = locations.findIndex((elm) => elm.location === v["縣市"]);
       const nowAgeIndex = ages.findIndex((elm) => elm.range === v["年齡層"]);
       if (v["是否為境外移入"] === "是") {
@@ -151,7 +159,7 @@ function setupSelect2(selectOptions, mode) {
   if (mode === "rat") placeholder = "區域 (老鼠通報總數)";
   if (mode === "food") placeholder = "搜尋美食名稱...";
 
-  $("#select-country").empty().select2({
+  globalThis.$("#select-country").empty().select2({
     data: selectOptions,
     placeholder: placeholder,
     allowClear: true,
@@ -173,10 +181,10 @@ function setupSelect2(selectOptions, mode) {
         paramCountry: modifyCountryParam(data.paramCountry),
       });
       if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
-        $("#chart--dounut").css("zIndex", 1);
+        globalThis.$("#chart--dounut").css("zIndex", 1);
         generateTaiwanTable();
       } else {
-        $("#chart--dounut").css("zIndex", -1);
+        globalThis.$("#chart--dounut").css("zIndex", -1);
         generateGlobalTable();
       }
       router.navigateTo(`country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`);
@@ -191,7 +199,7 @@ function setupRouter(selectOptions) {
     })
     .add("country/(:any)", function (country) {
       const nowCountry = country.replace(/-/g, " ").toLocaleLowerCase();
-      $("#select-country").val(nowCountry).trigger("change").trigger({
+      globalThis.$("#select-country").val(nowCountry).trigger("change").trigger({
         type: "select2:select",
         params: {
           data: selectOptions[selectOptions.findIndex((elm) => elm.id.toLowerCase() === nowCountry)],
@@ -228,15 +236,16 @@ window.updateMapModeUI = (mode) => {
     } else {
       generateFoodTable();
     }
-    $("#chart--bar, #chart--line, #chart--dounut").css("display", "none");
+    globalThis.$("#chart--bar, #chart--line, #chart--dounut").css("display", "none");
   } else {
     generateTaiwanTable();
     generateChartGlobal();
-    $("#chart--bar, #chart--line, #chart--dounut").css("display", "block");
+    globalThis.$("#chart--bar, #chart--line, #chart--dounut").css("display", "block");
   }
   
   const finalMapData = getFinalCountriesForMap(finalCountries, mode);
-  app.$set({ finalCountries: finalMapData, mapMode: mode });
+  state.finalCountries = finalMapData;
+  state.mapMode = mode;
 };
 
 const initialMode = mapMode;
@@ -247,16 +256,18 @@ const finalCountriesWithTaiwan = initApp({
   mapMode: initialMode,
 });
 
-const app = new App({
+// Initialize reactive state
+state.finalCountries = finalCountriesWithTaiwan;
+state.mapMode = initialMode;
+
+// Mount the app using Svelte 5 API
+const app = mount(App, {
   target: document.body,
-  props: {
-    finalCountries: finalCountriesWithTaiwan,
-    mapMode: initialMode,
-  },
+  props: state
 });
 
 setTimeout(() => {
-  app.$set({ showLoading: false });
+  state.showLoading = false;
   if (initialMode === "virus") {
     generateChartGlobal();
     generateTaiwanTable();
@@ -267,18 +278,18 @@ setTimeout(() => {
   }
 }, 500);
 
-$("#btn-open").click(function () {
-  $("#modal").css("display", "block");
-  $("#modal").css("opacity", 1);
-  $("#modal").css("zIndex", 1000);
-  $("#btn-open").css("zIndex", -1);
+globalThis.$("#btn-open").click(function () {
+  globalThis.$("#modal").css("display", "block");
+  globalThis.$("#modal").css("opacity", 1);
+  globalThis.$("#modal").css("zIndex", 1000);
+  globalThis.$("#btn-open").css("zIndex", -1);
 });
 
-$("#btn-close").click(function () {
-  $("#modal").css("display", "none");
-  $("#modal").css("opacity", 0);
-  $("#modal").css("zIndex", -1);
-  $("#btn-open").css("zIndex", 2);
+globalThis.$("#btn-close").click(function () {
+  globalThis.$("#modal").css("display", "none");
+  globalThis.$("#modal").css("opacity", 0);
+  globalThis.$("#modal").css("zIndex", -1);
+  globalThis.$("#btn-open").css("zIndex", 2);
 });
 
 removeFbclid();

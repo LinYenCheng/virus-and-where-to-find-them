@@ -1,3 +1,3 @@
 <select id="select-country" name="country">
-  <option />
+  <option></option>
 </select>
