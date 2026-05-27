@@ -45,8 +45,8 @@ jobs:
           commit-message: "chore: publish with new data"
           # force-add: "true"
           # rebase: "true"
-          folder: docs
-          # files: docs/
+          folder: dist
+          # files: dist/
           # name: Github Action
           # email: 41898282+github-actions[bot]@users.noreply.github.com
           git-config-name: Github Action

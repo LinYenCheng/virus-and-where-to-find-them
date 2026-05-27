@@ -20,8 +20,9 @@ import jsonTaiwan from "../data/taiwan.json";
 // import jsonUSA from "../data/usa.json";
 import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
 import jsonRat from "../data/mouse.json";
+import jsonFood from "../data/food.json";
 
-import { generateGlobalTable, generateTaiwanTable, generateRatTable } from "./dataTable.js";
+import { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoodTable } from "./dataTable.js";
 
 const urlParams = new URLSearchParams(window.location.search);
 const mapMode = urlParams.get("map") || "virus";
@@ -52,6 +53,23 @@ function generateInformation(mode) {
       });
     });
 
+    return {
+      finalSelectOptions,
+      finalCountries: [],
+    };
+  }
+
+  if (mode === "food") {
+    jsonFood.forEach((item, index) => {
+      if (item.lat && item.lng) {
+        finalSelectOptions.push({
+          id: `food-${index}`,
+          text: `${item.name} (${item.location})`,
+          lat: parseFloat(item.lat),
+          lng: parseFloat(item.lng),
+        });
+      }
+    });
     return {
       finalSelectOptions,
       finalCountries: [],
@@ -129,17 +147,25 @@ function initApp({ selectOptions, finalCountries, mapMode }) {
 }
 
 function setupSelect2(selectOptions, mode) {
+  let placeholder = "區域 (確診數)";
+  if (mode === "rat") placeholder = "區域 (老鼠通報總數)";
+  if (mode === "food") placeholder = "搜尋美食名稱...";
+
   $("#select-country").empty().select2({
     data: selectOptions,
-    placeholder: mode === "rat" ? "區域 (老鼠通報總數)" : "區域 (確診數)",
+    placeholder: placeholder,
     allowClear: true,
   }).off("select2:select").on("select2:select", function (e) {
     var { data } = e.params;
     if (data) {
-      if (mode === "rat") {
+      if (mode === "rat" || mode === "food") {
         window.map.panTo([data.lat, data.lng]);
-        window.map.setZoom(16);
-        generateRatTable(data.id);
+        window.map.setZoom(mode === "food" ? 18 : 16);
+        if (mode === "rat") {
+          generateRatTable(data.id);
+        }
+        // For food mode, maybe open popup? 
+        // Need access to food markers. Map.svelte handles that.
         return;
       }
       generateChartCountry({
@@ -181,6 +207,9 @@ function getFinalCountriesForMap(finalCountries, mode) {
       .filter((elm) => elm.count)
       .map((elm) => [elm.location, elm.count, "老鼠通報", `${elm.lat} ${elm.lng}`]);
   }
+  if (mode === "food") {
+    return [];
+  }
   return finalCountries.concat(
     locations
       .filter((elm) => elm.count)
@@ -193,8 +222,12 @@ window.updateMapModeUI = (mode) => {
   const { finalSelectOptions, finalCountries } = generateInformation(mode);
   setupSelect2(finalSelectOptions, mode);
   
-  if (mode === "rat") {
-    generateRatTable();
+  if (mode === "rat" || mode === "food") {
+    if (mode === "rat") {
+      generateRatTable();
+    } else {
+      generateFoodTable();
+    }
     $("#chart--bar, #chart--line, #chart--dounut").css("display", "none");
   } else {
     generateTaiwanTable();
@@ -227,8 +260,10 @@ setTimeout(() => {
   if (initialMode === "virus") {
     generateChartGlobal();
     generateTaiwanTable();
-  } else {
+  } else if (initialMode === "rat") {
     generateRatTable();
+  } else {
+    generateFoodTable();
   }
 }, 500);
 

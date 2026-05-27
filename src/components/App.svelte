@@ -40,6 +40,9 @@
   <button class:active={mapMode === "rat"} on:click={() => toggleMap("rat")}>
     老鼠地圖
   </button>
+  <button class:active={mapMode === "food"} on:click={() => toggleMap("food")}>
+    肥肥地圖
+  </button>
 </div>
 
 <Select />

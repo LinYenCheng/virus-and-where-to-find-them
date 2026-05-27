@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [svelte()],
   base: '/virus-and-where-to-find-them/',
   build: {
-    outDir: 'docs',
+    outDir: 'dist',
     emptyOutDir: false, // Keep existing data in docs/ if needed, but usually true is better for clean builds
     rollupOptions: {
       input: {

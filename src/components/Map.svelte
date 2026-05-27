@@ -4,6 +4,7 @@
   import convidActivityJSON from "../../data/covid-activity.json";
   // https://github.com/ronnywang/twgeojson/blob/master/twcounty2010.2.2.json
   import twcounty2010 from "../../data/twcounty2010.2.json";
+  import foodData from "../../data/food.json";
 
   // import { getRandomAround, locations } from "../util.js";
 
@@ -34,22 +35,64 @@
   let ratLayers = L.layerGroup();
   let ratMarkers = L.markerClusterGroup();
   let ratHeatPoints = [];
+  let foodMarkers = L.markerClusterGroup();
+  let cities = L.layerGroup();
 
   $: if (map && mapMode) {
     updateMapMode();
+  }
+
+  $: if (map && countries) {
+    updateCityMarkers();
+  }
+
+  function updateCityMarkers() {
+    if (!map) return;
+    cities.clearLayers();
+    cityMarkers = [];
+    countries.forEach((elm) => {
+      const arrLatLng = elm[3].split(" ");
+      if (elm[0] !== "US" && !isNaN(parseFloat(arrLatLng[0]))) {
+        const tempMarker = L.marker(elm[3].split(" "), {
+          icon: virusIcon,
+        }).bindPopup(`${elm[0]}${elm[2]}：${elm[1]}`);
+
+        cityMarkers.push(tempMarker);
+        cities.addLayer(tempMarker);
+      }
+    });
+
+    if (mapMode === "virus" && map.getZoom() >= 7) {
+      if (!map.hasLayer(cities)) map.addLayer(cities);
+    } else {
+      map.removeLayer(cities);
+    }
   }
 
   function updateMapMode() {
     if (mapMode === "virus") {
       map.removeLayer(ratLayers);
       map.removeLayer(ratMarkers);
+      map.removeLayer(foodMarkers);
       map.addLayer(virusLayers);
       map.addLayer(convidMarkers);
-    } else {
+      if (map.getZoom() >= 7) map.addLayer(cities);
+    } else if (mapMode === "rat") {
       map.removeLayer(virusLayers);
       map.removeLayer(convidMarkers);
+      map.removeLayer(foodMarkers);
+      map.removeLayer(cities);
       map.addLayer(ratLayers);
       map.addLayer(ratMarkers);
+    } else if (mapMode === "food") {
+      map.removeLayer(virusLayers);
+      map.removeLayer(convidMarkers);
+      map.removeLayer(ratLayers);
+      map.removeLayer(ratMarkers);
+      map.removeLayer(cities);
+      map.addLayer(foodMarkers);
+      // Center map on Hsinchu for food mode
+      if (map) map.setView([24.805, 120.968], 14);
     }
   }
 
@@ -117,26 +160,11 @@
         }
       });
 
-    countries.forEach((elm) => {
-      const totalCount = parseInt(elm[1]);
-      let nowCount = 0;
-      const arrLatLng = elm[3].split(" ");
-      if (elm[0] !== "US" && !isNaN(parseFloat(arrLatLng[0]))) {
-        const tempMarker = L.marker(elm[3].split(" "), {
-          icon: virusIcon,
-        }).bindPopup(`${elm[0]}${elm[2]}：${elm[1]}`);
-
-        cityMarkers.push(tempMarker);
-      }
-    });
-
-    const cities = L.layerGroup(cityMarkers);
     const heat = L.heatLayer(addressPoints, {
       radius: 9,
       blur: 12,
       minOpacity: 0.6,
     });
-    virusLayers.addLayer(cities);
     virusLayers.addLayer(heat);
 
     // Rat Map Data
@@ -172,7 +200,31 @@
     });
     ratLayers.addLayer(ratHeat);
 
+    // Food Map Data
+    window.foodMarkerMap = new Map();
+    foodData.forEach((elm, index) => {
+      const lat = parseFloat(elm.lat);
+      const lng = parseFloat(elm.lng);
+      if (!isNaN(lat) && !isNaN(lng)) {
+        const marker = L.marker([lat, lng]);
+        const id = `food-${index}`;
+        let popupContent = `
+          <div class="food-popup">
+            <h3 style="margin:0 0 8px 0;">${elm.name}</h3>
+            <strong>評價:</strong> ${elm.rating}<br>
+            <strong>地址:</strong> ${elm.fullAddress}<br>
+            <p style="margin-top:8px;">${elm.description}</p>
+            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(elm.fullAddress + ' ' + elm.name)}" target="_blank" style="display:inline-block;margin-top:8px;color:#007bff;text-decoration:none;">在 Google Maps 查看</a>
+          </div>
+        `;
+        marker.bindPopup(popupContent);
+        foodMarkers.addLayer(marker);
+        window.foodMarkerMap.set(id, marker);
+      }
+    });
+
     updateMapMode();
+    updateCityMarkers();
 
     // 鄉鎮市界
     L.geoJson(twcounty2010, {
@@ -190,13 +242,16 @@
 
     map.on("zoomend", function () {
       const zoomLevel = map.getZoom();
+      if (mapMode !== "virus") {
+        map.removeLayer(cities);
+        return;
+      }
+
       if (zoomLevel < 7) {
         map.removeLayer(cities);
       }
       if (zoomLevel >= 7) {
-        if (map.hasLayer(cities)) {
-          // console.log("layer already added");
-        } else {
+        if (!map.hasLayer(cities)) {
           map.addLayer(cities);
         }
       }
