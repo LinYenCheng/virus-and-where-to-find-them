@@ -242,29 +242,29 @@ window.updateMapModeUI = (mode) => {
     generateChartGlobal();
     globalThis.$("#chart--bar, #chart--line, #chart--dounut").css("display", "block");
   }
-  
-  const finalMapData = getFinalCountriesForMap(finalCountries, mode);
+    const finalMapData = getFinalCountriesForMap(finalCountries, mode);
   state.finalCountries = finalMapData;
   state.mapMode = mode;
 };
 
 const initialMode = mapMode;
 const { finalSelectOptions, finalCountries } = generateInformation(initialMode);
+
+// Mount the app using Svelte 5 API first so DOM elements (<select id="select-country">) exist
+const app = mount(App, {
+  target: document.body,
+  props: state
+});
+
+// Initial UI Setup after mounting DOM elements
 const finalCountriesWithTaiwan = initApp({
   selectOptions: finalSelectOptions,
   finalCountries,
   mapMode: initialMode,
 });
 
-// Initialize reactive state
 state.finalCountries = finalCountriesWithTaiwan;
 state.mapMode = initialMode;
-
-// Mount the app using Svelte 5 API
-const app = mount(App, {
-  target: document.body,
-  props: state
-});
 
 setTimeout(() => {
   state.showLoading = false;
@@ -277,19 +277,5 @@ setTimeout(() => {
     generateFoodTable();
   }
 }, 500);
-
-globalThis.$("#btn-open").click(function () {
-  globalThis.$("#modal").css("display", "block");
-  globalThis.$("#modal").css("opacity", 1);
-  globalThis.$("#modal").css("zIndex", 1000);
-  globalThis.$("#btn-open").css("zIndex", -1);
-});
-
-globalThis.$("#btn-close").click(function () {
-  globalThis.$("#modal").css("display", "none");
-  globalThis.$("#modal").css("opacity", 0);
-  globalThis.$("#modal").css("zIndex", -1);
-  globalThis.$("#btn-open").css("zIndex", 2);
-});
 
 removeFbclid();

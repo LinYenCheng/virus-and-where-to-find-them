@@ -3,6 +3,51 @@ import jsonFinalGlobalTimeSeriesData from "../data/global.json";
 import { sma } from "./util";
 // import { modifyCountryParam } from "./util.js";
 
+const chartColors = {
+  shortAverage: "#2d6f9f",
+  longAverage: "#dd8a24",
+  cases: "#56a36c",
+  deaths: "#d75c4a",
+};
+
+const baseChartOptions = {
+  bar: {
+    width: {
+      ratio: 0.72,
+    },
+  },
+  grid: {
+    y: {
+      show: true,
+    },
+  },
+  legend: {
+    position: "bottom",
+  },
+  padding: {
+    top: 8,
+    right: 22,
+    bottom: 10,
+    left: 58,
+  },
+  point: {
+    r: 2.2,
+    focus: {
+      expand: {
+        r: 4,
+      },
+    },
+  },
+  transition: {
+    duration: 180,
+  },
+};
+
+function updateChartStat(id, text) {
+  const element = document.getElementById(id);
+  if (element) element.textContent = text;
+}
+
 function generateChart(resChart) {
   const dates = [];
   const diffConfirmCounts = [];
@@ -190,14 +235,21 @@ function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
   return {
     counts: [...counts],
     diffCounts: [...diffCounts],
-    // 一張表只需要用一次日期
     dates: [...dates],
   };
 }
 
+let chartCountryInstance = null;
+let chartGlobalInstance = null;
+
 // 抓出個別的表
 function generateChartCountry({ title, paramCountry }) {
-  fetch(`data/${paramCountry.replace("*", "")}.json`)
+  const countryTitleEl = document.getElementById("chart-country-title");
+  if (countryTitleEl) countryTitleEl.textContent = title || "國家/地區";
+  updateChartStat("chart-country-stat", "載入中...");
+
+  const formattedParam = paramCountry ? paramCountry.replace("*", "") : "taiwan";
+  fetch(`data/${formattedParam}.json`)
     .then((response) => {
       if (!response.ok) {
         throw new Error("HTTP error " + response.status);
@@ -209,7 +261,7 @@ function generateChartCountry({ title, paramCountry }) {
       let sma14 = [];
       let sma7 = [];
 
-      if (resChart[0]) {
+      if (resChart && resChart[0]) {
         const {
           timeline: { cases, deaths, recovered },
         } = resChart[0];
@@ -229,36 +281,40 @@ function generateChartCountry({ title, paramCountry }) {
         sma14 = [...Array(13).fill(0), ...sma(finalDiffConfirmCounts, 14)];
         sma7 = [...Array(6).fill(0), ...sma(finalDiffConfirmCounts, 7)];
 
-        const chartCountry = c3.generate({
+        const latestConfirmed = totalCounts[totalCounts.length - 1] || 0;
+        const latestDeaths = deathCounts[deathCounts.length - 1] || 0;
+        const deathRatio = latestConfirmed > 0 ? ((latestDeaths * 100) / latestConfirmed).toFixed(2) : "0.00";
+
+        updateChartStat(
+          "chart-country-stat",
+          `確診: ${Number(latestConfirmed).toLocaleString()} | 死亡: ${Number(latestDeaths).toLocaleString()} (${deathRatio}%)`
+        );
+
+        if (chartCountryInstance && typeof chartCountryInstance.destroy === "function") {
+          try { chartCountryInstance.destroy(); } catch (e) {}
+        }
+
+        chartCountryInstance = c3.generate({
           bindto: "#chart--line",
+          padding: {
+            top: 10,
+            right: 20,
+            bottom: 10,
+            left: 55,
+          },
           zoom: {
             enabled: true,
             rescale: true,
           },
-          title: {
-            text: `${title}
-             確診: ${totalCounts[totalCounts.length - 1]}
-             死亡:${deathCounts[deathCounts.length - 1]} (${(
-              (deathCounts[deathCounts.length - 1] * 100) /
-              totalCounts[totalCounts.length - 1]
-            ).toFixed(2)}%)`,
-            //  恢復: ${recoverCounts[recoverCounts.length - 1]}(${(
-            //   (recoverCounts[recoverCounts.length - 1] * 100) /
-            //   totalCounts[totalCounts.length - 1]
-            // ).toFixed(2)}%)`
-          },
-
           data: {
             x: "date",
             xFormat: "%Y-%m-%d",
             columns: [
               ["date", ...dates],
-              // ["累積確診", ...totalCounts],
               ["7日平均", ...sma7],
               ["14日平均", ...sma14],
               ["新增病例", ...diffConfirmCounts],
               ["新增死亡", ...diffDeathCounts],
-              // ["恢復", ...recoverCounts],
             ],
             type: "bar",
             types: {
@@ -266,12 +322,12 @@ function generateChartCountry({ title, paramCountry }) {
               "14日平均": "spline",
             },
             groups: [["新增病例", "新增死亡"]],
-            // axes: {
-            //   死亡: "y2",
-            //   新增病例: "y2",
-            //   "7日平均": "y",
-            //   "14日平均": "y",
-            // },
+            colors: {
+              "新增病例": chartColors.cases,
+              "新增死亡": chartColors.deaths,
+              "7日平均": chartColors.shortAverage,
+              "14日平均": chartColors.longAverage,
+            },
           },
           axis: {
             x: {
@@ -287,20 +343,15 @@ function generateChartCountry({ title, paramCountry }) {
             y: {
               min: 0,
             },
-            // y2: {
-            //   min: 0,
-            //   show: true,
-            // },
           },
         });
-
-        window.addEventListener("resize", () => {
-          if (chartCountry) chartCountry.resize();
-        });
+      } else {
+        updateChartStat("chart-country-stat", "無數據");
       }
     })
     .catch(function (error) {
       console.log(error);
+      updateChartStat("chart-country-stat", "載入失敗");
     });
 }
 
@@ -317,7 +368,6 @@ function generateChartGlobal() {
 
   const {
     dates,
-    // counts: confirmPatientCounts,
     diffCounts: diffConfirmCounts,
   } = getCountsAndDiffPreviousCount(cases);
   const { counts: deathCounts, diffCounts: diffDeathCounts } =
@@ -329,18 +379,23 @@ function generateChartGlobal() {
   sma30 = [...Array(29).fill(0), ...sma(finalDiffConfirmCounts, 30)];
   sma60 = [...Array(59).fill(0), ...sma(finalDiffConfirmCounts, 60)];
 
-  const chart = c3.generate({
+  const globalDeathRatio = todayConfirmed > 0 ? ((todayDeath * 100) / todayConfirmed).toFixed(2) : "0.00";
+  updateChartStat(
+    "chart-global-stat",
+    `確診: ${Number(todayConfirmed).toLocaleString()} | 死亡: ${Number(todayDeath).toLocaleString()} (${globalDeathRatio}%)`
+  );
+
+  if (chartGlobalInstance && typeof chartGlobalInstance.destroy === "function") {
+    try { chartGlobalInstance.destroy(); } catch (e) {}
+  }
+
+  chartGlobalInstance = c3.generate({
     bindto: "#chart--bar",
-    title: {
-      text: `
-      確診: ${todayConfirmed}
-      全球死亡: ${todayDeath} (${((todayDeath * 100) / todayConfirmed).toFixed(
-        2
-      )}%)`,
-      // 全球恢復: ${todayRecover} (${(
-      //   (todayRecover * 100) /
-      //   todayConfirmed
-      // ).toFixed(2)}%)`,
+    padding: {
+      top: 10,
+      right: 20,
+      bottom: 10,
+      left: 55,
     },
     zoom: {
       enabled: true,
@@ -355,9 +410,6 @@ function generateChartGlobal() {
         ["60日平均", ...sma60],
         ["新增病例", ...diffConfirmCounts],
         ["新增死亡", ...diffDeathCounts],
-        // ["全球確診", ...confirmPatientCounts],
-        // ["全球死亡", ...deathCounts],
-        // ["全球恢復", ...recoverCounts],
       ],
       type: "bar",
       types: {
@@ -365,11 +417,14 @@ function generateChartGlobal() {
         "60日平均": "spline",
       },
       groups: [["新增病例", "新增死亡"]],
+      colors: {
+        "新增病例": chartColors.cases,
+        "新增死亡": chartColors.deaths,
+        "30日平均": chartColors.shortAverage,
+        "60日平均": chartColors.longAverage,
+      },
       axes: {
         新增病例: "y",
-        // 全球日增: "y2",
-        // "30日平均": "y2",
-        // "60日平均": "y2",
       },
     },
     axis: {
@@ -385,16 +440,18 @@ function generateChartGlobal() {
       y: {
         min: 0,
       },
-      // y2: {
-      //   min: 0,
-      //   show: true,
-      // },
     },
   });
-  window.addEventListener("resize", () => {
-    if (chart) chart.resize();
-  });
 }
+
+window.addEventListener("resize", () => {
+  if (chartCountryInstance && typeof chartCountryInstance.resize === "function") {
+    chartCountryInstance.resize();
+  }
+  if (chartGlobalInstance && typeof chartGlobalInstance.resize === "function") {
+    chartGlobalInstance.resize();
+  }
+});
 
 export {
   generateChart,

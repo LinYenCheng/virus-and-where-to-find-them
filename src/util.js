@@ -245,25 +245,33 @@ function modifyCountryName(name) {
 }
 
 function modifyCountryParam(name) {
+  if (!name) return "";
   let finalName = name.toLowerCase();
-  switch (name) {
+  switch (finalName) {
     case "taiwan":
+    case "taiwan*":
       finalName = "taiwan*";
       break;
     case "united arab emirates":
-      finalName = "UAE";
+    case "uae":
+      finalName = "united arab emirates";
       break;
     case "korea, south":
-      finalName = "S. Korea";
+    case "korea":
+    case "south korea":
+      finalName = "s.korea";
       break;
     case "united kingdom":
-      finalName = "UK";
+    case "uk":
+      finalName = "united kingdom";
       break;
     case "us":
-      finalName = "USA";
+    case "usa":
+      finalName = "us";
       break;
     case "bosnia and herzegovina":
-      finalName = "Bosnia";
+    case "bosnia":
+      finalName = "bosnia and herzegovina";
       break;
 
     default:

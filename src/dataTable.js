@@ -21,7 +21,7 @@ function getPercentHTMLString({ intChild, intParent }) {
 function generateFoodTable() {
   let table = '';
   table += `
-  <button id="btn-toggle">顯示/隱藏</button>
+  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-food display responsive nowrap">
       <thead>
             <tr>
@@ -78,6 +78,8 @@ function generateFoodTable() {
   });
   $('#btn-toggle').click(function () {
     $('#dataTable-now_wrapper').toggle();
+    const isOpen = $('#dataTable-now_wrapper').is(':visible');
+    $('#btn-toggle').attr('aria-expanded', isOpen);
   });
   $('#btn-toggle').click();
 }
@@ -85,7 +87,7 @@ function generateFoodTable() {
 function generateRatTable(filterRegion = null) {
   let table = '';
   table += `
-  <button id="btn-toggle">顯示/隱藏</button>
+  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-rat display responsive nowrap">
       <thead>
             <tr>
@@ -144,6 +146,8 @@ function generateRatTable(filterRegion = null) {
   });
   $('#btn-toggle').click(function () {
     $('#dataTable-now_wrapper').toggle();
+    const isOpen = $('#dataTable-now_wrapper').is(':visible');
+    $('#btn-toggle').attr('aria-expanded', isOpen);
   });
   $('#btn-toggle').click();
 }
@@ -151,7 +155,7 @@ function generateRatTable(filterRegion = null) {
 function generateGlobalTable() {
   let table = '';
   table += `
-  <button id="btn-toggle">顯示/隱藏</button>
+  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
@@ -210,6 +214,8 @@ function generateGlobalTable() {
   });
   $('#btn-toggle').click(function () {
     $('#dataTable-now_wrapper').toggle();
+    const isOpen = $('#dataTable-now_wrapper').is(':visible');
+    $('#btn-toggle').attr('aria-expanded', isOpen);
   });
   $('#btn-toggle').click();
 }
@@ -217,7 +223,7 @@ function generateGlobalTable() {
 function generateTaiwanTable() {
   let table = '';
   table += `
-  <button id="btn-toggle">顯示/隱藏</button>
+  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
@@ -265,6 +271,8 @@ function generateTaiwanTable() {
   });
   $('#btn-toggle').click(function () {
     $('#dataTable-now_wrapper').toggle();
+    const isOpen = $('#dataTable-now_wrapper').is(':visible');
+    $('#btn-toggle').attr('aria-expanded', isOpen);
   });
   $('#btn-toggle').click();
 }
