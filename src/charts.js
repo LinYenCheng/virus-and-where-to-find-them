@@ -10,44 +10,33 @@ const chartColors = {
   deaths: "#d75c4a",
 };
 
-const baseChartOptions = {
-  bar: {
-    width: {
-      ratio: 0.72,
-    },
-  },
-  grid: {
-    y: {
-      show: true,
-    },
-  },
-  legend: {
-    position: "bottom",
-  },
-  padding: {
-    top: 8,
-    right: 22,
-    bottom: 10,
-    left: 58,
-  },
-  point: {
-    r: 2.2,
-    focus: {
-      expand: {
-        r: 4,
-      },
-    },
-  },
-  transition: {
-    duration: 180,
-  },
-};
-
 function updateChartStat(id, text) {
   const element = document.getElementById(id);
   if (element) element.textContent = text;
 }
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
+/** Get or create an ECharts instance bound to the given DOM id. */
+function getChart(id) {
+  const el = document.getElementById(id);
+  if (!el) return null;
+  return echarts.getInstanceByDom(el) || echarts.init(el);
+}
+
+/** Build common dataZoom components used by all time-series charts. */
+function buildDataZoom() {
+  return [
+    { type: "inside", xAxisIndex: 0, filterMode: "filter" },
+    { type: "slider", xAxisIndex: 0, bottom: 4, height: 20, filterMode: "filter" },
+  ];
+}
+
+// ---------------------------------------------------------------------------
+// generateChart  (legacy – kept for API compatibility, currently unused in UI)
+// ---------------------------------------------------------------------------
 function generateChart(resChart) {
   const dates = [];
   const diffConfirmCounts = [];
@@ -66,143 +55,128 @@ function generateChart(resChart) {
       recoverCounts.push(elm.todayRecover);
     }
   });
-  const chart = c3.generate({
-    bindto: "#chart--bar",
+
+  const chart = getChart("chart--bar");
+  if (!chart) return;
+
+  chart.setOption({
     title: {
-      text: `累積死亡: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}%
-      累積恢復: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`,
+      text: `累積死亡: ${((todayDeath * 100) / todayConfirmed).toFixed(2)}%  累積恢復: ${((todayRecover * 100) / todayConfirmed).toFixed(2)}%`,
+      textStyle: { fontSize: 13 },
     },
-    zoom: {
-      enabled: true,
+    tooltip: { trigger: "axis" },
+    legend: { bottom: 28 },
+    dataZoom: buildDataZoom(),
+    grid: { top: 48, right: 22, bottom: 70, left: 58 },
+    xAxis: {
+      type: "category",
+      data: dates,
+      axisLabel: { formatter: (v) => v.slice(5) },
     },
-    data: {
-      x: "date",
-      xFormat: "%Y-%m-%d",
-      columns: [
-        ["date", ...dates],
-        ["單日增加", ...diffConfirmCounts],
-        ["全球確診", ...confirmPatientCounts],
-        ["全球死亡", ...deathCounts],
-        ["全球恢復", ...recoverCounts],
-      ],
-      axes: {
-        全球確診病例: "y",
-        單日增加: "y2",
+    yAxis: [
+      { type: "value", min: 0 },
+      { type: "value", min: 0 },
+    ],
+    series: [
+      {
+        name: "單日增加",
+        type: "bar",
+        yAxisIndex: 1,
+        data: diffConfirmCounts,
+        itemStyle: { color: chartColors.cases },
       },
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%m-%d",
-        },
+      {
+        name: "全球確診",
+        type: "line",
+        data: confirmPatientCounts,
+        itemStyle: { color: chartColors.shortAverage },
+        showSymbol: false,
       },
-      y: {
-        min: 0,
+      {
+        name: "全球死亡",
+        type: "line",
+        data: deathCounts,
+        itemStyle: { color: chartColors.deaths },
+        showSymbol: false,
       },
-      y2: {
-        min: 0,
-        show: true,
+      {
+        name: "全球恢復",
+        type: "line",
+        data: recoverCounts,
+        itemStyle: { color: chartColors.longAverage },
+        showSymbol: false,
       },
-    },
+    ],
   });
-  window.addEventListener("resize", () => {
-    chart.resize();
-  });
+
+  window.addEventListener("resize", () => chart.resize());
 }
 
+// ---------------------------------------------------------------------------
+// generateDounutChartTaiwan
+// ---------------------------------------------------------------------------
 function generateDounutChartTaiwan({
   otherCounts,
   taiwanCounts,
   locations,
   ages,
 }) {
-  let nowChart = 0;
-  let chartDounutNations;
-  let chartDounutCounty;
-  let chartDounutAge;
+  function buildDonutOption(title, data) {
+    return {
+      title: {
+        text: title,
+        left: "center",
+        top: "center",
+        textStyle: { fontSize: 14, fontWeight: "bold" },
+      },
+      tooltip: { trigger: "item", formatter: "{b}: {c} ({d}%)" },
+      legend: { bottom: 4, type: "scroll" },
+      series: [
+        {
+          type: "pie",
+          radius: ["40%", "68%"],
+          label: { formatter: "{b}: {c}" },
+          data,
+        },
+      ],
+    };
+  }
 
   function generateNations() {
-    chartDounutNations = c3.generate({
-      bindto: "#chart--dounut",
-      data: {
-        columns: [
-          ["非本國籍", otherCounts],
-          ["本國籍", taiwanCounts],
-        ],
-        type: "donut",
-      },
-      donut: {
-        title: "台灣疫情",
-        label: {
-          format: function (value, ratio, id) {
-            return value;
-          },
-        },
-      },
-    });
+    const chart = getChart("chart--dounut");
+    if (!chart) return;
+    chart.setOption(
+      buildDonutOption("台灣疫情", [
+        { name: "非本國籍", value: otherCounts },
+        { name: "本國籍", value: taiwanCounts },
+      ])
+    );
   }
 
   function generateCounties() {
-    const cloumns = locations
+    const chart = getChart("chart--dounut");
+    if (!chart) return;
+    const data = locations
       .filter(({ count }) => count > 0)
-      .map(({ location, count }) => [location, count]);
-    chartDounutCounty = c3.generate({
-      bindto: "#chart--dounut",
-      data: {
-        columns: [...cloumns],
-        type: "donut",
-      },
-      donut: {
-        title: "台灣疫情",
-        label: {
-          format: function (value, ratio, id) {
-            return value;
-          },
-        },
-      },
-    });
+      .map(({ location, count }) => ({ name: location, value: count }));
+    chart.setOption(buildDonutOption("台灣疫情", data));
   }
 
   function generateAges() {
-    const cloumns = ages
+    const chart = getChart("chart--dounut");
+    if (!chart) return;
+    const data = ages
       .filter(({ count }) => count > 0)
-      .map(({ range, count }) => [range, count]);
-    chartDounutAge = c3.generate({
-      bindto: "#chart--dounut",
-      data: {
-        columns: [...cloumns],
-        type: "donut",
-      },
-      donut: {
-        title: "年齡分布",
-        label: {
-          format: function (value, ratio, id) {
-            return value;
-          },
-        },
-      },
-    });
+      .map(({ range, count }) => ({ name: range, value: count }));
+    chart.setOption(buildDonutOption("年齡分布", data));
   }
 
-  // setInterval(() => {
-  //   if (nowChart === 0) {
-  //     nowChart = 1;
-  //     chartDounutCounty.destroy();
-  //     generateAges();
-  //   } else if (nowChart === 1) {
-  //     nowChart = 2;
-  //     chartDounutAge.destroy();
-  //     generateNations();
-  //   } else {
-  //     nowChart = 0;
-  //     chartDounutNations.destroy();
-  //     generateCounties();
-  //   }
-  // }, 10000);
   generateAges();
 }
 
+// ---------------------------------------------------------------------------
+// getCountsAndDiffPreviousCount  (unchanged data-processing helper)
+// ---------------------------------------------------------------------------
 function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
   const counts = [];
   const diffCounts = [];
@@ -242,6 +216,9 @@ function getCountsAndDiffPreviousCount(objOfTotalCountsByDate) {
 let chartCountryInstance = null;
 let chartGlobalInstance = null;
 
+// ---------------------------------------------------------------------------
+// generateChartCountry
+// ---------------------------------------------------------------------------
 // 抓出個別的表
 function generateChartCountry({ title, paramCountry }) {
   const countryTitleEl = document.getElementById("chart-country-title");
@@ -290,60 +267,60 @@ function generateChartCountry({ title, paramCountry }) {
           `確診: ${Number(latestConfirmed).toLocaleString()} | 死亡: ${Number(latestDeaths).toLocaleString()} (${deathRatio}%)`
         );
 
-        if (chartCountryInstance && typeof chartCountryInstance.destroy === "function") {
-          try { chartCountryInstance.destroy(); } catch (e) {}
+        if (chartCountryInstance) {
+          try { chartCountryInstance.dispose(); } catch (e) {}
         }
 
-        chartCountryInstance = c3.generate({
-          bindto: "#chart--line",
-          padding: {
-            top: 10,
-            right: 20,
-            bottom: 10,
-            left: 55,
+        const el = document.getElementById("chart--line");
+        if (!el) return;
+        chartCountryInstance = echarts.init(el);
+
+        chartCountryInstance.setOption({
+          tooltip: { trigger: "axis" },
+          legend: { top: 4, type: "scroll" },
+          dataZoom: buildDataZoom(),
+          grid: { top: 36, right: 20, bottom: 52, left: 55 },
+          xAxis: {
+            type: "category",
+            data: dates,
+            axisLabel: { formatter: (v) => v.slice(5), rotate: 30 },
+            boundaryGap: true,
           },
-          zoom: {
-            enabled: true,
-            rescale: true,
-          },
-          data: {
-            x: "date",
-            xFormat: "%Y-%m-%d",
-            columns: [
-              ["date", ...dates],
-              ["7日平均", ...sma7],
-              ["14日平均", ...sma14],
-              ["新增病例", ...diffConfirmCounts],
-              ["新增死亡", ...diffDeathCounts],
-            ],
-            type: "bar",
-            types: {
-              "7日平均": "spline",
-              "14日平均": "spline",
+          yAxis: { type: "value", min: 0 },
+          series: [
+            {
+              name: "新增病例",
+              type: "bar",
+              stack: "daily",
+              data: diffConfirmCounts,
+              itemStyle: { color: chartColors.cases },
             },
-            groups: [["新增病例", "新增死亡"]],
-            colors: {
-              "新增病例": chartColors.cases,
-              "新增死亡": chartColors.deaths,
-              "7日平均": chartColors.shortAverage,
-              "14日平均": chartColors.longAverage,
+            {
+              name: "新增死亡",
+              type: "bar",
+              stack: "daily",
+              data: diffDeathCounts,
+              itemStyle: { color: chartColors.deaths },
             },
-          },
-          axis: {
-            x: {
-              type: "timeseries",
-              tick: {
-                centered: true,
-                format: "%m-%d",
-                culling: true,
-                count: 90,
-                fit: true,
-              },
+            {
+              name: "7日平均",
+              type: "line",
+              data: sma7,
+              smooth: true,
+              showSymbol: false,
+              lineStyle: { color: chartColors.shortAverage, width: 2 },
+              itemStyle: { color: chartColors.shortAverage },
             },
-            y: {
-              min: 0,
+            {
+              name: "14日平均",
+              type: "line",
+              data: sma14,
+              smooth: true,
+              showSymbol: false,
+              lineStyle: { color: chartColors.longAverage, width: 2 },
+              itemStyle: { color: chartColors.longAverage },
             },
-          },
+          ],
         });
       } else {
         updateChartStat("chart-country-stat", "無數據");
@@ -355,6 +332,9 @@ function generateChartCountry({ title, paramCountry }) {
     });
 }
 
+// ---------------------------------------------------------------------------
+// generateChartGlobal
+// ---------------------------------------------------------------------------
 function generateChartGlobal() {
   let sma30 = [];
   let sma60 = [];
@@ -385,71 +365,69 @@ function generateChartGlobal() {
     `確診: ${Number(todayConfirmed).toLocaleString()} | 死亡: ${Number(todayDeath).toLocaleString()} (${globalDeathRatio}%)`
   );
 
-  if (chartGlobalInstance && typeof chartGlobalInstance.destroy === "function") {
-    try { chartGlobalInstance.destroy(); } catch (e) {}
+  if (chartGlobalInstance) {
+    try { chartGlobalInstance.dispose(); } catch (e) {}
   }
 
-  chartGlobalInstance = c3.generate({
-    bindto: "#chart--bar",
-    padding: {
-      top: 10,
-      right: 20,
-      bottom: 10,
-      left: 55,
+  const el = document.getElementById("chart--bar");
+  if (!el) return;
+  chartGlobalInstance = echarts.init(el);
+
+  chartGlobalInstance.setOption({
+    tooltip: { trigger: "axis" },
+    legend: { top: 4, type: "scroll" },
+    dataZoom: buildDataZoom(),
+    grid: { top: 36, right: 20, bottom: 52, left: 55 },
+    xAxis: {
+      type: "category",
+      data: dates,
+      axisLabel: { formatter: (v) => v.slice(5), rotate: 30 },
+      boundaryGap: true,
     },
-    zoom: {
-      enabled: true,
-      rescale: true,
-    },
-    data: {
-      x: "date",
-      xFormat: "%Y-%m-%d",
-      columns: [
-        ["date", ...dates],
-        ["30日平均", ...sma30],
-        ["60日平均", ...sma60],
-        ["新增病例", ...diffConfirmCounts],
-        ["新增死亡", ...diffDeathCounts],
-      ],
-      type: "bar",
-      types: {
-        "30日平均": "spline",
-        "60日平均": "spline",
+    yAxis: { type: "value", min: 0 },
+    series: [
+      {
+        name: "新增病例",
+        type: "bar",
+        stack: "daily",
+        data: diffConfirmCounts,
+        itemStyle: { color: chartColors.cases },
       },
-      groups: [["新增病例", "新增死亡"]],
-      colors: {
-        "新增病例": chartColors.cases,
-        "新增死亡": chartColors.deaths,
-        "30日平均": chartColors.shortAverage,
-        "60日平均": chartColors.longAverage,
+      {
+        name: "新增死亡",
+        type: "bar",
+        stack: "daily",
+        data: diffDeathCounts,
+        itemStyle: { color: chartColors.deaths },
       },
-      axes: {
-        新增病例: "y",
+      {
+        name: "30日平均",
+        type: "line",
+        data: sma30,
+        smooth: true,
+        showSymbol: false,
+        lineStyle: { color: chartColors.shortAverage, width: 2 },
+        itemStyle: { color: chartColors.shortAverage },
       },
-    },
-    axis: {
-      x: {
-        type: "timeseries",
-        tick: {
-          format: "%m-%d",
-          culling: true,
-          count: 90,
-          fit: true,
-        },
+      {
+        name: "60日平均",
+        type: "line",
+        data: sma60,
+        smooth: true,
+        showSymbol: false,
+        lineStyle: { color: chartColors.longAverage, width: 2 },
+        itemStyle: { color: chartColors.longAverage },
       },
-      y: {
-        min: 0,
-      },
-    },
+    ],
   });
 }
 
 window.addEventListener("resize", () => {
-  if (chartCountryInstance && typeof chartCountryInstance.resize === "function") {
-    chartCountryInstance.resize();
+  if (chartCountryInstance) {
+    try { chartCountryInstance.resize(); } catch (e) {}
   }
-  if (chartGlobalInstance && typeof chartGlobalInstance.resize === "function") {
-    chartGlobalInstance.resize();
+  if (chartGlobalInstance) {
+    try { chartGlobalInstance.resize(); } catch (e) {}
   }
 });
 

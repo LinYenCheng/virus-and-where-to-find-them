@@ -196,12 +196,21 @@
   }
 
   .chart-panel {
+    display: flex;
+    flex-direction: column;
     min-width: 0;
     padding: 14px;
     background: rgba(255, 255, 255, 0.86);
     border: 1px solid rgba(23, 50, 58, 0.12);
     border-radius: 8px;
     box-shadow: 0 18px 45px rgba(16, 34, 39, 0.13);
+  }
+
+  .chart-panel :global(#chart--line),
+  .chart-panel :global(#chart--bar) {
+    flex: 1 1 0;
+    min-height: 260px;
+    height: 300px;
   }
 
   .chart-panel-heading {
