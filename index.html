@@ -2,38 +2,38 @@
 <html lang="zh-Hant-TW">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>台北老鼠出沒地圖 | 漢他病毒防疫資訊 | 前端三分鐘</title>
+    <title>新竹美食地圖 | 探索在地隱藏版美食與餐廳推薦 | 前端三分鐘</title>
     <meta
       name="site_name"
-      content="台北老鼠出沒地圖 | 漢他病毒防疫即時資訊 | 前端三分鐘"
+      content="新竹美食地圖 | 在地小吃與餐廳即時資訊 | 前端三分鐘"
     />
     <meta
       name="description"
-      content="老鼠與牠們的產地 - 漢他病毒威脅不容忽視！透過即時熱區地圖監測台北老鼠出沒熱點，提供民眾防疫參考與通報紀錄，共同守護公共衛生。"
+      content="擺脫美食沙漠稱號！透過即時互動地圖探索新竹熱門美食、城隍廟小吃、在地人隱藏版口袋名單，提供詳細食記與好評推薦。"
     />
     <link rel="canonical" href="https://linyencheng.github.io/virus-and-where-to-find-them/" />
     <meta name="robots" content="index, follow" />
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="台北老鼠出沒地圖 | 漢他病毒防疫即時資訊 | 前端三分鐘" />
+    <meta property="og:title" content="新竹美食地圖 | 探索在地隱藏版美食與餐廳推薦 | 前端三分鐘" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://linyencheng.github.io/virus-and-where-to-find-them/" />
-    <meta property="og:site_name" content="台北老鼠地圖 | 前端三分鐘" />
-    <meta property="og:description" content="因應漢他病毒威脅，本圖資提供即時老鼠出沒分佈、熱區統計與詳細通報圖片。" />
-    <meta property="og:image" content="https://linyencheng.github.io/virus-and-where-to-find-them/meta-heat.jpg" />
+    <meta property="og:site_name" content="新竹美食地圖 | 前端三分鐘" />
+    <meta property="og:description" content="收錄新竹各式熱門美食與在地口袋名單，搭配視覺化熱區與詳細店家資訊，帶你吃遍新竹！" />
+    <meta property="og:image" content="https://linyencheng.github.io/virus-and-where-to-find-them/eat.png" />
     <meta property="og:locale" content="zh_TW" />
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="台北老鼠出沒地圖 | 漢他病毒防疫 | 前端三分鐘" />
-    <meta name="twitter:description" content="透過地理熱區監測老鼠分佈，提早防範漢他病毒傳播。" />
-    <meta name="twitter:image" content="https://linyencheng.github.io/virus-and-where-to-find-them/meta-heat.jpg" />
+    <meta name="twitter:title" content="新竹美食地圖 | 在地小吃與餐廳推薦 | 前端三分鐘" />
+    <meta name="twitter:description" content="透過互動式地圖探索新竹各式隱藏版美食與熱門餐廳。" />
+    <meta name="twitter:image" content="https://linyencheng.github.io/virus-and-where-to-find-them/eat.png" />
 
     <meta
       name="keywords"
-      content="老鼠地圖,台北老鼠,漢他病毒,Hantavirus,防疫資訊,通報熱區,Taiwan,前端三分鐘,環境衛生"
+      content="新竹美食,新竹美食地圖,新竹小吃,城隍廟美食,竹北美食,新竹餐廳,美食地圖,Taiwan Food,前端三分鐘"
     />
     
     <!-- JSON-LD Structured Data -->
@@ -41,10 +41,10 @@
     {
       "@context": "https://schema.org",
       "@type": "WebApplication",
-      "name": "台北老鼠出沒地圖",
-      "description": "即時顯示台北區域老鼠通報熱區，協助防範漢他病毒。",
+      "name": "新竹美食地圖",
+      "description": "即時地圖顯示新竹地區熱門美食與在地口袋名單推薦。",
       "url": "https://linyencheng.github.io/virus-and-where-to-find-them/",
-      "applicationCategory": "HealthApplication",
+      "applicationCategory": "LifestyleApplication",
       "operatingSystem": "Web",
       "author": {
         "@type": "Person",
@@ -53,11 +53,13 @@
     }
     </script>
 
+    <!-- Leaflet CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
     />
 
+    <!-- Select2 & DataTables CSS -->
     <link
       href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
       rel="stylesheet"
@@ -71,6 +73,7 @@
       rel="stylesheet"
     />
 
+    <!-- Leaflet MarkerCluster CSS -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css"
@@ -84,10 +87,15 @@
   </head>
 
   <body>
-    <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">台北老鼠出沒地圖 - 漢他病毒防疫資訊</h1>
-    <!-- 台灣對抗病毒加油!!!! -->
+    <!-- SEO Accessibility H1 Heading -->
+    <h1 style="position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0;">
+      新竹美食地圖 - 在地小吃與熱門餐廳推薦
+    </h1>
+    
+    <!-- 新竹不是美食沙漠，作伙吃爆新竹！ -->
     <!-- <div id="root"></div> -->
 
+    <!-- JS Libraries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
@@ -97,6 +105,7 @@
     <script src="https://cdn.datatables.net/2.2.2/js/dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/3.0.3/js/dataTables.responsive.min.js"></script>
 
+    <!-- Main JS Application Entry -->
     <script type="module" src="/src/index.svelte.js"></script>
   </body>
 </html>

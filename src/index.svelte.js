@@ -26,7 +26,7 @@ import jsonFood from "../data/food.json";
 import { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoodTable } from "./dataTable.js";
 
 const urlParams = new URLSearchParams(window.location.search);
-const mapMode = urlParams.get("map") || "virus";
+const mapMode = urlParams.get("map") || "food";
 
 // Create reactive state for Svelte 5
 const state = $state({
