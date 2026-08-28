@@ -1,4 +1,4 @@
-import "../public/global.css";
+﻿import "../public/global.css";
 import { mount } from "svelte";
 import App from "./components/App.svelte";
 
@@ -44,7 +44,7 @@ function generateInformation(mode) {
     locations.forEach(loc => loc.count = 0);
 
     jsonRat.forEach((elm) => {
-      const nowLocationIndex = locations.findIndex((loc) => 
+      const nowLocationIndex = locations.findIndex((loc) =>
         elm.location.includes(loc.location)
       );
       if (nowLocationIndex !== -1) {
@@ -146,7 +146,7 @@ function initApp({ selectOptions, finalCountries, mapMode }) {
 
   // Initial UI Setup
   setupSelect2(selectOptions, mapMode);
-  
+
   if (mapMode === "virus") {
     setupRouter(selectOptions);
   }
@@ -172,7 +172,7 @@ function setupSelect2(selectOptions, mode) {
         if (mode === "rat") {
           generateRatTable(data.id);
         }
-        // For food mode, maybe open popup? 
+        // For food mode, maybe open popup?
         // Need access to food markers. Map.svelte handles that.
         return;
       }
@@ -229,22 +229,32 @@ function getFinalCountriesForMap(finalCountries, mode) {
 window.updateMapModeUI = (mode) => {
   const { finalSelectOptions, finalCountries } = generateInformation(mode);
   setupSelect2(finalSelectOptions, mode);
-  
+
   if (mode === "rat" || mode === "food") {
     if (mode === "rat") {
       generateRatTable();
     } else {
       generateFoodTable();
     }
-    globalThis.$("#chart--bar, #chart--line, #chart--dounut").css("display", "none");
   } else {
     generateTaiwanTable();
-    generateChartGlobal();
-    globalThis.$("#chart--bar, #chart--line, #chart--dounut").css("display", "block");
   }
-    const finalMapData = getFinalCountriesForMap(finalCountries, mode);
+
+  const finalMapData = getFinalCountriesForMap(finalCountries, mode);
   state.finalCountries = finalMapData;
   state.mapMode = mode;
+
+  if (mode === "virus") {
+    // Defer chart generation so Svelte has time to restore the
+    // #chart--line / #chart--bar DOM nodes (they live inside an
+    // {#if mapMode === "virus"} block and are destroyed while in
+    // rat/food mode). Without this delay, getElementById returns null
+    // and ECharts silently skips initialisation, leaving blank panels.
+    setTimeout(() => {
+      generateChartGlobal();
+      generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
+    }, 0);
+  }
 };
 
 const initialMode = mapMode;
