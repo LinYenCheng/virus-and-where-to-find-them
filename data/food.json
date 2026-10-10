@@ -72,9 +72,9 @@
   {
     "name": "滿美吐司部",
     "location": "北門街",
-    "description": "肉排蛋土司、九層塔蛋餅必點，超好吃。缺點是內用只有三桌，且蛋餅內用也是用塑膠袋裝。",
+    "description": "豬排蛋、肉鬆蛋也很好吃、肉排蛋土司、九層塔蛋餅必點，超好吃。缺點是內用只有三桌，且蛋餅內用也是用塑膠袋裝。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市北門街",
+    "fullAddress": "新竹市北區勝利路208號",
     "isClosed": false,
     "lat": "24.8095781",
     "lng": "120.9655686"
@@ -302,9 +302,9 @@
   {
     "name": "禧樂 丼飯·刺身·炭燒",
     "location": "埔頂路99巷",
-    "description": "鮭魚腹握壽司超好吃！禧三味串燒丼也很棒，有四串、兩樣配菜、溫泉蛋，只是我個人覺得有些地方不太容易咀嚼。同伴說鮭魚親子丼、醬燒天婦羅也很好吃。中高價位。",
+    "description": "cp高日料丼飯刺身、鮭魚腹握壽司超好吃！禧三味串燒丼也很棒，有四串、兩樣配菜、溫泉蛋，只是我個人覺得有些地方不太容易咀嚼。同伴說鮭魚親子丼、醬燒天婦羅也很好吃。中高價位。",
     "rating": "👍👍",
-    "fullAddress": "新竹市埔頂路99巷",
+    "fullAddress": "新竹市東區埔頂路99號",
     "isClosed": false,
     "lat": "24.7970049",
     "lng": "121.0059478"
@@ -692,9 +692,9 @@
   {
     "name": "三廠麵店",
     "location": "延平路一段214巷",
-    "description": "還不錯吃，而且餐點都不貴，很划算。",
+    "description": "大乾醡加蛋加餛飩、還不錯吃，而且餐點都不貴，很划算。",
     "rating": "👌",
-    "fullAddress": "新竹市延平路一段214巷",
+    "fullAddress": "新竹市北區延平路一段214巷72號",
     "isClosed": false,
     "lat": "24.8064448",
     "lng": "120.9505214"
@@ -1782,7 +1782,7 @@
   {
     "name": "喜劇收場",
     "location": "三民路",
-    "description": "學區附近的高CP值漢堡專賣店，漢堡肉汁多厚實，風格活潑逗趣，深受學生喜愛。",
+    "description": "美式漢堡、學區附近的高CP值漢堡專賣店，漢堡肉汁多厚實，風格活潑逗趣，深受學生喜愛。",
     "rating": "👍👍👍",
     "fullAddress": "新竹市東區三民路2巷5號",
     "isClosed": false,
@@ -2078,5 +2078,1145 @@
     "isClosed": false,
     "lat": "24.8029100",
     "lng": "120.9688100"
+  },
+  {
+    "name": "墨多 Modo Taco",
+    "location": "新竹市",
+    "description": "酪梨鴨、脆皮豬、炸魚塔可",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區東門街101號",
+    "isClosed": false,
+    "lat": "24.8037303",
+    "lng": "120.9701777"
+  },
+  {
+    "name": "Friendy pizzeria",
+    "location": "新竹市",
+    "description": "麵餃、牛頰寬麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民族路61號",
+    "isClosed": false,
+    "lat": "24.8062828",
+    "lng": "120.9723223"
+  },
+  {
+    "name": "阿水哥港點",
+    "location": "新竹市",
+    "description": "蝦餃韭菜餃全系列推",
+    "rating": "👍👍",
+    "fullAddress": "新竹市香山區牛埔路352號",
+    "isClosed": false,
+    "lat": "24.7963388",
+    "lng": "120.9472391"
+  },
+  {
+    "name": "麵屋浩",
+    "location": "新竹市",
+    "description": "濃湯sp 極品，吃完加白飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北門街87號",
+    "isClosed": false,
+    "lat": "24.8068715",
+    "lng": "120.9654157"
+  },
+  {
+    "name": "宗初食堂",
+    "location": "新竹市",
+    "description": "cp超高品質一流",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北門街158號",
+    "isClosed": false,
+    "lat": "24.807897",
+    "lng": "120.9639535"
+  },
+  {
+    "name": "探吉飯包",
+    "location": "新竹市",
+    "description": "神仙雞腿滷排",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中央路286號",
+    "isClosed": false,
+    "lat": "24.8115654",
+    "lng": "120.9749539"
+  },
+  {
+    "name": "山房 Mountain House",
+    "location": "新竹市",
+    "description": "塔魚山明治",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路252號",
+    "isClosed": false,
+    "lat": "24.7972605",
+    "lng": "120.9701764"
+  },
+  {
+    "name": "默倪 Morning Hsinchu",
+    "location": "新竹市",
+    "description": "厚豬排起士蛋餅",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北大路244號",
+    "isClosed": false,
+    "lat": "24.8080036",
+    "lng": "120.9654714"
+  },
+  {
+    "name": "創意DIY蛋餅",
+    "location": "新竹市",
+    "description": "蔬菜河粉蛋餅加辣",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中華路二段285號",
+    "isClosed": false,
+    "lat": "24.8028263",
+    "lng": "120.9739505"
+  },
+  {
+    "name": "烘蜜 HonMi",
+    "location": "新竹市",
+    "description": "早午餐、甜點",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路59巷2-1號",
+    "isClosed": false,
+    "lat": "24.799015",
+    "lng": "120.994462"
+  },
+  {
+    "name": "熒熒商行",
+    "location": "新竹市",
+    "description": "日式炸雞早午餐、水果大蝦莎莎",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路266號",
+    "isClosed": false,
+    "lat": "24.813088",
+    "lng": "120.973418"
+  },
+  {
+    "name": "永福胡椒豬肚雞",
+    "location": "新竹市",
+    "description": "豬肚配蔥油醬",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經國路二段83號",
+    "isClosed": false,
+    "lat": "24.8118025",
+    "lng": "120.9691343"
+  },
+  {
+    "name": "MushaMusha",
+    "location": "新竹市",
+    "description": "牛肋咖哩加辣",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區勝利路128號",
+    "isClosed": false,
+    "lat": "24.8028308",
+    "lng": "120.9669528"
+  },
+  {
+    "name": "上允生魚片",
+    "location": "新竹漁港",
+    "description": "新鮮種類多好吃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區新港三路1-9號直銷中心一樓10號攤位",
+    "isClosed": false,
+    "lat": "24.8488338",
+    "lng": "120.9272365"
+  },
+  {
+    "name": "Uncle Shawn 燒肉演義 新竹店",
+    "location": "新竹市",
+    "description": "干貝漢堡配比目魚蓋飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區林森路137號",
+    "isClosed": false,
+    "lat": "24.8015383",
+    "lng": "120.966606"
+  },
+  {
+    "name": "蔣好的味道",
+    "location": "新竹市",
+    "description": "粥類滷味也很棒、平價好吃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區仁愛街29號",
+    "isClosed": false,
+    "lat": "24.8058229",
+    "lng": "120.9705574"
+  },
+  {
+    "name": "米舖炒飯",
+    "location": "新竹市",
+    "description": "紹興炒飯有夠香",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路263號",
+    "isClosed": false,
+    "lat": "24.813083",
+    "lng": "120.9732731"
+  },
+  {
+    "name": "64A sweets",
+    "location": "竹北市",
+    "description": "每一樣都很頂",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市成功二街64-1號",
+    "isClosed": false,
+    "lat": "24.8178125",
+    "lng": "121.0229341"
+  },
+  {
+    "name": "新予小館",
+    "location": "竹北市",
+    "description": "鴨胸、肋排、魚排",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市嘉豐五路二段127號",
+    "isClosed": false,
+    "lat": "24.8118671",
+    "lng": "121.0289139"
+  },
+  {
+    "name": "南門壹食",
+    "location": "新竹市",
+    "description": "紅油、蒜油抄手一絕！一生推",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區南門街71號",
+    "isClosed": false,
+    "lat": "24.801648",
+    "lng": "120.967882"
+  },
+  {
+    "name": "栖穗 Nanasai",
+    "location": "新竹市",
+    "description": "義大利麵、早午餐",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路114號",
+    "isClosed": false,
+    "lat": "24.810573",
+    "lng": "120.976865"
+  },
+  {
+    "name": "青浪パスタ",
+    "location": "新竹市",
+    "description": "義大利麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中央路182號",
+    "isClosed": false,
+    "lat": "24.8081637",
+    "lng": "120.9739502"
+  },
+  {
+    "name": "PASTA de SHOW/CURRY de SHOW 帕士達秀/咖哩秀",
+    "location": "新竹市",
+    "description": "義大利麵、咖哩",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區大同路62號",
+    "isClosed": false,
+    "lat": "24.8038753",
+    "lng": "120.9688414"
+  },
+  {
+    "name": "Oya pizza",
+    "location": "新竹市",
+    "description": "披薩專賣",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區南大路672巷10號",
+    "isClosed": false,
+    "lat": "24.7925762",
+    "lng": "120.967261"
+  },
+  {
+    "name": "日久好食",
+    "location": "竹北市",
+    "description": "金沙排骨必點",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市光明一路365號",
+    "isClosed": false,
+    "lat": "24.8310931",
+    "lng": "121.0118536"
+  },
+  {
+    "name": "墨簡單",
+    "location": "新竹市",
+    "description": "熱炒、家常菜",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路180巷10號",
+    "isClosed": false,
+    "lat": "24.8118023",
+    "lng": "120.9754807"
+  },
+  {
+    "name": "Holi活力印度料理",
+    "location": "竹北市",
+    "description": "印度料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市光明一路408號",
+    "isClosed": false,
+    "lat": "24.8306782",
+    "lng": "121.010729"
+  },
+  {
+    "name": "鴨公館",
+    "location": "竹北市",
+    "description": "烤鴨&熱炒",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市文興路一段228號",
+    "isClosed": false,
+    "lat": "24.8124587",
+    "lng": "121.023253"
+  },
+  {
+    "name": "草根匯",
+    "location": "竹北市",
+    "description": "烤鴨&熱炒",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市莊敬南路11-1號",
+    "isClosed": false,
+    "lat": "24.8174523",
+    "lng": "121.021574"
+  },
+  {
+    "name": "伴日嚐",
+    "location": "新竹市",
+    "description": "定食",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區關新東路256號",
+    "isClosed": false,
+    "lat": "24.782803",
+    "lng": "121.018698"
+  },
+  {
+    "name": "屋裡香",
+    "location": "新竹市",
+    "description": "定食",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路59巷14號",
+    "isClosed": false,
+    "lat": "24.798782",
+    "lng": "120.994263"
+  },
+  {
+    "name": "築路 JULU",
+    "location": "新竹市",
+    "description": "定食",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區忠孝路27巷11號",
+    "isClosed": false,
+    "lat": "24.8020815",
+    "lng": "120.9882205"
+  },
+  {
+    "name": "小院子台菜美食",
+    "location": "竹北市",
+    "description": "定食、台菜料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市莊敬南路11號",
+    "isClosed": false,
+    "lat": "24.817521",
+    "lng": "121.021542"
+  },
+  {
+    "name": "艾薇麵包 Ivy Bread",
+    "location": "新竹/竹北",
+    "description": "越式麵包很好吃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區大同路23巷3號",
+    "isClosed": false,
+    "lat": "24.8033785",
+    "lng": "120.9700812"
+  },
+  {
+    "name": "金福越式河粉",
+    "location": "新竹/竹北",
+    "description": "越式河粉專賣",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北大路166巷1弄2號",
+    "isClosed": false,
+    "lat": "24.809088",
+    "lng": "120.966453"
+  },
+  {
+    "name": "菳蒔鐵板料理",
+    "location": "新竹市",
+    "description": "鐵板燒",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區三民路2巷13號",
+    "isClosed": false,
+    "lat": "24.808064",
+    "lng": "120.977286"
+  },
+  {
+    "name": "上品苑鐵板燒 興隆店",
+    "location": "竹北市",
+    "description": "鐵板燒",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市興隆路五段43號",
+    "isClosed": false,
+    "lat": "24.8079632",
+    "lng": "121.0270634"
+  },
+  {
+    "name": "鵝子",
+    "location": "竹北市",
+    "description": "平價好吃鵝肉料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市縣政二路183號",
+    "isClosed": false,
+    "lat": "24.8291024",
+    "lng": "121.0118501"
+  },
+  {
+    "name": "斡角烘焙 Studio",
+    "location": "新竹市",
+    "description": "泡芙很讚",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區東大路一段11巷28號",
+    "isClosed": false,
+    "lat": "24.8058428",
+    "lng": "120.9765809"
+  },
+  {
+    "name": "生生 Kapi",
+    "location": "新竹市",
+    "description": "提拉米蘇",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區博愛街57號",
+    "isClosed": false,
+    "lat": "24.799781",
+    "lng": "120.980612"
+  },
+  {
+    "name": "日出咖啡 Sunrise Coffee",
+    "location": "新竹市將軍村",
+    "description": "早午餐（將軍村最喜歡）",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區金牌路61號（將軍村）",
+    "isClosed": false,
+    "lat": "24.796122",
+    "lng": "121.002871"
+  },
+  {
+    "name": "那山那茶",
+    "location": "竹北市",
+    "description": "喜歡喝純茶",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市文興路一段189號",
+    "isClosed": false,
+    "lat": "24.8126702",
+    "lng": "121.0218765"
+  },
+  {
+    "name": "良也居",
+    "location": "竹北市",
+    "description": "喜歡喝純茶",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市嘉豐五路一段108號",
+    "isClosed": false,
+    "lat": "24.814321",
+    "lng": "121.028912"
+  },
+  {
+    "name": "月桃拌麵",
+    "location": "新竹市",
+    "description": "手切滷肉拌麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區大同路180號",
+    "isClosed": false,
+    "lat": "24.805602",
+    "lng": "120.965413"
+  },
+  {
+    "name": "宜時生製",
+    "location": "新竹市",
+    "description": "麵店",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區三民路57號",
+    "isClosed": false,
+    "lat": "24.809214",
+    "lng": "120.978142"
+  },
+  {
+    "name": "菜園上海菜餐廳",
+    "location": "新竹市",
+    "description": "上海菜餐廳",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區東大路一段136號",
+    "isClosed": false,
+    "lat": "24.8068712",
+    "lng": "120.975412"
+  },
+  {
+    "name": "弄味小廚",
+    "location": "新竹市",
+    "description": "客家菜、家常菜",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中正路96巷8號",
+    "isClosed": false,
+    "lat": "24.804561",
+    "lng": "120.971253"
+  },
+  {
+    "name": "茉莉絲義思廚房",
+    "location": "新竹市",
+    "description": "大推煙燻鮭魚明太子義大利麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區西大路280號",
+    "isClosed": false,
+    "lat": "24.800912",
+    "lng": "120.965821"
+  },
+  {
+    "name": "世界街雞白湯拉麵",
+    "location": "新竹市",
+    "description": "雞白湯拉麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區世界街81號",
+    "isClosed": false,
+    "lat": "24.805981",
+    "lng": "120.970112"
+  },
+  {
+    "name": "禾豐自助餐",
+    "location": "新竹市",
+    "description": "菜色種類豐富便當",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區光復路二段326號",
+    "isClosed": false,
+    "lat": "24.796321",
+    "lng": "120.995812"
+  },
+  {
+    "name": "小稻甜 Café",
+    "location": "新竹市",
+    "description": "唐揚雞真的厲害、早午餐",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北大路166巷1弄1號",
+    "isClosed": false,
+    "lat": "24.809054",
+    "lng": "120.966421"
+  },
+  {
+    "name": "微生 Float Dept.",
+    "location": "新竹市",
+    "description": "早午餐咖啡",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民權路111巷23號",
+    "isClosed": false,
+    "lat": "24.808215",
+    "lng": "120.972351"
+  },
+  {
+    "name": "Hidden Off",
+    "location": "新竹市",
+    "description": "早午餐、甜點",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區西門街135號",
+    "isClosed": false,
+    "lat": "24.802145",
+    "lng": "120.963281"
+  },
+  {
+    "name": "陳阿姨火鍋",
+    "location": "新竹市",
+    "description": "種類多又新鮮",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路165號",
+    "isClosed": false,
+    "lat": "24.798124",
+    "lng": "120.969851"
+  },
+  {
+    "name": "寓葉 Currying",
+    "location": "新竹市",
+    "description": "低調慢燉咖喱飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區三民路2巷5號",
+    "isClosed": false,
+    "lat": "24.807954",
+    "lng": "120.977123"
+  },
+  {
+    "name": "禾日香魯肉飯",
+    "location": "新竹市",
+    "description": "滷肉飯好吃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北門街151號",
+    "isClosed": false,
+    "lat": "24.807765",
+    "lng": "120.964123"
+  },
+  {
+    "name": "黑隆美食",
+    "location": "新竹市",
+    "description": "辣香腸炒飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路62號",
+    "isClosed": false,
+    "lat": "24.798951",
+    "lng": "120.993852"
+  },
+  {
+    "name": "100種味道 / 甜點小墊子",
+    "location": "新竹市",
+    "description": "水果戚風蛋糕慶生常客",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區三民路154號",
+    "isClosed": false,
+    "lat": "24.811254",
+    "lng": "120.977851"
+  },
+  {
+    "name": "無名牛肉麵刀削麵",
+    "location": "新竹市",
+    "description": "刀削麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中華路二段562號",
+    "isClosed": false,
+    "lat": "24.800124",
+    "lng": "120.968541"
+  },
+  {
+    "name": "厚醍牛肉麵",
+    "location": "新竹市",
+    "description": "牛肉麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區忠孝路25-1號",
+    "isClosed": false,
+    "lat": "24.801852",
+    "lng": "120.988012"
+  },
+  {
+    "name": "原味鴨肉麵",
+    "location": "新竹市",
+    "description": "鴨肉飯/麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區勝利路102號",
+    "isClosed": false,
+    "lat": "24.802581",
+    "lng": "120.967123"
+  },
+  {
+    "name": "老段牛肉麵",
+    "location": "新竹市",
+    "description": "水餃、滷味也很好吃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路182號",
+    "isClosed": false,
+    "lat": "24.799851",
+    "lng": "120.998541"
+  },
+  {
+    "name": "牛仔油飯",
+    "location": "新竹市",
+    "description": "中式早餐、油飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區城北街60號",
+    "isClosed": false,
+    "lat": "24.808951",
+    "lng": "120.964851"
+  },
+  {
+    "name": "台北陳大腸蚵仔麵線",
+    "location": "新竹市",
+    "description": "中式早餐、大腸蚵仔麵線",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路210號",
+    "isClosed": false,
+    "lat": "24.797851",
+    "lng": "120.970124"
+  },
+  {
+    "name": "旬覓 Xun Mi",
+    "location": "新竹市",
+    "description": "早午餐",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路128號",
+    "isClosed": false,
+    "lat": "24.810851",
+    "lng": "120.976541"
+  },
+  {
+    "name": "24分之1早午餐手作麵包 24分之一",
+    "location": "竹北市",
+    "description": "早午餐、手作麵包",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市文興路一段51號",
+    "isClosed": false,
+    "lat": "24.814521",
+    "lng": "121.020124"
+  },
+  {
+    "name": "岩嶼塘 x Salt Sugar",
+    "location": "新竹市",
+    "description": "漢堡",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區博愛街121號",
+    "isClosed": false,
+    "lat": "24.798541",
+    "lng": "120.982145"
+  },
+  {
+    "name": "波藤甜點 Boton Dessert",
+    "location": "新竹市",
+    "description": "下午茶甜點",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路27巷11號",
+    "isClosed": false,
+    "lat": "24.798124",
+    "lng": "120.970851"
+  },
+  {
+    "name": "種甜",
+    "location": "新竹市",
+    "description": "下午茶麵包甜點",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民族路66巷14號",
+    "isClosed": false,
+    "lat": "24.806541",
+    "lng": "120.972851"
+  },
+  {
+    "name": "自然產販豆所 Natural Product Coffee Roaster",
+    "location": "新竹市",
+    "description": "下午茶、自烘咖啡豆",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區立鵬路102號",
+    "isClosed": false,
+    "lat": "24.792851",
+    "lng": "121.012541"
+  },
+  {
+    "name": "一想一響 ReEcho Coffee",
+    "location": "新竹市",
+    "description": "下午茶、咖啡",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路58巷8號",
+    "isClosed": false,
+    "lat": "24.809851",
+    "lng": "120.978541"
+  },
+  {
+    "name": "品芫麵食館",
+    "location": "新竹市",
+    "description": "炒飯、麵食",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區關新路211號",
+    "isClosed": false,
+    "lat": "24.783541",
+    "lng": "121.018254"
+  },
+  {
+    "name": "石坊小井",
+    "location": "新竹市",
+    "description": "家常菜、私房菜",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區石坊街17-4號",
+    "isClosed": false,
+    "lat": "24.803851",
+    "lng": "120.966254"
+  },
+  {
+    "name": "倆相好私房料理",
+    "location": "新竹市",
+    "description": "客家菜",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區東大路一段177號",
+    "isClosed": false,
+    "lat": "24.807254",
+    "lng": "120.974851"
+  },
+  {
+    "name": "川和 胡椒豬肚雞",
+    "location": "新竹市",
+    "description": "火鍋",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經國路二段100號",
+    "isClosed": false,
+    "lat": "24.811541",
+    "lng": "120.968851"
+  },
+  {
+    "name": "岩漿火鍋",
+    "location": "新竹市",
+    "description": "麻辣火鍋",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區光復路一段238號",
+    "isClosed": false,
+    "lat": "24.782154",
+    "lng": "121.015254"
+  },
+  {
+    "name": "大阪燒肉 燒魂Yakikon新竹店",
+    "location": "新竹市",
+    "description": "燒肉",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區勝利路38號",
+    "isClosed": false,
+    "lat": "24.803541",
+    "lng": "120.968254"
+  },
+  {
+    "name": "ZenA",
+    "location": "竹北市",
+    "description": "餐廳",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市莊敬南路85號",
+    "isClosed": false,
+    "lat": "24.815851",
+    "lng": "121.021254"
+  },
+  {
+    "name": "SABI",
+    "location": "竹北市",
+    "description": "餐廳",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市成功十五街52號",
+    "isClosed": false,
+    "lat": "24.816254",
+    "lng": "121.023541"
+  },
+  {
+    "name": "淳和食",
+    "location": "新竹市",
+    "description": "日料",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路150號",
+    "isClosed": false,
+    "lat": "24.798541",
+    "lng": "120.969254"
+  },
+  {
+    "name": "鮨安",
+    "location": "竹北市",
+    "description": "無菜單日料",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市嘉豐六路二段96號",
+    "isClosed": false,
+    "lat": "24.811254",
+    "lng": "121.029851"
+  },
+  {
+    "name": "ラーメン 鷄白湯",
+    "location": "新竹市",
+    "description": "拉麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區世界街91號",
+    "isClosed": false,
+    "lat": "24.805851",
+    "lng": "120.970254"
+  },
+  {
+    "name": "麺宮浦島",
+    "location": "新竹市",
+    "description": "拉麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路162號",
+    "isClosed": false,
+    "lat": "24.799254",
+    "lng": "120.997541"
+  },
+  {
+    "name": "橘太郎爆漿雞蛋糕 新竹北大店",
+    "location": "新竹市",
+    "description": "雞蛋糕",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區北大路211號",
+    "isClosed": false,
+    "lat": "24.807851",
+    "lng": "120.965851"
+  },
+  {
+    "name": "万丹紅豆餅（湳雅街）",
+    "location": "新竹市",
+    "description": "紅豆餅",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區湳雅街82號",
+    "isClosed": false,
+    "lat": "24.818541",
+    "lng": "120.970254"
+  },
+  {
+    "name": "夏綠蒂雪花冰",
+    "location": "新竹市",
+    "description": "冰品",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路64號",
+    "isClosed": false,
+    "lat": "24.798851",
+    "lng": "120.993951"
+  },
+  {
+    "name": "芒果遇到冰",
+    "location": "新竹市",
+    "description": "冰品",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區仁化街9號",
+    "isClosed": false,
+    "lat": "24.805254",
+    "lng": "120.965851"
+  },
+  {
+    "name": "慧心冰店",
+    "location": "新竹市",
+    "description": "冰品、豆花",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區杏林街11號",
+    "isClosed": false,
+    "lat": "24.808541",
+    "lng": "120.962541"
+  },
+  {
+    "name": "海鷗鐵板燒",
+    "location": "新竹市",
+    "description": "鐵板燒",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路212號",
+    "isClosed": false,
+    "lat": "24.797754",
+    "lng": "120.970254"
+  },
+  {
+    "name": "信集 Shin Ji",
+    "location": "新竹市",
+    "description": "酒吧",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區中央路179-1號",
+    "isClosed": false,
+    "lat": "24.808254",
+    "lng": "120.974124"
+  },
+  {
+    "name": "Bar 蛤",
+    "location": "新竹市",
+    "description": "酒吧",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區大同路138號",
+    "isClosed": false,
+    "lat": "24.804851",
+    "lng": "120.967541"
+  },
+  {
+    "name": "迴香酒舖",
+    "location": "新竹市",
+    "description": "酒吧、精釀啤酒",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區大同路86號（東門市場）",
+    "isClosed": false,
+    "lat": "24.804254",
+    "lng": "120.968541"
+  },
+  {
+    "name": "不染 Pure Bar",
+    "location": "新竹市",
+    "description": "酒吧",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區世界街116號",
+    "isClosed": false,
+    "lat": "24.805254",
+    "lng": "120.971254"
+  },
+  {
+    "name": "The Choice 酌肆",
+    "location": "新竹市",
+    "description": "酒吧",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路155號",
+    "isClosed": false,
+    "lat": "24.798254",
+    "lng": "120.969951"
+  },
+  {
+    "name": "inBush",
+    "location": "新竹市",
+    "description": "酒吧、花藝咖啡",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區長春街64號",
+    "isClosed": false,
+    "lat": "24.787541",
+    "lng": "121.011254"
+  },
+  {
+    "name": "天狗舞居酒屋",
+    "location": "新竹市",
+    "description": "居酒屋",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區東大路一段58號",
+    "isClosed": false,
+    "lat": "24.805541",
+    "lng": "120.977254"
+  },
+  {
+    "name": "統一姜滷味",
+    "location": "新竹市",
+    "description": "滷味",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路22號",
+    "isClosed": false,
+    "lat": "24.798541",
+    "lng": "120.992541"
+  },
+  {
+    "name": "馨口味鹽水雞",
+    "location": "新竹市",
+    "description": "鹽水雞",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路280號",
+    "isClosed": false,
+    "lat": "24.796851",
+    "lng": "120.970541"
+  },
+  {
+    "name": "陳記脆皮鹹水雞",
+    "location": "新竹市",
+    "description": "鹹水雞",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路41號",
+    "isClosed": false,
+    "lat": "24.798951",
+    "lng": "120.993254"
+  },
+  {
+    "name": "新豐麻油雞 新竹店",
+    "location": "新竹市",
+    "description": "麻油雞",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路188號",
+    "isClosed": false,
+    "lat": "24.797951",
+    "lng": "120.970012"
+  },
+  {
+    "name": "京品麻油雞",
+    "location": "新竹市",
+    "description": "麻油雞",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區光華東街13號",
+    "isClosed": false,
+    "lat": "24.816254",
+    "lng": "120.974851"
+  },
+  {
+    "name": "家圓新竹燒酒雞",
+    "location": "新竹市",
+    "description": "燒酒雞",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經國路二段186號",
+    "isClosed": false,
+    "lat": "24.809851",
+    "lng": "120.968254"
+  },
+  {
+    "name": "蝦King活蝦料理",
+    "location": "新竹市",
+    "description": "快炒、活蝦料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路185號",
+    "isClosed": false,
+    "lat": "24.798124",
+    "lng": "120.969851"
+  },
+  {
+    "name": "阿明快炒",
+    "location": "新竹市",
+    "description": "快炒",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區光復路二段380號",
+    "isClosed": false,
+    "lat": "24.795851",
+    "lng": "120.996851"
+  },
+  {
+    "name": "本質工作室 Natural Studio",
+    "location": "新竹市",
+    "description": "餐廳、無菜單料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區西大路247號",
+    "isClosed": false,
+    "lat": "24.801254",
+    "lng": "120.965254"
+  },
+  {
+    "name": "Piccola Enoteca 彼刻義式餐酒館",
+    "location": "竹北市",
+    "description": "義式餐酒館",
+    "rating": "👍👍",
+    "fullAddress": "新竹縣竹北市成功二街102號",
+    "isClosed": false,
+    "lat": "24.818541",
+    "lng": "121.023254"
+  },
+  {
+    "name": "竹美私房料理",
+    "location": "新竹市",
+    "description": "港式點心、烤鴨",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區關新路160號",
+    "isClosed": false,
+    "lat": "24.784521",
+    "lng": "121.018541"
+  },
+  {
+    "name": "橫濱家系拉麵家",
+    "location": "新竹市",
+    "description": "家系拉麵",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區民生路193號",
+    "isClosed": false,
+    "lat": "24.812154",
+    "lng": "120.974521"
+  },
+  {
+    "name": "姐妹的雞腿便當",
+    "location": "新竹市",
+    "description": "便當",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路218號",
+    "isClosed": false,
+    "lat": "24.797541",
+    "lng": "120.970541"
+  },
+  {
+    "name": "周家燒き餃子/港點",
+    "location": "新竹漁港",
+    "description": "港式、煎餃",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區新港三路1-9號直銷中心二樓",
+    "isClosed": false,
+    "lat": "24.848951",
+    "lng": "120.927541"
+  },
+  {
+    "name": "阿富滷肉飯",
+    "location": "新竹市",
+    "description": "滷肉飯",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區中山路75號",
+    "isClosed": false,
+    "lat": "24.803851",
+    "lng": "120.965541"
+  },
+  {
+    "name": "南寮龍門炒飯",
+    "location": "新竹市",
+    "description": "炒飯（一定要老闆炒的）",
+    "rating": "👍👍",
+    "fullAddress": "新竹市北區東大路四段212號",
+    "isClosed": false,
+    "lat": "24.838541",
+    "lng": "120.932541"
+  },
+  {
+    "name": "御廚雲泰美食",
+    "location": "新竹市",
+    "description": "炒飯、雲泰料理",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區建功一路68號",
+    "isClosed": false,
+    "lat": "24.798851",
+    "lng": "120.994124"
+  },
+  {
+    "name": "希弗德式甜點",
+    "location": "新竹市",
+    "description": "德式甜點",
+    "rating": "👍👍",
+    "fullAddress": "新竹市東區經典路228號",
+    "isClosed": false,
+    "lat": "24.797452",
+    "lng": "120.970851"
   }
 ]
