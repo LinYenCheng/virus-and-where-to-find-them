@@ -4,17 +4,17 @@
     "location": "仁德街",
     "description": "魯肉飯、半熟蛋都非常好吃，必點。生意很好，店員都很客氣。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市仁德街",
+    "fullAddress": "新竹市北區仁德街88號",
     "isClosed": false,
-    "lat": "24.8066076",
-    "lng": "120.9639425"
+    "lat": "24.8087000",
+    "lng": "120.9678000"
   },
   {
     "name": "泰貓了 Thai Cafe",
     "location": "中正路96巷",
     "description": "很喜歡綠咖哩雞飯、正宗泰式綠奶茶！價位不高、環境漂亮又乾淨、店員也很客氣，很棒的用餐體驗。生意很好，要提前訂位，不然可能吃不到。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市中正路96巷",
+    "fullAddress": "新竹市東區中正路96巷18號",
     "isClosed": false,
     "lat": "24.8057386",
     "lng": "120.9700740"
@@ -24,7 +24,7 @@
     "location": "南大路",
     "description": "飯類、甜點都非常好吃。特別喜歡大黃蜂咖椰娘惹糕、原味千層派。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市南大路",
+    "fullAddress": "新竹市東區南大路52號",
     "isClosed": false,
     "lat": "24.8014197",
     "lng": "120.9758535"
@@ -34,7 +34,7 @@
     "location": "學府路",
     "description": "綜合起司披薩、波隆那肉醬千層麵非常好吃！很喜歡！",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市學府路",
+    "fullAddress": "新竹市東區綠水里學府路391之1號",
     "isClosed": false,
     "lat": "24.7963640",
     "lng": "120.9831563"
@@ -64,7 +64,7 @@
     "location": "東南街",
     "description": "非常好吃。生意很好，剛營業就去買就要等半小時，不想等可以提前預訂。更新：買過好幾次了，我最喜歡香草牛奶、起司薯薯、黑糖牛奶麻糬、熔岩可可。平日不太需要等。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市東南街",
+    "fullAddress": "新竹市東區東南街118號",
     "isClosed": false,
     "lat": "24.7979551",
     "lng": "120.9739529"
@@ -84,10 +84,10 @@
     "location": "金山十一街",
     "description": "去過很多次了，非常喜歡他們的餐點。吃過叉燒乾撈麵、叻沙咖哩魚飯、海南雞飯、蔬食肉骨茶麵、咖椰奶油烤吐司，都非常好吃！",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市金山十一街",
+    "fullAddress": "新竹市東區金山十一街37號",
     "isClosed": false,
-    "lat": "24.7784024",
-    "lng": "121.0222381"
+    "lat": "24.7779800",
+    "lng": "121.0215000"
   },
   {
     "name": "雅素齋",
@@ -104,20 +104,10 @@
     "location": "金山十五街",
     "description": "什錦魚丼超級好吃！生魚片、小菜都很棒，不到兩百塊卻比台北知名壽司店五百多塊的生魚片好吃很多。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市金山十五街",
+    "fullAddress": "新竹市東區金山十五街5號",
     "isClosed": false,
-    "lat": "24.7767602",
-    "lng": "121.0230620"
-  },
-  {
-    "name": "bigreeny 料理．家",
-    "location": "金山七街",
-    "description": "點了蔥油雞片烤吐司，超好吃！鮮奶玉米濃湯也不錯。標榜天然健康，食材品質很好。",
-    "rating": "👍👍👍",
-    "fullAddress": "新竹市金山七街",
-    "isClosed": false,
-    "lat": "24.7785887",
-    "lng": "121.0203552"
+    "lat": "24.7765100",
+    "lng": "121.0221000"
   },
   {
     "name": "艾塔甜品",
@@ -134,10 +124,10 @@
     "location": "延平路二段",
     "description": "肉圓很好吃。新竹的肉圓口味跟台南的很不一樣，新竹用的是紅糟肉，我覺得新竹的肉圓比台南最好吃的肉圓都還要好吃。烤香腸肥肉太多了不喜歡。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市延平路二段",
+    "fullAddress": "新竹市香山區延平路二段350號",
     "isClosed": false,
-    "lat": "24.8085397",
-    "lng": "120.9337681"
+    "lat": "24.8021100",
+    "lng": "120.9423500"
   },
   {
     "name": "Family Pizza 手工柴燒窯烤比薩",
@@ -164,10 +154,10 @@
     "location": "文興路一段",
     "description": "外表很普通但吃起來卻很好吃。蛋糕就像枕頭一樣軟，吃的時候很療癒。",
     "rating": "👍👍👍",
-    "fullAddress": "新竹市文興路一段",
+    "fullAddress": "新竹縣竹北市文興路一段338號",
     "isClosed": false,
-    "lat": "24.8089247",
-    "lng": "121.0310872"
+    "lat": "24.8089200",
+    "lng": "121.0289500"
   },
   {
     "name": "黃記清蒸肉丸豆花甜湯",
@@ -200,16 +190,6 @@
     "lng": "120.9176707"
   },
   {
-    "name": "卉羚綠豆沙牛乳專賣店",
-    "location": "中山路",
-    "description": "新竹這幾年開了好幾間綠豆沙店，玉蘭、卉羚、法豆、草根豐味⋯⋯不過不知道為什麼卉羚好像特別有名。第一次喝，味道和口感真的是我目前喝過最好的（但我不知道誰的品質比較好）。",
-    "rating": "👍👍👍",
-    "fullAddress": "新竹市中山路",
-    "isClosed": false,
-    "lat": "24.8057829",
-    "lng": "120.9673339"
-  },
-  {
     "name": "軒邑快餐",
     "location": "寶山路",
     "description": "清大、交大南門附近的便當店，現炒的孜然豬肉和宮保豬肉超好吃！便當副菜青菜很多，而且也很好吃！",
@@ -234,10 +214,10 @@
     "location": "福興東路二段",
     "description": "魯汁超讚，嫩豆腐也不錯，可是米飯偏硬。",
     "rating": "👍👍",
-    "fullAddress": "新竹市福興東路二段",
+    "fullAddress": "新竹縣竹北市嘉興路150號",
     "isClosed": false,
-    "lat": "24.8130774",
-    "lng": "121.0303371"
+    "lat": "24.8142100",
+    "lng": "121.0258000"
   },
   {
     "name": "橄欖樹廚房",
@@ -254,7 +234,7 @@
     "location": "林森路",
     "description": "燒仙草、配料都很好吃，特別喜歡他們的芋圓。",
     "rating": "👍👍",
-    "fullAddress": "新竹市林森路",
+    "fullAddress": "新竹市東區林森路208號",
     "isClosed": false,
     "lat": "24.7993895",
     "lng": "120.9648122"
@@ -264,7 +244,7 @@
     "location": "勝利路",
     "description": "糖水冰沙、薑汁冰沙加豆花，很特別，味道也很棒。熱豆花也很棒。假日生意很好。",
     "rating": "👍👍",
-    "fullAddress": "新竹市勝利路",
+    "fullAddress": "新竹市東區勝利路20號",
     "isClosed": false,
     "lat": "24.8013034",
     "lng": "120.9646868"
@@ -294,7 +274,7 @@
     "location": "文昌街",
     "description": "水果大福、蜂蜜生乳酪大福、生巧克力大福、紅豆大福都很好吃！原味牡丹餅普通。",
     "rating": "👍👍",
-    "fullAddress": "新竹市文昌街",
+    "fullAddress": "新竹市東區文昌街85號",
     "isClosed": false,
     "lat": "24.8032750",
     "lng": "120.9688140"
@@ -344,17 +324,17 @@
     "location": "光復路一段268巷",
     "description": "喜歡他們的打拋豬、蔥油時蔬，手工寬麵也非常好吃。乾鍋豬腳味道很棒，可是有很多骨頭跟辣椒皮，有點不太知道要怎麼優雅的吃。花鵰雞拌麵也不錯。平日生意也很好，有時會客滿。",
     "rating": "👍👍",
-    "fullAddress": "新竹市光復路一段268巷",
+    "fullAddress": "新竹市東區新莊街6號",
     "isClosed": false,
-    "lat": "24.7832802",
-    "lng": "121.0208117"
+    "lat": "24.7871500",
+    "lng": "121.0182000"
   },
   {
     "name": "北門炸粿",
     "location": "城北街",
     "description": "米糕好吃不油膩。",
     "rating": "👍👍",
-    "fullAddress": "新竹市城北街",
+    "fullAddress": "新竹市北區城北街15號",
     "isClosed": false,
     "lat": "24.8110279",
     "lng": "120.9636385"
@@ -384,10 +364,10 @@
     "location": "西大路",
     "description": "肉圓好吃，嫌鷹王肉圓太遠的話可以來這家。",
     "rating": "👍👍",
-    "fullAddress": "新竹市西大路",
+    "fullAddress": "新竹市東區西大路28號",
     "isClosed": false,
-    "lat": "24.8102103",
-    "lng": "120.9584828"
+    "lat": "24.7981000",
+    "lng": "120.9675000"
   },
   {
     "name": "古井下花生湯",
@@ -460,16 +440,6 @@
     "lng": "121.0442099"
   },
   {
-    "name": "Tudo Bem Bistro 哩賀巴西小館",
-    "location": "博愛街94巷",
-    "description": "一人份的披薩，好吃，也不會很貴。",
-    "rating": "👍👍",
-    "fullAddress": "新竹市博愛街94巷",
-    "isClosed": false,
-    "lat": "24.7989513",
-    "lng": "120.9830648"
-  },
-  {
     "name": "安姆士輕食茶舖",
     "location": "光復路二段",
     "description": "營養又美味的蔬食料理，一餐飯就可以吃到很多蔬果，而且也不會很貴。",
@@ -484,20 +454,10 @@
     "location": "建功一路",
     "description": "好吃，牛肉麵、魯味、紅油抄手都有一定的水準，牛肉很嫩。很多地方都有分店。",
     "rating": "👍👍",
-    "fullAddress": "新竹市建功一路",
+    "fullAddress": "新竹市東區建功一路135號",
     "isClosed": false,
-    "lat": "24.8026728",
-    "lng": "120.9937943"
-  },
-  {
-    "name": "大心 EXPRESS",
-    "location": "Big City 遠東巨城購物中心",
-    "description": "酸辣番茄豬肉麵，麵條、湯頭、肉片都料理得很好，份量也很足夠。",
-    "rating": "👍👍",
-    "fullAddress": "新竹市Big City 遠東巨城購物中心",
-    "isClosed": false,
-    "lat": "",
-    "lng": ""
+    "lat": "24.8001200",
+    "lng": "120.9951800"
   },
   {
     "name": "大鼓肉夾饃",
@@ -548,16 +508,6 @@
     "isClosed": false,
     "lat": "24.7981455",
     "lng": "120.9980664"
-  },
-  {
-    "name": "樂活鮮瓶",
-    "location": "寶山路",
-    "description": "喜歡金萱鮮奶茶！還有牧野鮮奶茶、茉香鮮奶綠也很好喝，是清大、交大南門附近我最喜歡的飲料店。",
-    "rating": "👍👍",
-    "fullAddress": "新竹市寶山路",
-    "isClosed": false,
-    "lat": "24.7941118",
-    "lng": "120.9732809"
   },
   {
     "name": "Second Floor Cafe 貳樓",
@@ -620,16 +570,6 @@
     "lng": "120.9708058"
   },
   {
-    "name": "青茶道",
-    "location": "食品路",
-    "description": "標榜使用品質比較好的茶葉，點微糖還是太甜了。更新：第二次買，甜度好很多了。推薦金萱拿鐵。",
-    "rating": "👌",
-    "fullAddress": "新竹市食品路",
-    "isClosed": false,
-    "lat": "24.7987721",
-    "lng": "120.9789344"
-  },
-  {
     "name": "梅花雞蛋糕",
     "location": "中正路",
     "description": "脆皮雞蛋糕，一個五元，還不錯吃。生意很好要排隊。",
@@ -648,16 +588,6 @@
     "isClosed": false,
     "lat": "24.7969862",
     "lng": "120.9637639"
-  },
-  {
-    "name": "語菓 Fortune Teller",
-    "location": "文昌街",
-    "description": "飲料店，不差但有點貴。",
-    "rating": "👌",
-    "fullAddress": "新竹市文昌街",
-    "isClosed": false,
-    "lat": "24.8032750",
-    "lng": "120.9688140"
   },
   {
     "name": "翁記滷肉飯",
@@ -714,7 +644,7 @@
     "location": "光明一路",
     "description": "餐點都太貴了，一粒水餃要八元，也沒有特別好吃。紅油抄手拌麵還不錯吃，但是份量小。",
     "rating": "👌",
-    "fullAddress": "新竹市光明一路",
+    "fullAddress": "新竹縣竹北市光明一路275號",
     "isClosed": false,
     "lat": "24.8323783",
     "lng": "121.0088237"
@@ -734,20 +664,20 @@
     "location": "興學街",
     "description": "魯肉飯好吃，魚丸湯我覺得普通。",
     "rating": "👌",
-    "fullAddress": "新竹市興學街",
+    "fullAddress": "新竹市東區興學街27號",
     "isClosed": false,
-    "lat": "24.7978370",
-    "lng": "120.9678226"
+    "lat": "24.7968500",
+    "lng": "120.9681500"
   },
   {
     "name": "廟口鴨香飯",
     "location": "中山路",
     "description": "我個人覺很還好，不過喜歡吃鴨肉的人或許可以試試。",
     "rating": "👌",
-    "fullAddress": "新竹市中山路",
+    "fullAddress": "新竹市北區中山路142號",
     "isClosed": false,
-    "lat": "24.8040749",
-    "lng": "120.9645469"
+    "lat": "24.8038500",
+    "lng": "120.9654100"
   },
   {
     "name": "瑞迪印度廚房",
@@ -784,7 +714,7 @@
     "location": "博愛街",
     "description": "牛肉斤餅還不錯。",
     "rating": "👌",
-    "fullAddress": "新竹市博愛街",
+    "fullAddress": "新竹市東區博愛街31號",
     "isClosed": false,
     "lat": "24.7974212",
     "lng": "120.9854293"
@@ -794,17 +724,17 @@
     "location": "東山街",
     "description": "還算不錯，推薦點抄手麵。",
     "rating": "👌",
-    "fullAddress": "新竹市東山街",
+    "fullAddress": "新竹市東區東山街6號",
     "isClosed": false,
-    "lat": "24.7960724",
-    "lng": "120.9800111"
+    "lat": "24.7995800",
+    "lng": "120.9798500"
   },
   {
     "name": "老港陳",
     "location": "南門街",
     "description": "抄手意麵好吃，粥普通。",
     "rating": "👌",
-    "fullAddress": "新竹市南門街",
+    "fullAddress": "新竹市東區南門街55號",
     "isClosed": false,
     "lat": "24.8010160",
     "lng": "120.9673669"
@@ -824,17 +754,17 @@
     "location": "林森路",
     "description": "就真的很古早味，看個人口味喜不喜歡。",
     "rating": "👌",
-    "fullAddress": "新竹市林森路",
+    "fullAddress": "新竹市北區中山路110號",
     "isClosed": false,
-    "lat": "24.7993895",
-    "lng": "120.9648122"
+    "lat": "24.8035200",
+    "lng": "120.9658000"
   },
   {
     "name": "一百種味道",
     "location": "石坊街",
     "description": "有賣各式各樣的塔，不錯吃，可是上次點了宇治抹茶白巧克力塔，太甜、容易膩。",
     "rating": "👌",
-    "fullAddress": "新竹市石坊街",
+    "fullAddress": "新竹市北區勝利路183號",
     "isClosed": false,
     "lat": "24.8025544",
     "lng": "120.9639889"
@@ -864,10 +794,10 @@
     "location": "北門街",
     "description": "鴨肉麵份量大但不好吃。",
     "rating": "👌",
-    "fullAddress": "新竹市北門街",
+    "fullAddress": "新竹市北區北門街35號",
     "isClosed": false,
-    "lat": "24.8080714",
-    "lng": "120.9651659"
+    "lat": "24.8052100",
+    "lng": "120.9671500"
   },
   {
     "name": "可不可熟成紅茶",
@@ -878,16 +808,6 @@
     "isClosed": false,
     "lat": "24.7981524",
     "lng": "120.9977583"
-  },
-  {
-    "name": "圈圈微森 Circle Within",
-    "location": "西大路",
-    "description": "鮮奶綠茶好喝，肯亞赤道鮮奶茶普通，泰式鮮奶茶很膩。",
-    "rating": "👌",
-    "fullAddress": "新竹市西大路",
-    "isClosed": false,
-    "lat": "24.8102103",
-    "lng": "120.9584828"
   },
   {
     "name": "貢茶",
@@ -970,16 +890,6 @@
     "lng": "120.9977060"
   },
   {
-    "name": "手作本物",
-    "location": "文興路一段",
-    "description": "只吃過烤糰子，不差。",
-    "rating": "👌",
-    "fullAddress": "新竹市文興路一段",
-    "isClosed": false,
-    "lat": "24.8129389",
-    "lng": "121.0236036"
-  },
-  {
     "name": "紅帽烘焙",
     "location": "和福街",
     "description": "只吃過牛奶巧克力慕斯塔，還不錯。",
@@ -1050,16 +960,6 @@
     "lng": "121.0396368"
   },
   {
-    "name": "Plan.B",
-    "location": "西門街",
-    "description": "創意刈包料理，搭配薯條，不錯吃但頗貴。",
-    "rating": "👌",
-    "fullAddress": "新竹市西門街",
-    "isClosed": false,
-    "lat": "24.8007835",
-    "lng": "120.9623423"
-  },
-  {
     "name": "珍煮丹",
     "location": "光復路一段",
     "description": "黑糖仙草／綠豆／布丁／紅豆鮮奶、泰泰鮮奶茶都還不錯，不過我最喜歡黑糖布丁鮮奶跟黑糖仙草鮮奶。",
@@ -1078,16 +978,6 @@
     "isClosed": false,
     "lat": "24.8061491",
     "lng": "120.9675159"
-  },
-  {
-    "name": "三層山",
-    "location": "光復路二段",
-    "description": "特色霜淇淋店，還不錯，只是有一點小貴。",
-    "rating": "👌",
-    "fullAddress": "新竹市光復路二段",
-    "isClosed": false,
-    "lat": "24.7924771",
-    "lng": "121.0028182"
   },
   {
     "name": "麵朝",
@@ -1234,7 +1124,7 @@
     "location": "東門街",
     "description": "雞魯飯好吃。",
     "rating": "👌",
-    "fullAddress": "新竹市東門街",
+    "fullAddress": "新竹市東區東門街114號",
     "isClosed": false,
     "lat": "24.8042690",
     "lng": "120.9698725"
@@ -1244,7 +1134,7 @@
     "location": "民權路",
     "description": "肉燥是他們的招牌，真的非常好吃，但是手工麵不怎麼樣，且偏貴。二訪：這次拜訪翟九將軍村分店，肉燥乾麵很好吃，肉燥和手作麵都很棒，滷菜也不錯，唯一的缺點就是稍微貴了點。三訪（將軍村分店）：肉燥手作粗麵、滷菜跟上次一樣好吃，但水餃不好吃，口感乾硬、味道普普。用餐環境乾淨、整齊、舒適。",
     "rating": "👌",
-    "fullAddress": "新竹市民權路",
+    "fullAddress": "新竹市東區民權路217號",
     "isClosed": false,
     "lat": "24.8110079",
     "lng": "120.9726221"
@@ -1284,7 +1174,7 @@
     "location": "西門街",
     "description": "肉圓還算不錯。",
     "rating": "👌",
-    "fullAddress": "新竹市西門街",
+    "fullAddress": "新竹市北區西門街104號",
     "isClosed": false,
     "lat": "24.8007835",
     "lng": "120.9623423"
@@ -1300,16 +1190,6 @@
     "lng": "120.9666805"
   },
   {
-    "name": "十六區壽司／和風料理",
-    "location": "光復路二段",
-    "description": "壽司不太好吃，炸蝦還可以。有點貴，我覺得不值得。",
-    "rating": "👌",
-    "fullAddress": "新竹市光復路二段",
-    "isClosed": false,
-    "lat": "24.7989017",
-    "lng": "120.9934852"
-  },
-  {
     "name": "双星甜不辣",
     "location": "大同路",
     "description": "不難吃，但也沒有特別讓人驚艷。很有名，假日生意很好。",
@@ -1318,26 +1198,6 @@
     "isClosed": false,
     "lat": "24.8068532",
     "lng": "120.9670629"
-  },
-  {
-    "name": "戲棚下 Under Six Pound",
-    "location": "中央路",
-    "description": "（2018）新開的，茶飲好喝，只是有點貴。下次試試看他們的唐揚雞。",
-    "rating": "👌",
-    "fullAddress": "新竹市中央路",
-    "isClosed": false,
-    "lat": "24.8039847",
-    "lng": "120.9667849"
-  },
-  {
-    "name": "幸福冰舖",
-    "location": "關東路",
-    "description": "喝過手工粉圓黑糖奶，還不錯，也不貴。",
-    "rating": "👌",
-    "fullAddress": "新竹市關東路",
-    "isClosed": false,
-    "lat": "24.7897596",
-    "lng": "121.0198718"
   },
   {
     "name": "米樂爆米花",
@@ -1350,26 +1210,6 @@
     "lng": "121.0259421"
   },
   {
-    "name": "凡妮莎南歐花園餐廳",
-    "location": "金山二十三街",
-    "description": "餐點都蠻好吃的，略貴。",
-    "rating": "👌",
-    "fullAddress": "新竹市金山二十三街",
-    "isClosed": false,
-    "lat": "24.7750123",
-    "lng": "121.0262633"
-  },
-  {
-    "name": "水韻堂",
-    "location": "金山十一街",
-    "description": "飲料店，還算不錯。",
-    "rating": "👌",
-    "fullAddress": "新竹市金山十一街",
-    "isClosed": false,
-    "lat": "24.7784024",
-    "lng": "121.0222381"
-  },
-  {
     "name": "TACO HOUSE 塔坷屋．美墨速食",
     "location": "勝利路",
     "description": "塔可是Ｕ型脆餅夾餡料。點了牛肉塔可，牛肉不好吃，脆餅吃起來很像多力多滋。",
@@ -1378,16 +1218,6 @@
     "isClosed": false,
     "lat": "24.8013034",
     "lng": "120.9646868"
-  },
-  {
-    "name": "韓新樓",
-    "location": "金山六路2巷",
-    "description": "點了烤肉飯，附小菜，還可以。價位一百多。",
-    "rating": "👌",
-    "fullAddress": "新竹市金山六路2巷",
-    "isClosed": false,
-    "lat": "",
-    "lng": ""
   },
   {
     "name": "賈董的麵",
@@ -1410,14 +1240,14 @@
     "lng": "121.0015269"
   },
   {
-    "name": "川牛木石亭",
+    "name": "川牛木石亭 新竹北門店",
     "location": "北門街／光復路一段",
     "description": "吃過光復店外送的極盛牛肉丼飯，味道很好，但是肉非常難咬。下次試試北門店。二訪：這次來到北門店，一樣是味道好，但肉難咀嚼。不過內用提供的雞白湯還蠻好喝的。",
     "rating": "👌",
-    "fullAddress": "新竹市北門街／光復路一段",
+    "fullAddress": "新竹市北區北門街145號",
     "isClosed": false,
-    "lat": "",
-    "lng": ""
+    "lat": "24.8078864",
+    "lng": "120.9638712"
   },
   {
     "name": "Pizza Rock",
@@ -1460,16 +1290,6 @@
     "lng": "120.9732809"
   },
   {
-    "name": "NUTTEA 堅果奶茶",
-    "location": "光復路一段",
-    "description": "品質好，堅果奶很特別，但我個人還是比較喜歡加鮮奶。",
-    "rating": "👌",
-    "fullAddress": "新竹市光復路一段",
-    "isClosed": false,
-    "lat": "24.7855780",
-    "lng": "121.0120782"
-  },
-  {
     "name": "小巷廚房",
     "location": "光復路一段89巷4弄",
     "description": "吃過餐盒、優格，個人覺得還好。",
@@ -1478,16 +1298,6 @@
     "isClosed": false,
     "lat": "24.7810425",
     "lng": "121.0234928"
-  },
-  {
-    "name": "屋有 WOYO",
-    "location": "信義街",
-    "description": "主餐海鮮橘醬麵份量大，味道普通。不過雞湯、沙拉、薯條、紅茶拿鐵、冰沙都很棒，用餐環境也很棒。",
-    "rating": "👌",
-    "fullAddress": "新竹市信義街",
-    "isClosed": false,
-    "lat": "24.8029212",
-    "lng": "120.9703760"
   },
   {
     "name": "影咖啡",
@@ -1500,41 +1310,11 @@
     "lng": "121.0017478"
   },
   {
-    "name": "珍一波 黑糖タピオカの牛乳",
-    "location": "中山路",
-    "description": "我覺得珍珠不夠軟。",
-    "rating": "👌",
-    "fullAddress": "新竹市中山路",
-    "isClosed": false,
-    "lat": "24.8057829",
-    "lng": "120.9673339"
-  },
-  {
-    "name": "東門旺角 香港大排檔",
-    "location": "東門市場",
-    "description": "點了太陽蛋公仔麵和法蘭西多士，一開始都覺得很好吃，可是吃到後面會覺得有點單調，特別是西多士，吃到後面很膩。",
-    "rating": "👌",
-    "fullAddress": "新竹市東門市場",
-    "isClosed": false,
-    "lat": "24.8049042",
-    "lng": "120.9689527"
-  },
-  {
-    "name": "蔗一條豬",
-    "location": "東門市場",
-    "description": "綠茶鮮奶味道普通。",
-    "rating": "👌",
-    "fullAddress": "新竹市東門市場",
-    "isClosed": false,
-    "lat": "24.8049042",
-    "lng": "120.9689527"
-  },
-  {
     "name": "榮記客家湯圓",
     "location": "武昌街",
     "description": "骨仔肉飯的調味很好，喜歡他們的蔥油。",
     "rating": "👌",
-    "fullAddress": "新竹市武昌街",
+    "fullAddress": "新竹市東區武昌街64號",
     "isClosed": false,
     "lat": "24.8025563",
     "lng": "120.9674689"
@@ -1544,10 +1324,10 @@
     "location": "北門街",
     "description": "熱芋泥很特別，鹹的、加油蔥、沒有想像中的濃稠。我沒有特別喜歡這種口味，不過我覺得值得試一次，體驗一下古早味。",
     "rating": "👌",
-    "fullAddress": "新竹市北門街",
+    "fullAddress": "新竹市北區城北街46號",
     "isClosed": false,
-    "lat": "24.8068191",
-    "lng": "120.9657332"
+    "lat": "24.8085000",
+    "lng": "120.9652000"
   },
   {
     "name": "萬波島嶼紅茶",
@@ -1558,16 +1338,6 @@
     "isClosed": false,
     "lat": "24.8068532",
     "lng": "120.9670629"
-  },
-  {
-    "name": "肆爺炒泡麵",
-    "location": "東門市場",
-    "description": "味道還不錯，辛拉麵有點辣。",
-    "rating": "👌",
-    "fullAddress": "新竹市東門市場",
-    "isClosed": false,
-    "lat": "24.8049042",
-    "lng": "120.9689527"
   },
   {
     "name": "古拉爵 Café Grazie",
@@ -1628,26 +1398,6 @@
     "isClosed": false,
     "lat": "24.8068532",
     "lng": "120.9670629"
-  },
-  {
-    "name": "法豆 綠豆沙牛奶",
-    "location": "仁化街",
-    "description": "綠豆沙牛奶中規中矩，喜歡綠豆沙的人或許可以試試。",
-    "rating": "👌",
-    "fullAddress": "新竹市仁化街",
-    "isClosed": false,
-    "lat": "24.8046704",
-    "lng": "120.9647346"
-  },
-  {
-    "name": "老虎堂",
-    "location": "中央路",
-    "description": "紅茶厚拿鐵、春光紅茶厚拿鐵好喝。",
-    "rating": "👌",
-    "fullAddress": "新竹市中央路",
-    "isClosed": false,
-    "lat": "24.8039847",
-    "lng": "120.9667849"
   },
   {
     "name": "小炫清燉牛肉麵",
@@ -1932,7 +1682,7 @@
   {
     "name": "三層山",
     "location": "光復路二段（清大附近）",
-    "description": "主打濃郁高純度霜淇淋與特色手作甜點，冰品口感綿密滑順，深受年輕族群喜愛。",
+    "description": "特色霜淇淋店，還不錯，只是有一點小貴。 主打濃郁高純度霜淇淋與特色手作甜點，冰品口感綿密滑順，深受年輕族群喜愛。",
     "rating": "👍👍",
     "fullAddress": "新竹市東區光復路二段100號",
     "isClosed": false,
@@ -1942,7 +1692,7 @@
   {
     "name": "卉羚綠豆沙牛乳專賣店",
     "location": "中山路（城隍廟商圈）",
-    "description": "城隍廟周邊熱門排隊飲品，綠豆沙打得極為細緻綿密，加入鮮奶後口感更加滑順濃厚。",
+    "description": "新竹這幾年開了好幾間綠豆沙店，玉蘭、卉羚、法豆、草根豐味⋯⋯不過不知道為什麼卉羚好像特別有名。第一次喝，味道和口感真的是我目前喝過最好的（但我不知道誰的品質比較好）。 城隍廟周邊熱門排隊飲品，綠豆沙打得極為細緻綿密，加入鮮奶後口感更加滑順濃厚。",
     "rating": "👍👍",
     "fullAddress": "新竹市北區中山路103號",
     "isClosed": false,
