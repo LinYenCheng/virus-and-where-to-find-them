@@ -1,6 +1,6 @@
 import jsonTaiwan from '../data/taiwan.json';
 import jsonFinalTimeSeriesData from '../data/finalTimeSeriesData.json';
-import jsonRat from '../data/mouse.json';
+import { validRatReports } from './ratData.js';
 import jsonFood from '../data/food.json';
 
 function getPercentHTMLString({ intChild, intParent }) {
@@ -19,143 +19,98 @@ function getPercentHTMLString({ intChild, intParent }) {
 }
 
 function generateFoodTable() {
-  let table = '';
-  table += `
-  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
-  <table id="dataTable-now" class="dataTable-food display responsive nowrap">
-      <thead>
-            <tr>
-                <th>名稱</th>
-                <th>評價</th>    
-                <th>地址</th>
-                <th>說明</th>
-            </tr>
-        </thead>
-        <tbody>
-        `;
-
-  /* loop over each object in the array to create rows*/
-  jsonFood.forEach((item, index) => {
-    table += `<tr class="food-row" data-lat="${item.lat}" data-lng="${item.lng}" data-id="food-${index}">
-    <td>${item.name}</td>
-    <td>${item.rating}</td>
-    <td>${item.fullAddress}</td>
-    <td>${item.description}</td>
-    </tr>`;
-  });
-  table += '</tbody></table>';
-  $('#dataTable').html(table);
-
-  // Add click handler for rows
-  $('.food-row').on('click', function() {
-    const lat = $(this).data('lat');
-    const lng = $(this).data('lng');
-    const id = $(this).data('id');
-    if (window.map && lat && lng) {
-      window.map.setView([lat, lng], 18);
-      // Trigger popup if marker exists
-      if (window.foodMarkerMap && window.foodMarkerMap.has(id)) {
-        window.foodMarkerMap.get(id).openPopup();
-      }
-    }
-  });
-
-  $(`#dataTable-now`).DataTable({
-    order: [[1, 'desc']],
-    responsive: true,
-    lengthMenu: [
-      [8, 12],
-      [8, 12],
-    ],
-    language: {
-      search: '搜尋:',
-      info: '_START_ - _END_ / _TOTAL_',
-      paginate: {
-        previous: '<',
-        next: '>',
-      },
-    },
-  });
-  $('#btn-toggle').click(function () {
-    $('#dataTable-now_wrapper').toggle();
-    const isOpen = $('#dataTable-now_wrapper').is(':visible');
-    $('#btn-toggle').attr('aria-expanded', isOpen);
-  });
-  $('#btn-toggle').click();
+  $('#dataTable').removeClass('data-table-virus panel-open').show().empty();
+  const esc = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const renderCards = (items) => items.map(({ item, index }) => `
+    <article class="map-card food-card" role="button" aria-pressed="false" tabindex="0" data-lat="${esc(item.lat)}" data-lng="${esc(item.lng)}" data-id="food-${index}">
+      <div class="map-card-heading"><h3>${esc(item.name)}</h3><span class="card-rating">${esc(item.rating || '尚無評價')}</span></div>
+      <span class="card-tag">${esc(item.location || '新竹')}</span>
+      <p class="card-address">⌖ ${esc(item.fullAddress)}</p>
+      <p class="card-description">${esc(item.description)}</p>
+    </article>`).join('');
+  mountInfiniteCards('店家清單', jsonFood.map((item, index) => ({ item, index })), renderCards);
 }
 
 function generateRatTable(filterRegion = null) {
-  let table = '';
-  table += `
-  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
-  <table id="dataTable-now" class="dataTable-rat display responsive nowrap">
-      <thead>
-            <tr>
-                <th>地點</th>
-                <th>類型</th>    
-                <th>時間</th>
-                <th>說明</th>
-            </tr>
-        </thead>
-        <tbody>
-        `;
+  $('#dataTable').removeClass('data-table-virus panel-open').show().empty();
+  const normalizeRegionName = (value = '') => String(value).replace(/臺/g, '台').trim();
+  const normalizedFilter = normalizeRegionName(filterRegion || '');
+  const items = validRatReports.filter(({ item }) => !normalizedFilter || normalizeRegionName(item.location).includes(normalizedFilter));
+  const esc = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const renderCards = (entries) => entries.map(({ item, index }) => `
+    <article class="map-card rat-card" role="button" aria-pressed="false" tabindex="0" data-lat="${esc(item.lat)}" data-lng="${esc(item.lng)}" data-id="rat-${index}">
+      <div class="map-card-heading"><h3>${esc(item.location)}</h3><span class="card-date">${esc(item.time)}</span></div>
+      <span class="card-tag">${esc(item.type)}</span><p class="card-description">${esc(item.description)}</p>
+    </article>`).join('');
+  mountInfiniteCards(filterRegion ? `${filterRegion} 通報` : '通報清單', items, renderCards);
+}
 
-  /* loop over each object in the array to create rows*/
-  jsonRat
-    .filter((item) => !filterRegion || item.location.includes(filterRegion))
-    .forEach((item, index) => {
-      table += `<tr class="rat-row" data-lat="${item.lat}" data-lng="${item.lng}" data-id="rat-${index}">
-    <td>${item.location}</td>
-    <td>${item.type}</td>
-    <td>${item.time}</td>
-    <td>${item.description}</td>
-    </tr>`;
-    });
-  table += '</tbody></table>';
-  $('#dataTable').html(table);
+function mountInfiniteCards(title, items, renderCards) {
+  $('#dataTable').removeClass('data-table-virus panel-open').show();
+  $('#dataTable').empty();
+  $('#dataTable').removeClass('data-table-virus');
+  $('#dataTable').data('cardsObserver')?.disconnect();
+  const batchSize = 12;
+  let shown = 0;
+  $('#dataTable').html(`<div class="cards-panel" data-list-title="${title}"><div class="cards-toolbar"><input class="cards-search" type="search" placeholder="搜尋名稱、地點或內容" aria-label="搜尋清單"><span class="cards-result-count"></span><span class="cards-count">${items.length} 筆</span></div><div class="cards-list" role="list"><div class="cards-sentinel" aria-hidden="true"></div></div><p class="cards-end" hidden>已顯示全部項目</p></div>`);
+  const panel = $('#dataTable .cards-panel');
+  const list = panel.find('.cards-list');
+  const search = panel.find('.cards-search');
+  const resultCount = panel.find('.cards-result-count');
+  const sentinel = panel.find('.cards-sentinel')[0];
+  let filtered = items;
 
-  // Add click handler for rows
-  $('.rat-row').on('click', function() {
-    const lat = $(this).data('lat');
-    const lng = $(this).data('lng');
-    const id = $(this).data('id');
-    if (window.map && lat && lng) {
-      window.map.setView([lat, lng], 18);
-      // Trigger popup if marker exists in global marker map
-      if (window.ratMarkerMap && window.ratMarkerMap.has(id)) {
-        window.ratMarkerMap.get(id).openPopup();
+  const loadMore = () => {
+    if (shown >= filtered.length) return;
+    const next = filtered.slice(shown, shown + batchSize);
+    if (!next.length) return;
+    list.append(renderCards(next));
+    shown += next.length;
+    resultCount.text(`${shown} / ${filtered.length}`);
+    panel.find('.cards-end').prop('hidden', shown < filtered.length);
+  };
+  const reset = () => {
+    filtered = items.filter(({ item }) => !search.val() || Object.values(item).some((value) => String(value ?? '').toLocaleLowerCase().includes(search.val().toLocaleLowerCase())));
+    shown = 0;
+    list.empty();
+    panel.find('.cards-end').prop('hidden', true);
+    loadMore();
+  };
+  panel.on('click keydown', '.map-card', function (event) {
+    if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
+    if (event.type === 'keydown') event.preventDefault();
+    const { lat, lng, id } = this.dataset;
+    panel.find('.map-card').removeClass('is-selected').attr('aria-pressed', 'false');
+    $(this).addClass('is-selected').attr('aria-pressed', 'true');
+    if (id.startsWith('food-') && window.matchMedia('(max-width: 720px)').matches) {
+      const food = jsonFood[Number(id.slice('food-'.length))];
+      if (food) {
+        window.dispatchEvent(new CustomEvent('food-card-select', { detail: { food, id } }));
       }
+      return;
+    }
+    if (window.map && lat && lng) {
+      const markerMap = id.startsWith('food-') ? window.foodMarkerMap : window.ratMarkerMap;
+      window.map.setView([Number(lat), Number(lng)], 18, { animate: false });
+      if (markerMap?.has(id)) markerMap.get(id).openPopup();
     }
   });
-
-  $(`#dataTable-now`).DataTable({
-    order: [[0, 'desc']],
-    responsive: true,
-    lengthMenu: [
-      [8, 12],
-      [8, 12],
-    ],
-    language: {
-      search: '搜尋:',
-      info: '_START_ - _END_ / _TOTAL_',
-      paginate: {
-        previous: '<',
-        next: '>',
-      },
-    },
+  search.on('input', reset);
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => { if (entries.some((entry) => entry.isIntersecting)) loadMore(); }, { root: list[0], rootMargin: '180px' });
+    observer.observe(sentinel);
+    $('#dataTable').data('cardsObserver', observer);
+  }
+  list.on('scroll', function () {
+    if (this.scrollTop + this.clientHeight >= this.scrollHeight - 180) loadMore();
   });
-  $('#btn-toggle').click(function () {
-    $('#dataTable-now_wrapper').toggle();
-    const isOpen = $('#dataTable-now_wrapper').is(':visible');
-    $('#btn-toggle').attr('aria-expanded', isOpen);
-  });
-  $('#btn-toggle').click();
+  reset();
 }
 
 function generateGlobalTable() {
+  $('#dataTable').empty().removeClass('data-table-virus panel-open').show();
   let table = '';
   table += `
-  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
@@ -192,7 +147,7 @@ function generateGlobalTable() {
     </tr>`;
   });
   table += '</tbody></table>';
-  $('#dataTable').html(table);
+  $('#dataTable').html(`<div class="data-table-scroll">${table}</div>`).removeClass('data-table-virus panel-open').show();
   $(`#dataTable-now`).DataTable({
     order: [
       [2, 'desc'],
@@ -202,9 +157,16 @@ function generateGlobalTable() {
       [8, 12],
       [8, 12],
     ],
+    pagingType: 'full',
     responsive: true,
+    scrollY: '50vh',
+    scrollX: true,
+    scrollCollapse: true,
+    initComplete() {
+      this.api().table().container().querySelector('.dt-search input')?.setAttribute('aria-label', '搜尋資料');
+    },
     language: {
-      search: '搜尋:',
+      search: ' ',
       info: '_START_ - _END_ / _TOTAL_',
       paginate: {
         previous: '<',
@@ -212,18 +174,17 @@ function generateGlobalTable() {
       },
     },
   });
-  $('#btn-toggle').click(function () {
-    $('#dataTable-now_wrapper').toggle();
-    const isOpen = $('#dataTable-now_wrapper').is(':visible');
-    $('#btn-toggle').attr('aria-expanded', isOpen);
-  });
-  $('#btn-toggle').click();
+  $('#dataTable-now_wrapper').show();
 }
 
 function generateTaiwanTable() {
+  const host = $('#dataTable');
+  host.data('cardsObserver')?.disconnect();
+  if ($.fn.DataTable.isDataTable('#dataTable-now')) {
+    $('#dataTable-now').DataTable().destroy();
+  }
   let table = '';
   table += `
-  <button id="btn-toggle" type="button" aria-expanded="false">資料表</button>
   <table id="dataTable-now" class="dataTable-virus display responsive nowrap">
       <thead>
             <tr>
@@ -252,16 +213,25 @@ function generateTaiwanTable() {
     </tr>`;
     });
   table += '</tbody></table>';
-  $('#dataTable').html(table);
-  $(`#dataTable-now`).DataTable({
+  const tableHost = $('#dataTable');
+  tableHost.data('cardsObserver')?.disconnect();
+  tableHost.html(`<div class="data-table-scroll">${table}</div>`).removeClass('data-table-virus panel-open').show();
+  tableHost.find('#dataTable-now').DataTable({
     order: [[0, 'desc']],
     responsive: true,
+    scrollY: '50vh',
+    scrollX: true,
+    scrollCollapse: true,
+    initComplete() {
+      this.api().table().container().querySelector('.dt-search input')?.setAttribute('aria-label', '搜尋資料');
+    },
     lengthMenu: [
       [8, 12],
       [8, 12],
     ],
+    pagingType: 'full',
     language: {
-      search: '搜尋:',
+      search: ' ',
       info: '_START_ - _END_ / _TOTAL_',
       paginate: {
         previous: '<',
@@ -269,12 +239,7 @@ function generateTaiwanTable() {
       },
     },
   });
-  $('#btn-toggle').click(function () {
-    $('#dataTable-now_wrapper').toggle();
-    const isOpen = $('#dataTable-now_wrapper').is(':visible');
-    $('#btn-toggle').attr('aria-expanded', isOpen);
-  });
-  $('#btn-toggle').click();
+  tableHost.find('.dt-container').show();
 }
 
 export { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoodTable };

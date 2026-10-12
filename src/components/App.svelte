@@ -7,8 +7,12 @@
   export let finalCountries = [];
   export let mapMode = "virus";
   export let showLoading = true;
+  export let chartCountryOptions = [];
+  export let trendCountryId = "taiwan";
 
   let chartOpen = false;
+  let selectedFood = null;
+  let selectedFoodId = null;
 
   const modes = [
     {
@@ -44,7 +48,27 @@
     const timer = setTimeout(() => {
       showLoading = false;
     }, 2000);
-    return () => clearTimeout(timer);
+    const handleFoodSelect = (event) => {
+      selectedFood = event.detail?.food;
+      selectedFoodId = event.detail?.id || null;
+      requestAnimationFrame(() => {
+        if (!selectedFood?.lat || !selectedFood?.lng || !window.map) return;
+        const location = [Number(selectedFood.lat), Number(selectedFood.lng)];
+        window.map.invalidateSize({ pan: false });
+        window.map.setView(location, 17, { animate: false });
+        if (selectedFoodId) window.foodMarkerMap?.get(selectedFoodId)?.openPopup();
+      });
+    };
+    const handleKeydown = (event) => {
+      if (event.key === "Escape") closeFoodModal();
+    };
+    window.addEventListener("food-card-select", handleFoodSelect);
+    window.addEventListener("keydown", handleKeydown);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("food-card-select", handleFoodSelect);
+      window.removeEventListener("keydown", handleKeydown);
+    };
   });
 
   function toggleMap(mode) {
@@ -64,17 +88,23 @@
       window.dispatchEvent(new Event("resize"));
     }, 50);
   }
+
+  function closeFoodModal() {
+    selectedFood = null;
+    if (selectedFoodId) window.foodMarkerMap?.get(selectedFoodId)?.closePopup();
+  }
+
+  function selectTrendCountry(id) {
+    if (typeof window.updateTrendCountry === "function") {
+      window.updateTrendCountry(id);
+    }
+  }
 </script>
 
 <Map countries={finalCountries} {mapMode} />
 
+<aside class="left-rail" class:food-modal-active={!!selectedFood} aria-label="地圖資訊面板">
 <section class="map-station" aria-label="地圖控制台">
-  <div class="station-heading">
-    <span class="station-kicker">{activeMode.eyebrow}</span>
-    <h2>{activeMode.title}</h2>
-    <p>{activeMode.description}</p>
-  </div>
-
   <div class="mode-switch" role="group" aria-label="切換地圖圖層">
     {#each modes as mode}
       <button
@@ -89,18 +119,54 @@
     {/each}
   </div>
 </section>
-
-<Select />
+<section class="list-panel" aria-label="模式資訊與資料清單">
+  <header class="list-panel-heading" class:has-trend={mapMode === "virus"}>
+    {#if mapMode === "virus"}
+      <button
+        id="btn-open"
+        type="button"
+        aria-expanded={chartOpen}
+        aria-controls="modal"
+        onclick={openChartModal}
+      >趨勢圖表</button>
+    {/if}
+    <div class="list-panel-copy">
+      <span class="station-kicker">{activeMode.eyebrow}</span>
+      <h2>{activeMode.title}</h2>
+      <p>{activeMode.description}</p>
+    </div>
+  </header>
+  <div class="station-search">
+    <Select />
+  </div>
+<div id="dataTable"></div>
+</section>
+</aside>
+{#if selectedFood}
+  <div class="food-map-modal" role="dialog" aria-modal="true" aria-label={`${selectedFood.name} 地圖資訊`}>
+    <header class="food-map-modal__header">
+      <h2>{selectedFood.name}</h2>
+      <button type="button" aria-label="關閉地圖資訊" onclick={closeFoodModal}>×</button>
+    </header>
+    <article class="food-map-modal__card">
+      <div class="food-map-modal__card-heading">
+        <h3>{selectedFood.name}</h3>
+        <span>{selectedFood.rating || "尚無評價"}</span>
+      </div>
+      <span class="card-tag">{selectedFood.location || "新竹"}</span>
+      <p class="card-address">⌖ {selectedFood.fullAddress}</p>
+      <p class="card-description">{selectedFood.description}</p>
+    </article>
+    <footer class="food-map-modal__footer">
+      <a
+        href={`https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(`${selectedFood.fullAddress} ${selectedFood.name}`)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >↗ 前往 Google 地圖</a>
+    </footer>
+  </div>
+{/if}
 {#if mapMode === "virus"}
-  <button
-    id="btn-open"
-    type="button"
-    aria-expanded={chartOpen}
-    aria-controls="modal"
-    onclick={openChartModal}
-  >
-    趨勢圖表
-  </button>
   <div id="modal" class:modal-open={chartOpen} aria-hidden={!chartOpen}>
     <button id="btn-close" type="button" onclick={() => (chartOpen = false)}>
       關閉
@@ -109,6 +175,14 @@
       <span class="chart-kicker">Epidemic timeline</span>
       <h2>病例曲線</h2>
       <p>用日增與移動平均看趨勢，不讓單日尖峰搶走判斷。</p>
+      <label class="chart-country-picker">
+        <span>切換國家</span>
+        <select bind:value={trendCountryId} aria-label="切換趨勢圖國家" onchange={(event) => selectTrendCountry(event.currentTarget.value)}>
+          {#each chartCountryOptions as option (option.id)}
+            <option value={option.id}>{option.text}</option>
+          {/each}
+        </select>
+      </label>
     </div>
 
     <div class="chart-grid">
@@ -146,18 +220,26 @@
     top: 18px;
     left: 58px;
     z-index: 1000;
-    width: min(330px, calc(100vw - 140px));
+    width: 100%;
     color: #17323a;
     background: rgba(247, 248, 244, 0.92);
     border: 1px solid rgba(23, 50, 58, 0.18);
     border-left: 5px solid #d75c4a;
-    border-radius: 8px;
+    border-radius: 0;
     box-shadow: 0 18px 45px rgba(16, 34, 39, 0.22);
     backdrop-filter: blur(12px);
   }
+  .station-search { padding: 8px 12px 9px; border-top: 1px solid rgba(23,50,58,.12); }
+  .station-search label { display:block; margin-bottom:4px; color:#4e6b5d; font-size:.68rem; font-weight:800; letter-spacing:.08em; }
+  .station-search :global(#select-country), .station-search :global(.select2-container) { position:relative; inset:auto; display:block; width:100% !important; min-width:0; }
+  .station-search :global(.select2-container--default .select2-selection--single) { background:#fff; box-shadow:none; }
+  .station-search :global(.select2-container--default .select2-selection--single),
+  .station-search :global(.select2-container--default .select2-selection--single .select2-selection__rendered) { height:38px; line-height:38px; }
+  .station-search :global(.select2-container--default .select2-selection--single .select2-selection__arrow) { height:38px; }
+  .list-panel :global(.select2-container--open) { z-index:2100; }
 
   .station-heading {
-    padding: 14px 16px 10px;
+    padding: 10px 14px 7px;
   }
 
   .station-kicker {
@@ -170,10 +252,10 @@
   }
 
   h2 {
-    margin: 4px 0 5px;
+    margin: 2px 0 3px;
     font-family: "Noto Serif TC", "Iowan Old Style", "Songti TC", serif;
     font-size: clamp(1.25rem, 1.05rem + 0.6vw, 1.7rem);
-    line-height: 1.18;
+    line-height: 1.14;
   }
 
   .chart-modal-header {
@@ -192,6 +274,7 @@
   .chart-grid {
     display: grid;
     grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.35fr);
+    align-items:start;
     gap: 16px;
   }
 
@@ -205,6 +288,8 @@
     border-radius: 8px;
     box-shadow: 0 18px 45px rgba(16, 34, 39, 0.13);
   }
+
+  .chart-panel:first-child { max-height:calc(100vh - 170px); overflow:auto; }
 
   .chart-panel :global(#chart--line),
   .chart-panel :global(#chart--bar) {
@@ -236,14 +321,14 @@
   p {
     margin: 0;
     color: #39535a;
-    font-size: 0.9rem;
-    line-height: 1.55;
+    font-size: 0.84rem;
+    line-height: 1.38;
   }
 
   .mode-switch {
     display: flex;
     gap: 1px;
-    padding: 5px;
+    padding: 3px 5px;
     background: rgba(220, 234, 228, 0.78);
     border-top: 1px solid rgba(23, 50, 58, 0.13);
     border-radius: 0 0 7px 7px;
@@ -251,8 +336,8 @@
 
   .mode-switch button {
     flex: 1 1 0;
-    min-height: 38px;
-    padding: 8px 10px;
+    min-height: 34px;
+    padding: 6px 8px;
     color: #17323a;
     background: transparent;
     border: 0;
@@ -304,14 +389,12 @@
 
   @media (max-width: 720px) {
     .map-station {
-      top: auto;
-      bottom: 16px;
-      left: 12px;
-      right: 12px;
-      width: auto;
+      top: 10px;
+      left: 10px;
+      right: auto;
+      width: min(350px, calc(100vw - 20px));
       z-index: 1002;
     }
-
     .station-heading {
       padding: 11px 13px 8px;
     }
@@ -325,9 +408,8 @@
       padding-inline: 6px;
     }
 
-    .chart-grid {
-      grid-template-columns: 1fr;
-    }
+    .chart-grid { grid-template-columns: 1fr; }
+    .chart-panel:first-child { max-height:none; overflow:visible; }
 
     .chart-panel-heading {
       display: block;

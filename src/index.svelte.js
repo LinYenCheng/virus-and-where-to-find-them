@@ -20,7 +20,7 @@ import {
 import jsonTaiwan from "../data/taiwan.json";
 // import jsonUSA from "../data/usa.json";
 import jsonFinalTimeSeriesData from "../data/finalTimeSeriesData.json";
-import jsonRat from "../data/mouse.json";
+import { validRatReports } from "./ratData.js";
 import jsonFood from "../data/food.json";
 
 import { generateGlobalTable, generateTaiwanTable, generateRatTable, generateFoodTable } from "./dataTable.js";
@@ -32,8 +32,12 @@ const mapMode = urlParams.get("map") || "food";
 const state = $state({
   finalCountries: [],
   mapMode: mapMode,
-  showLoading: true
+  showLoading: true,
+  chartCountryOptions: [],
+  trendCountryId: "taiwan",
 });
+
+const normalizeRegionName = (value = "") => String(value).replace(/臺/g, "台").trim();
 
 function generateInformation(mode) {
   const usaCounties = [];
@@ -43,9 +47,9 @@ function generateInformation(mode) {
     // Reset counts first
     locations.forEach(loc => loc.count = 0);
 
-    jsonRat.forEach((elm) => {
+    validRatReports.forEach(({ item: elm }) => {
       const nowLocationIndex = locations.findIndex((loc) =>
-        elm.location.includes(loc.location)
+        normalizeRegionName(elm.location).includes(normalizeRegionName(loc.location))
       );
       if (nowLocationIndex !== -1) {
         locations[nowLocationIndex].count = (locations[nowLocationIndex].count || 0) + 1;
@@ -155,6 +159,7 @@ function initApp({ selectOptions, finalCountries, mapMode }) {
 }
 
 function setupSelect2(selectOptions, mode) {
+  state.chartCountryOptions = mode === "virus" ? selectOptions : [];
   let placeholder = "區域 (確診數)";
   if (mode === "rat") placeholder = "區域 (老鼠通報總數)";
   if (mode === "food") placeholder = "搜尋美食名稱...";
@@ -180,9 +185,16 @@ function setupSelect2(selectOptions, mode) {
         title: data.paramCountry,
         paramCountry: modifyCountryParam(data.paramCountry),
       });
-      if (data.paramCountry === "Taiwan*" || data.paramCountry === "Taiwan") {
+      if (state.chartCountryOptions.some((option) => option.id === data.id)) {
+        state.trendCountryId = data.id;
+      }
+      const selectedCountry = String(data.paramCountry || data.text || '').toLowerCase();
+      const isTaiwan = String(data.id || '').toLowerCase() === 'taiwan'
+        || /^taiwan(?:\*|\s|\(|$)/.test(selectedCountry);
+      if (isTaiwan) {
         globalThis.$("#chart--dounut").css("zIndex", 1);
         generateTaiwanTable();
+        setTimeout(() => globalThis.$('#dataTable-now').DataTable?.().columns.adjust(), 0);
       } else {
         globalThis.$("#chart--dounut").css("zIndex", -1);
         generateGlobalTable();
@@ -191,6 +203,16 @@ function setupSelect2(selectOptions, mode) {
     }
   });
 }
+
+window.updateTrendCountry = (id) => {
+  const option = state.chartCountryOptions.find((item) => item.id === id);
+  if (!option) return;
+  state.trendCountryId = id;
+  generateChartCountry({
+    title: option.paramCountry,
+    paramCountry: modifyCountryParam(option.paramCountry),
+  });
+};
 
 function setupRouter(selectOptions) {
   router
@@ -229,6 +251,7 @@ function getFinalCountriesForMap(finalCountries, mode) {
 window.updateMapModeUI = (mode) => {
   const { finalSelectOptions, finalCountries } = generateInformation(mode);
   setupSelect2(finalSelectOptions, mode);
+  globalThis.$('#dataTable').empty().removeClass('data-table-virus panel-open');
 
   if (mode === "rat" || mode === "food") {
     if (mode === "rat") {
@@ -237,7 +260,7 @@ window.updateMapModeUI = (mode) => {
       generateFoodTable();
     }
   } else {
-    generateTaiwanTable();
+    globalThis.$('#dataTable').empty();
   }
 
   const finalMapData = getFinalCountriesForMap(finalCountries, mode);
@@ -251,8 +274,11 @@ window.updateMapModeUI = (mode) => {
     // rat/food mode). Without this delay, getElementById returns null
     // and ECharts silently skips initialisation, leaving blank panels.
     setTimeout(() => {
+      if (state.mapMode !== mode) return;
       generateChartGlobal();
       generateChartCountry({ title: "Taiwan", paramCountry: "taiwan*" });
+      generateTaiwanTable();
+      globalThis.$('#dataTable-now').DataTable?.().columns.adjust();
     }, 0);
   }
 };
@@ -281,6 +307,7 @@ setTimeout(() => {
   if (initialMode === "virus") {
     generateChartGlobal();
     generateTaiwanTable();
+    globalThis.$('#dataTable-now').DataTable?.().columns.adjust();
   } else if (initialMode === "rat") {
     generateRatTable();
   } else {

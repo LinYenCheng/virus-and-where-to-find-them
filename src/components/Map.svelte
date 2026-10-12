@@ -11,7 +11,7 @@
   export let countries = [];
   export let mapMode = "virus";
 
-  import ratData from "../../data/mouse.json";
+  import { validRatReports } from "../ratData.js";
 
   const virusIcon = L.icon({
     iconUrl: srcVirus,
@@ -99,6 +99,9 @@
   onMount(() => {
     map = L.map("map").setView([23.5, 120.8], 8);
     window.map = map;
+    const resizeMap = () => map?.invalidateSize({ pan: false });
+    window.addEventListener("resize", resizeMap);
+    requestAnimationFrame(resizeMap);
     const tiles = L.tileLayer(
       "https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}",
       {
@@ -169,7 +172,7 @@
 
     // Rat Map Data
     window.ratMarkerMap = new Map();
-    ratData.forEach((elm, index) => {
+    validRatReports.forEach(({ item: elm, index }) => {
       const lat = parseFloat(elm.lat);
       const lng = parseFloat(elm.lng);
       if (!isNaN(lat) && !isNaN(lng)) {
@@ -187,7 +190,8 @@
           popupContent += `<img src="${elm.image}" style="width:100%;max-width:250px;margin-top:8px;border-radius:4px;display:block;" alt="通報照片" />`;
         }
         popupContent += `</div>`;
-        marker.bindPopup(popupContent);
+        // Keep the selected restaurant coordinate centered when its popup opens.
+        marker.bindPopup(popupContent, { autoPan: false });
         ratMarkers.addLayer(marker);
         window.ratMarkerMap.set(id, marker);
       }
@@ -257,6 +261,8 @@
       }
     });
 
+    return () => window.removeEventListener("resize", resizeMap);
+
     // 加入 GA
     var _gaId = "UA-106834789-1";
     var _gaDomain = "linyencheng.github.io";
@@ -290,5 +296,4 @@
 </script>
 
 <div id="map">
-  <div id="dataTable"></div>
 </div>
