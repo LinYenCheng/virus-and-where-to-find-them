@@ -164,7 +164,16 @@ function setupSelect2(selectOptions, mode) {
   if (mode === "rat") placeholder = "區域 (老鼠通報總數)";
   if (mode === "food") placeholder = "搜尋美食名稱...";
 
-  globalThis.$("#select-country").empty().select2({
+  const selectElement = globalThis.$("#select-country").empty();
+  const defaultTaiwan = mode === "virus"
+    ? selectOptions.find((option) => option.id === "taiwan")
+    : null;
+  if (defaultTaiwan) {
+    selectElement.append(new Option(defaultTaiwan.text, defaultTaiwan.id, true, true));
+    state.trendCountryId = defaultTaiwan.id;
+  }
+
+  selectElement.select2({
     data: selectOptions,
     placeholder: placeholder,
     allowClear: true,
@@ -202,6 +211,7 @@ function setupSelect2(selectOptions, mode) {
       router.navigateTo(`country/${data.id.toString().toLowerCase().replace(/ /g, "-")}`);
     }
   });
+  if (defaultTaiwan) selectElement.trigger("change");
 }
 
 window.updateTrendCountry = (id) => {
