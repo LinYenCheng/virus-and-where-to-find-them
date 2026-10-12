@@ -2,6 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.10.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.9.0...v1.10.0) (2026-10-12)
+
+
+### Features
+
+* add food and time series data files along with gitignore updates ([59d3dc9](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/59d3dc91a2d5e2345f372ac44d479d58badf8795))
+* add initial dataset files, frontend design skills, and Svelte application setup ([e364b35](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/e364b35749ca3cec8d7fb9f2d9ccebfe76f4b855))
+* add initial frontend support files ([bb3adcc](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/bb3adcc238e9192b8ac3aa1fac8fdb061dc1c91f))
+* add map component, data files, and frontend design skill guide ([560f4b4](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/560f4b476069f77d8408010aad3766b4611fac4d))
+* add rat map ([c2e9d48](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/c2e9d484d5bdb17e35c88a290af53f5fe50fd614))
+* configure gitignore for JSON data and add new datasets and base utility files ([3eb1001](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/3eb10015838126333d9b42695add49e2532280f7))
+* implement ECharts visualization suite and add essential data source files ([1334ebe](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/1334ebe2b7e4e8219b10b0f808d067edeb287c77))
+* initialize Svelte 5 application with modularized chart, data table, and UI components ([22a1bb9](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/22a1bb96d5377653e9f1aa2e237eaee4c1e8ee0a))
+* initialize Svelte application with map, data tables, and multi-mode support ([24a22e9](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/24a22e9f0edf2e237f96427356cf840e387e3337))
+* update good food map in hsinchu ([56e9bc4](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/56e9bc44c5a688eb0fc259d98eb1c7c1cc562daf))
+* 更新圖表樣式 ([1840799](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/18407993b065ce1bc3a8cc65fb41e8759c651ef4))
+
+
+### Bug Fixes
+
+* 更新部分邏輯 ([b0731eb](https://github.com/LinYenCheng/virus-and-where-to-find-them/commit/b0731eb277efb3a2952ff992ac73d8679bded8de))
+
 ## [1.9.0](https://github.com/LinYenCheng/virus-and-where-to-find-them/compare/v1.8.0...v1.9.0) (2021-06-11)
 
 
