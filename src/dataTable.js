@@ -46,31 +46,67 @@ function generateRatTable(filterRegion = null) {
 }
 
 function mountInfiniteCards(title, items, renderCards) {
-  $('#dataTable').removeClass('data-table-virus panel-open').show();
-  $('#dataTable').empty();
-  $('#dataTable').removeClass('data-table-virus');
-  $('#dataTable').data('cardsObserver')?.disconnect();
+  const dataRoot = $('#dataTable');
+  dataRoot.data('cardsObserver')?.disconnect();
+  const oldMapSortHandler = dataRoot.data('cardsMapSortHandler');
+  if (oldMapSortHandler && window.map) window.map.off('moveend', oldMapSortHandler);
+  const oldMarkerSelectHandler = dataRoot.data('foodMarkerSelectHandler');
+  if (oldMarkerSelectHandler) window.removeEventListener('food-marker-select', oldMarkerSelectHandler);
+  dataRoot.removeClass('data-table-virus panel-open').show().empty().removeClass('data-table-virus');
   const batchSize = 12;
   let shown = 0;
-  $('#dataTable').html(`<div class="cards-panel" data-list-title="${title}"><div class="cards-toolbar"><input class="cards-search" type="search" placeholder="搜尋名稱、地點或內容" aria-label="搜尋清單"><span class="cards-result-count"></span><span class="cards-count">${items.length} 筆</span></div><div class="cards-list" role="list"><div class="cards-sentinel" aria-hidden="true"></div></div><p class="cards-end" hidden>已顯示全部項目</p></div>`);
+  let selectedCardId = null;
+  let revealTimer = null;
+  let observer = null;
+  dataRoot.html(`<div class="cards-panel" data-list-title="${title}"><div class="cards-toolbar"><input class="cards-search" type="search" placeholder="搜尋名稱、地點或內容" aria-label="搜尋清單"><span class="cards-result-count"></span><span class="cards-count">${items.length} 筆</span></div><div class="cards-list" role="list"></div><p class="cards-end" hidden>已顯示全部項目</p></div>`);
   const panel = $('#dataTable .cards-panel');
   const list = panel.find('.cards-list');
   const search = panel.find('.cards-search');
   const resultCount = panel.find('.cards-result-count');
-  const sentinel = panel.find('.cards-sentinel')[0];
   let filtered = items;
+
+  const applySelection = () => {
+    const cards = panel.find('.map-card');
+    cards.removeClass('is-selected').attr('aria-pressed', 'false');
+    cards.filter((_, card) => card.dataset.id === selectedCardId).addClass('is-selected').attr('aria-pressed', 'true');
+  };
+  const sortByMapCenter = () => {
+    if (!window.map || items.length < 2) return;
+    const center = window.map.getCenter();
+    filtered.sort((a, b) => {
+      const distanceA = window.map.distance(center, [Number(a.item.lat), Number(a.item.lng)]);
+      const distanceB = window.map.distance(center, [Number(b.item.lat), Number(b.item.lng)]);
+      return distanceA - distanceB || a.index - b.index;
+    });
+  };
 
   const loadMore = () => {
     if (shown >= filtered.length) return;
     const next = filtered.slice(shown, shown + batchSize);
     if (!next.length) return;
+    list.find('.cards-sentinel').remove();
     list.append(renderCards(next));
     shown += next.length;
     resultCount.text(`${shown} / ${filtered.length}`);
+    applySelection();
     panel.find('.cards-end').prop('hidden', shown < filtered.length);
+    const sentinel = $('<div class="cards-sentinel" aria-hidden="true"></div>').appendTo(list)[0];
+    if (observer) observer.observe(sentinel);
+  };
+  const revealSelectedCard = (id = selectedCardId, delay = 0) => {
+    if (!id) return;
+    window.clearTimeout(revealTimer);
+    revealTimer = window.setTimeout(() => {
+      if (id !== selectedCardId) return;
+      while (!list.children('.map-card').toArray().some((card) => card.dataset.id === id) && shown < filtered.length) loadMore();
+      const selectedCard = list.children('.map-card').toArray().find((card) => card.dataset.id === id);
+      applySelection();
+      selectedCard?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }, delay);
   };
   const reset = () => {
     filtered = items.filter(({ item }) => !search.val() || Object.values(item).some((value) => String(value ?? '').toLocaleLowerCase().includes(search.val().toLocaleLowerCase())));
+    sortByMapCenter();
     shown = 0;
     list.empty();
     panel.find('.cards-end').prop('hidden', true);
@@ -80,13 +116,14 @@ function mountInfiniteCards(title, items, renderCards) {
     if (event.type === 'keydown' && event.key !== 'Enter' && event.key !== ' ') return;
     if (event.type === 'keydown') event.preventDefault();
     const { lat, lng, id } = this.dataset;
-    panel.find('.map-card').removeClass('is-selected').attr('aria-pressed', 'false');
-    $(this).addClass('is-selected').attr('aria-pressed', 'true');
+    selectedCardId = id;
+    applySelection();
     if (id.startsWith('food-') && window.matchMedia('(max-width: 720px)').matches) {
       const food = jsonFood[Number(id.slice('food-'.length))];
       if (food) {
         window.dispatchEvent(new CustomEvent('food-card-select', { detail: { food, id } }));
       }
+      revealSelectedCard(id, 120);
       return;
     }
     if (window.map && lat && lng) {
@@ -94,13 +131,37 @@ function mountInfiniteCards(title, items, renderCards) {
       window.map.setView([Number(lat), Number(lng)], 18, { animate: false });
       if (markerMap?.has(id)) markerMap.get(id).openPopup();
     }
+    revealSelectedCard(id, 120);
   });
   search.on('input', reset);
   if ('IntersectionObserver' in window) {
-    const observer = new IntersectionObserver((entries) => { if (entries.some((entry) => entry.isIntersecting)) loadMore(); }, { root: list[0], rootMargin: '180px' });
-    observer.observe(sentinel);
-    $('#dataTable').data('cardsObserver', observer);
+    observer = new IntersectionObserver((entries) => { if (entries.some((entry) => entry.isIntersecting)) loadMore(); }, { root: list[0], rootMargin: '180px' });
+    dataRoot.data('cardsObserver', observer);
   }
+  const sortHandler = () => {
+    reset();
+    revealSelectedCard(selectedCardId, 120);
+  };
+  if (window.map && items.length) {
+    window.map.on('moveend', sortHandler);
+    dataRoot.data('cardsMapSortHandler', sortHandler);
+  }
+  const markerSelectHandler = ({ detail } = {}) => {
+    const id = detail?.id;
+    if (!id || !id.startsWith('food-') || !items.some(({ index }) => `food-${index}` === id)) return;
+    selectedCardId = id;
+    if (!filtered.some(({ index }) => `food-${index}` === id)) {
+      search.val('');
+      filtered = items.slice();
+      sortByMapCenter();
+      shown = 0;
+      list.empty();
+      panel.find('.cards-end').prop('hidden', true);
+    }
+    revealSelectedCard(id, 120);
+  };
+  window.addEventListener('food-marker-select', markerSelectHandler);
+  dataRoot.data('foodMarkerSelectHandler', markerSelectHandler);
   list.on('scroll', function () {
     if (this.scrollTop + this.clientHeight >= this.scrollHeight - 180) loadMore();
   });

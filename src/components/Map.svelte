@@ -190,8 +190,7 @@
           popupContent += `<img src="${elm.image}" style="width:100%;max-width:250px;margin-top:8px;border-radius:4px;display:block;" alt="通報照片" />`;
         }
         popupContent += `</div>`;
-        // Keep the selected restaurant coordinate centered when its popup opens.
-        marker.bindPopup(popupContent, { autoPan: false });
+        marker.bindPopup(popupContent);
         ratMarkers.addLayer(marker);
         window.ratMarkerMap.set(id, marker);
       }
@@ -221,7 +220,11 @@
             <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(elm.fullAddress + ' ' + elm.name)}" target="_blank" style="display:inline-block;margin-top:8px;color:#007bff;text-decoration:none;">在 Google Maps 查看</a>
           </div>
         `;
-        marker.bindPopup(popupContent);
+        // Keep a clicked restaurant marker centered when its popup opens.
+        marker.bindPopup(popupContent, { autoPan: false });
+        marker.on("click", () => {
+          window.dispatchEvent(new CustomEvent("food-marker-select", { detail: { id } }));
+        });
         foodMarkers.addLayer(marker);
         window.foodMarkerMap.set(id, marker);
       }
