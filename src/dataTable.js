@@ -21,14 +21,20 @@ function getPercentHTMLString({ intChild, intParent }) {
 function generateFoodTable() {
   $('#dataTable').removeClass('data-table-virus panel-open').show().empty();
   const esc = (value = '') => String(value).replace(/[&<>"']/g, (char) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[char]);
+  const ratings = [...new Set(jsonFood.map(({ rating }) => String(rating || '').trim()).filter(Boolean))].slice(0, 3);
+  const getStreet = (item) => {
+    const address = String(item.fullAddress || '');
+    const match = address.match(/(?:市|縣)(?:[^區鄉鎮市]+[區鄉鎮市])?(.+?(?:路|街|大道|巷))/);
+    return (match?.[1] || item.location || '').trim();
+  };
   const renderCards = (items) => items.map(({ item, index }) => `
     <article class="map-card food-card" role="button" aria-pressed="false" tabindex="0" data-lat="${esc(item.lat)}" data-lng="${esc(item.lng)}" data-id="food-${index}">
-      <div class="map-card-heading"><h3>${esc(item.name)}</h3><span class="card-rating">${esc(item.rating || '尚無評價')}</span></div>
-      <span class="card-tag">${esc(item.location || '新竹')}</span>
+      <div class="map-card-heading"><h3>${esc(item.name)}</h3></div>
+      <div class="food-card__tags">${getStreet(item) ? `<button type="button" class="card-tag food-card__tag-button" data-street="${esc(getStreet(item))}" aria-label="篩選${esc(getStreet(item))}">${esc(getStreet(item))}</button>` : ''}${item.rating ? `<span class="card-tag food-card__rating">${esc(item.rating)}</span>` : ''}</div>
       <p class="card-address">⌖ ${esc(item.fullAddress)}</p>
       <p class="card-description">${esc(item.description)}</p>
     </article>`).join('');
-  mountInfiniteCards('店家清單', jsonFood.map((item, index) => ({ item, index })), renderCards);
+  mountInfiniteCards('店家清單', jsonFood.map((item, index) => ({ item, index })), renderCards, { foodRatings: ratings });
 }
 
 function generateRatTable(filterRegion = null) {
@@ -45,7 +51,7 @@ function generateRatTable(filterRegion = null) {
   mountInfiniteCards(filterRegion ? `${filterRegion} 通報` : '通報清單', items, renderCards);
 }
 
-function mountInfiniteCards(title, items, renderCards) {
+function mountInfiniteCards(title, items, renderCards, options = {}) {
   const dataRoot = $('#dataTable');
   dataRoot.data('cardsObserver')?.disconnect();
   const oldMapSortHandler = dataRoot.data('cardsMapSortHandler');
@@ -58,17 +64,24 @@ function mountInfiniteCards(title, items, renderCards) {
   let selectedCardId = null;
   let revealTimer = null;
   let observer = null;
-  dataRoot.html(`<div class="cards-panel" data-list-title="${title}"><div class="cards-toolbar"><input class="cards-search" type="search" placeholder="搜尋名稱、地點或內容" aria-label="搜尋清單"><span class="cards-result-count"></span><span class="cards-count">${items.length} 筆</span></div><div class="cards-list" role="list"></div><p class="cards-end" hidden>已顯示全部項目</p></div>`);
+  const ratingFilters = options.foodRatings?.length ? `<div class="food-rating-filters" role="group" aria-label="依評價篩選"><span class="food-rating-filters__label">評價</span>${options.foodRatings.map((rating) => `<button type="button" class="food-rating-filter" data-rating="${rating.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}" aria-label="篩選評價 ${rating}" aria-pressed="false">${rating}</button>`).join('')}</div>` : '';
+  dataRoot.html(`<div class="cards-panel" data-list-title="${title}"><div class="cards-toolbar"><input class="cards-search" type="search" placeholder="搜尋名稱、地點或內容" aria-label="搜尋清單"><span class="cards-result-count"></span><span class="cards-count">${items.length} 筆</span></div>${ratingFilters}<div class="food-active-filters" aria-live="polite"></div><div class="cards-list" role="list"></div><p class="cards-end" hidden>已顯示全部項目</p></div>`);
   const panel = $('#dataTable .cards-panel');
   const list = panel.find('.cards-list');
   const search = panel.find('.cards-search');
   const resultCount = panel.find('.cards-result-count');
+  const selectedRatings = new Set();
+  let selectedStreet = '';
+  const activeFilters = panel.find('.food-active-filters');
   let filtered = items;
 
   const applySelection = () => {
     const cards = panel.find('.map-card');
     cards.removeClass('is-selected').attr('aria-pressed', 'false');
     cards.filter((_, card) => card.dataset.id === selectedCardId).addClass('is-selected').attr('aria-pressed', 'true');
+    panel.find('.food-card__tag-button').each((_, button) => {
+      $(button).attr('aria-pressed', button.dataset.street === selectedStreet ? 'true' : 'false');
+    });
   };
   const sortByMapCenter = () => {
     if (!window.map || items.length < 2) return;
@@ -105,7 +118,19 @@ function mountInfiniteCards(title, items, renderCards) {
     }, delay);
   };
   const reset = () => {
-    filtered = items.filter(({ item }) => !search.val() || Object.values(item).some((value) => String(value ?? '').toLocaleLowerCase().includes(search.val().toLocaleLowerCase())));
+    const query = String(search.val() || '').toLocaleLowerCase();
+    filtered = items.filter(({ item }) => {
+      const matchesSearch = !query || Object.values(item).some((value) => String(value ?? '').toLocaleLowerCase().includes(query));
+      const matchesRating = selectedRatings.size === 0 || selectedRatings.has(String(item.rating || '').trim());
+      const address = String(item.fullAddress || '');
+      const streetMatch = address.match(/(?:市|縣)(?:[^區鄉鎮市]+[區鄉鎮市])?(.+?(?:路|街|大道|巷))/);
+      const street = (streetMatch?.[1] || item.location || '').trim();
+      const matchesStreet = !selectedStreet || street === selectedStreet;
+      return matchesSearch && matchesRating && matchesStreet;
+    });
+    activeFilters.empty();
+    if (selectedStreet) activeFilters.append(`<button type="button" class="food-active-filter" data-filter="street"><span class="food-active-filter__kind">路段</span><span>${selectedStreet}</span><span class="food-active-filter__remove" aria-hidden="true">×</span><span class="sr-only">移除${selectedStreet}篩選</span></button>`);
+    selectedRatings.forEach((rating) => activeFilters.append(`<button type="button" class="food-active-filter" data-filter="rating" data-rating="${rating.replace(/&/g, '&amp;').replace(/"/g, '&quot;')}"><span class="food-active-filter__kind">評價</span><span>${rating}</span><span class="food-active-filter__remove" aria-hidden="true">×</span><span class="sr-only">移除評價篩選</span></button>`));
     sortByMapCenter();
     shown = 0;
     list.empty();
@@ -134,6 +159,27 @@ function mountInfiniteCards(title, items, renderCards) {
     revealSelectedCard(id, 120);
   });
   search.on('input', reset);
+  panel.on('click', '.food-rating-filter', function () {
+    const rating = this.dataset.rating;
+    if (selectedRatings.has(rating)) selectedRatings.delete(rating);
+    else selectedRatings.add(rating);
+    $(this).attr('aria-pressed', selectedRatings.has(rating) ? 'true' : 'false');
+    reset();
+  });
+  panel.on('click', '.food-card__tag-button', function (event) {
+    event.stopPropagation();
+    selectedStreet = this.dataset.street === selectedStreet ? '' : this.dataset.street;
+    reset();
+  });
+  panel.on('click', '.food-active-filter', function () {
+    if (this.dataset.filter === 'street') selectedStreet = '';
+    if (this.dataset.filter === 'rating') selectedRatings.delete(this.dataset.rating);
+    panel.find('.food-rating-filter').each((_, button) => {
+      const rating = button.dataset.rating;
+      $(button).attr('aria-pressed', selectedRatings.has(rating) ? 'true' : 'false');
+    });
+    reset();
+  });
   if ('IntersectionObserver' in window) {
     observer = new IntersectionObserver((entries) => { if (entries.some((entry) => entry.isIntersecting)) loadMore(); }, { root: list[0], rootMargin: '180px' });
     dataRoot.data('cardsObserver', observer);
@@ -152,6 +198,9 @@ function mountInfiniteCards(title, items, renderCards) {
     selectedCardId = id;
     if (!filtered.some(({ index }) => `food-${index}` === id)) {
       search.val('');
+      selectedRatings.clear();
+      selectedStreet = '';
+      panel.find('.food-rating-filter').attr('aria-pressed', 'false');
       filtered = items.slice();
       sortByMapCenter();
       shown = 0;

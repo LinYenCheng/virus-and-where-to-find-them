@@ -20,12 +20,43 @@
     popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
   });
 
-  const virusIconSmall = L.icon({
-    iconUrl: srcVirus,
-    iconSize: [12, 12], // size of the icon
-    iconAnchor: [20, 20], // point of the icon which will correspond to marker's location
-    popupAnchor: [-10, -25], // point from which the popup should open relative to the iconAnchor
-  });
+  function makePointIcon(kind = "virus") {
+    return L.divIcon({
+      className: `map-point-icon map-point-icon--${kind}`,
+      html: `<span class="map-point-dot" aria-hidden="true"></span>`,
+      iconSize: [18, 18],
+      iconAnchor: [9, 9],
+      popupAnchor: [0, -10],
+    });
+  }
+
+  function escapeHtml(value = "") {
+    return String(value).replace(/[&<>\"']/g, (character) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      "\"": "&quot;",
+      "'": "&#39;",
+    })[character]);
+  }
+
+  function scoreLabel(value) {
+    const score = String(value || "").trim();
+    return score || "尚無評價";
+  }
+
+  function foodMarkerIcon(elm, active = false) {
+    const rating = String(elm.rating || "").trim();
+    const name = String(elm.name || "未命名").trim();
+    const label = `${rating} ${name}`.trim();
+    return L.divIcon({
+      className: "food-marker-icon",
+      html: `<span class="food-marker${active ? " is-active" : ""}" title="${escapeHtml(label)}">${escapeHtml(label)}</span>`,
+      iconSize: [1, 1],
+      iconAnchor: [0, 0],
+      popupAnchor: [0, -16],
+    });
+  }
 
   let cityMarkers = [];
   let addressPoints = [];
@@ -55,7 +86,7 @@
       if (elm[0] !== "US" && !isNaN(parseFloat(arrLatLng[0]))) {
         const tempMarker = L.marker(elm[3].split(" "), {
           icon: virusIcon,
-        }).bindPopup(`${elm[0]}${elm[2]}：${elm[1]}`);
+        }).bindPopup(`${escapeHtml(elm[0])}${escapeHtml(elm[2])}：${escapeHtml(elm[1])}`);
 
         cityMarkers.push(tempMarker);
         cities.addLayer(tempMarker);
@@ -129,36 +160,37 @@
           var marker = L.marker(
             new L.LatLng(parseFloat(latitude), parseFloat(longitude), {
               title: name,
-            })
+            }),
+            { icon: makePointIcon("virus") }
           );
-          var strPopup = "";
+          const popupRows = [];
           addressPoints.push([latitude, longitude]);
 
           if (elm["案號"] !== "") {
-            strPopup = `${strPopup} + 案號: ${elm["案號"]} <br>`;
+            popupRows.push(`<div class="map-popup__row"><span>案號</span><strong>${escapeHtml(elm["案號"])}</strong></div>`);
           }
 
           if (name !== "") {
-            strPopup = `${strPopup} + ${name} <br>`;
+            popupRows.push(`<div class="map-popup__title">${escapeHtml(name)}</div>`);
           }
 
           if (begin !== "") {
-            strPopup = `${strPopup} + 開始:${begin} <br> `;
+            popupRows.push(`<div class="map-popup__row"><span>開始</span><strong>${escapeHtml(begin)}</strong></div>`);
           }
 
           if (end !== "") {
-            strPopup = `${strPopup} + 結束:${end} <br> `;
+            popupRows.push(`<div class="map-popup__row"><span>結束</span><strong>${escapeHtml(end)}</strong></div>`);
           }
 
           if (address !== "") {
-            strPopup = `${strPopup} + 地址:${address} <br> `;
+            popupRows.push(`<div class="map-popup__row"><span>地址</span><strong>${escapeHtml(address)}</strong></div>`);
           }
 
           if (elm["資料來源"] !== "") {
-            strPopup = `${strPopup} + <a href="${elm["資料來源"]}" target="_blank">資料來源連結<a> <br> `;
+            popupRows.push(`<a class="map-popup__link" href="${escapeHtml(elm["資料來源"])}" target="_blank" rel="noopener noreferrer">資料來源連結 ↗</a>`);
           }
 
-          marker.bindPopup(strPopup);
+          marker.bindPopup(`<div class="map-popup">${popupRows.join("")}</div>`, { maxWidth: 360 });
           convidMarkers.addLayer(marker);
         }
       });
@@ -177,20 +209,21 @@
       const lng = parseFloat(elm.lng);
       if (!isNaN(lat) && !isNaN(lng)) {
         ratHeatPoints.push([lat, lng]);
-        const marker = L.marker([lat, lng]);
+        const marker = L.marker([lat, lng], { icon: makePointIcon("rat") });
         const id = `rat-${index}`;
         let popupContent = `
           <div class="rat-popup">
-            <strong>時間:</strong> ${elm.time}<br>
-            <strong>地點:</strong> ${elm.location}<br>
-            <strong>類型:</strong> ${elm.type}<br>
-            <strong>說明:</strong> ${elm.description}<br>
+            <div class="map-popup__title">鼠患通報</div>
+            <div class="map-popup__row"><span>時間</span><strong>${escapeHtml(elm.time)}</strong></div>
+            <div class="map-popup__row"><span>地點</span><strong>${escapeHtml(elm.location)}</strong></div>
+            <div class="map-popup__row"><span>類型</span><strong>${escapeHtml(elm.type)}</strong></div>
+            <div class="map-popup__row"><span>說明</span><strong>${escapeHtml(elm.description)}</strong></div>
         `;
         if (elm.image && elm.image.startsWith('http')) {
-          popupContent += `<img src="${elm.image}" style="width:100%;max-width:250px;margin-top:8px;border-radius:4px;display:block;" alt="通報照片" />`;
+          popupContent += `<img class="rat-popup__image" src="${escapeHtml(elm.image)}" alt="通報照片" loading="lazy" />`;
         }
         popupContent += `</div>`;
-        marker.bindPopup(popupContent);
+        marker.bindPopup(popupContent, { maxWidth: 360 });
         ratMarkers.addLayer(marker);
         window.ratMarkerMap.set(id, marker);
       }
@@ -209,19 +242,21 @@
       const lat = parseFloat(elm.lat);
       const lng = parseFloat(elm.lng);
       if (!isNaN(lat) && !isNaN(lng)) {
-        const marker = L.marker([lat, lng]);
+        const marker = L.marker([lat, lng], { icon: foodMarkerIcon(elm) });
         const id = `food-${index}`;
         let popupContent = `
           <div class="food-popup">
-            <h3 style="margin:0 0 8px 0;">${elm.name}</h3>
-            <strong>評價:</strong> ${elm.rating}<br>
-            <strong>地址:</strong> ${elm.fullAddress}<br>
-            <p style="margin-top:8px;">${elm.description}</p>
-            <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(elm.fullAddress + ' ' + elm.name)}" target="_blank" style="display:inline-block;margin-top:8px;color:#007bff;text-decoration:none;">在 Google Maps 查看</a>
+            <div class="food-popup__heading">
+              <h3>${escapeHtml(elm.name || "未命名店家")}</h3>
+            </div>
+            ${elm.rating ? `<div class="food-popup__meta"><span class="food-popup__tag">${escapeHtml(elm.rating)}</span></div>` : ""}
+            <p class="food-popup__address">${escapeHtml(elm.fullAddress || "地址未提供")}</p>
+            ${elm.description ? `<p class="food-popup__description">${escapeHtml(elm.description)}</p>` : ""}
+            <a class="food-popup__link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((elm.fullAddress || "") + ' ' + (elm.name || ''))}" target="_blank" rel="noopener noreferrer">在 Google 地圖中查看 <span aria-hidden="true">↗</span></a>
           </div>
         `;
         // Keep a clicked restaurant marker centered when its popup opens.
-        marker.bindPopup(popupContent, { autoPan: false });
+        marker.bindPopup(popupContent, { autoPan: false, maxWidth: 420, minWidth: 280, closeButton: true });
         marker.on("click", () => {
           window.dispatchEvent(new CustomEvent("food-marker-select", { detail: { id } }));
         });
