@@ -166,24 +166,22 @@
           const popupRows = [];
           addressPoints.push([latitude, longitude]);
 
-          if (elm["案號"] !== "") {
-            popupRows.push(`<div class="map-popup__row"><span>案號</span><strong>${escapeHtml(elm["案號"])}</strong></div>`);
-          }
-
           if (name !== "") {
             popupRows.push(`<div class="map-popup__title">${escapeHtml(name)}</div>`);
           }
 
-          if (begin !== "") {
-            popupRows.push(`<div class="map-popup__row"><span>開始</span><strong>${escapeHtml(begin)}</strong></div>`);
-          }
+          const caseNumbers = escapeHtml(elm["案號"] || "未提供").replace(/,\s*/g, ",<wbr>");
+          popupRows.push(`<div class="map-popup__case"><span>案號</span><strong>${caseNumbers}</strong></div>`);
 
-          if (end !== "") {
-            popupRows.push(`<div class="map-popup__row"><span>結束</span><strong>${escapeHtml(end)}</strong></div>`);
+          if (begin !== "" || end !== "") {
+            popupRows.push(`<div class="map-popup__time-group">
+              ${begin !== "" ? `<div class="map-popup__time"><span>開始</span><strong>${escapeHtml(begin)}</strong></div>` : ""}
+              ${end !== "" ? `<div class="map-popup__time"><span>結束</span><strong>${escapeHtml(end)}</strong></div>` : ""}
+            </div>`);
           }
 
           if (address !== "") {
-            popupRows.push(`<div class="map-popup__row"><span>地址</span><strong>${escapeHtml(address)}</strong></div>`);
+            popupRows.push(`<div class="map-popup__address"><span>地址</span><strong>${escapeHtml(address)}</strong></div>`);
           }
 
           if (elm["資料來源"] !== "") {
@@ -248,11 +246,11 @@
           <div class="food-popup">
             <div class="food-popup__heading">
               <h3>${escapeHtml(elm.name || "未命名店家")}</h3>
+              ${elm.rating ? `<span class="food-popup__rating" aria-label="店家評分">${escapeHtml(elm.rating)}</span>` : ""}
             </div>
-            ${elm.rating ? `<div class="food-popup__meta"><span class="food-popup__tag">${escapeHtml(elm.rating)}</span></div>` : ""}
             <p class="food-popup__address">${escapeHtml(elm.fullAddress || "地址未提供")}</p>
             ${elm.description ? `<p class="food-popup__description">${escapeHtml(elm.description)}</p>` : ""}
-            <a class="food-popup__link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((elm.fullAddress || "") + ' ' + (elm.name || ''))}" target="_blank" rel="noopener noreferrer">在 Google 地圖中查看 <span aria-hidden="true">↗</span></a>
+            <a class="food-popup__link" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((elm.fullAddress || "") + ' ' + (elm.name || ''))}" target="_blank" rel="noopener noreferrer">前往 Google 地圖 <span aria-hidden="true">↗</span></a>
           </div>
         `;
         // Keep a clicked restaurant marker centered when its popup opens.
